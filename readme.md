@@ -27,6 +27,10 @@ Useful ant targets:
 
 ## Some example code
 
+A small snippet of java code which loads an mp3 file, prints out the artist from the ID3v1 tag (if found) and
+the artist and version from the ID3v2 tag (if found); then changes the artist on the ID3v2 tag and saves the
+mp3 with this change with a new filename.
+
 <code>
         String filename = "SomeMp3File.mp3";
         Mp3File mp3file = new Mp3File(filename);
