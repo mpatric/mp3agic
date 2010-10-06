@@ -1,0 +1,59 @@
+#!/bin/bash  
+if test "$1" = ""; then
+	echo
+	java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Retag
+	echo
+ 	echo "Retags the specified mp3 file(s)"
+ 	echo
+	echo "Usage: mp3retag [-i][-k][-c comment][-e encoder][-z customtag][filename spec]"
+	echo
+	echo "  -i : attach an album image if found in the same folder as the mp3"
+	echo "       with a jpg, jpeg or png extension and file named as:"
+	echo
+	echo "         \"Artist - Album\""
+	echo "         \"Artist-Album\" only with characters A-Z, a-z, 0-9, &, +, ( and )"
+	echo "         \"Album\""
+	echo "         \"Album\" only with characters A-Z, a-z, 0-9, &, +, ( and )"
+	echo "         \"folder\""
+	echo
+	echo "  -k : keep existing custom tags found in the file."
+	echo
+	echo "  -c : specify a comment."
+	echo
+	echo "  -e : specify an encoder."
+	echo
+	echo "  -z : attach a custom message before the ID3v1 tag, appended to the existing"
+	echo "       custom tags if used in conjunction with the -k option."
+	echo
+	echo "Example: mp3retag -i -k -c \"A comment \" -e \"Bob\" -z \"Message\" myaudio/*.mp3"
+	echo
+fi      
+fin=0
+while ! ((fin)); do
+	case "$1" in
+		-[c,e,z])
+			OPTIONS+=("${1}")
+			OPTIONS+=("${2}")
+			shift
+			shift
+			;;
+	  -*)      
+			OPTIONS+=("${1}")
+			shift
+			;;
+		*)       
+			fin=1
+			;;
+	esac
+done
+fin=0
+while ! ((fin)); do
+	if test "$1" = ""; then
+		fin=1
+	else
+		if [ -f "${1}" ]; then
+            java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Retag "${OPTIONS[@]}" "${1}"
+		fi
+		shift
+	fi
+done

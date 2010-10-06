@@ -1,0 +1,24 @@
+#!/bin/bash  
+if test "$1" = ""; then
+	echo
+	java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Move
+	echo
+	echo "Moves the specified mp3 file(s) to a new location, creating appropriate folders for the Artist and Album"
+	echo
+	echo "Usage: mp3move [filename spec][destination]"
+	echo "Example: mp3move myaudio/*.mp3 ~/Music/Collection/Songs/"
+	echo
+ 	exit 2
+fi      
+fin=0
+DEST=${!#}
+while ! ((fin)); do
+	if test "$2" = ""; then
+		fin=1
+	else
+		if [ -f "${1}" ]; then
+            java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Move "${1}" "${!#}"
+		fi
+		shift
+	fi
+done

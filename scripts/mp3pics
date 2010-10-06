@@ -1,0 +1,24 @@
+#!/bin/bash  
+if test "$1" = ""; then
+	echo
+	java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Pics
+	echo
+	echo "Extracts the album art images from the specified mp3 file(s)"
+	echo
+	echo "Usage: mp3pics [filename specifier]"
+	echo "Example: mp3pics myaudio/*.mp3"
+	echo
+	exit 2
+fi      
+fin=0
+while ! ((fin)); do
+	if test "$1" = ""; then
+		fin=1
+	else
+		if [ -f "${1}" ]; then
+			echo "FILE: ${1}"
+			java -cp @deploy-dir/mp3agic.jar com.mpatric.mp3agic.app.Mp3Pics "${1}"
+		fi
+		shift
+	fi
+done
