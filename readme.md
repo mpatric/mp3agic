@@ -1,9 +1,8 @@
 # mp3agic
 
-A library for reading mp3 files and parsing the ID3 tags (ID3v1 and ID3v2.1 through ID3v2.4) as well as writing ID3 tags on mp3 files.
+A java library for reading mp3 files and parsing the ID3 tags (ID3v1 and ID3v2.1 through ID3v2.4) as well as writing ID3 tags on mp3 files.
 
-A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and id3 details, renaming mp3 files using details from the id3 tags,
-retagging files, attaching images to mp3 files and extracting images from mp3 files.
+A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and id3 details, renaming mp3 files using details from the id3 tags, retagging files, attaching images to mp3 files and extracting images from mp3 files.
 
 ## Building
 
