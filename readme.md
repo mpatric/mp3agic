@@ -1,8 +1,18 @@
 # mp3agic
 
-A java library for reading mp3 files and parsing the ID3 tags (ID3v1 and ID3v2.1 through ID3v2.4) as well as writing ID3 tags on mp3 files.
+A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.1 through ID3v2.4).
 
-A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and id3 details, renaming mp3 files using details from the id3 tags, retagging files, attaching images to mp3 files and extracting images from mp3 files.
+A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and id3 details, renaming mp3 files using details from the id3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
+
+## Some features
+
+* 100% Java
+* read low-level mpeg frame data
+* read, write, add and remove ID3v1 and ID3v2 tags (ID3v2.1 through ID3v2.4)
+* correctly read VBR files by looking at the actual mpeg frames
+* read and write embedded images (such as album art)
+* read obsolete 3-letter ID3v2 tags (but not write them)
+* add or remove custom messages between the end of the mpeg frames and the ID3v1 tag
 
 ## Building
 
@@ -26,13 +36,12 @@ Useful ant targets:
 
 ## Some example code
 
-A small snippet of java code which loads an mp3 file, prints out the artist from the ID3v1 tag (if found) and
-the artist and version from the ID3v2 tag (if found); then changes the artist on the ID3v2 tag and saves the
-mp3 with this change with a new filename.
+A small snippet of java code which loads an mp3 file, prints out the length in seconds. It also prints out the artist from the ID3v1 tag
+(if found) and the artist and version from the ID3v2 tag (if found). It then changes the artist on an existing ID3v2 tag and saves the
+mp3 (including this change) with a new filename.
 
 <code>
-        String filename = "SomeMp3File.mp3";
-        Mp3File mp3file = new Mp3File(filename);
+        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         System.out.println("Length of this mp3 in seconds is: " + mp3file.getLengthInSeconds());
 
         if (mp3file.hasId3v1Tag()) {
@@ -50,6 +59,8 @@ mp3 with this change with a new filename.
           System.out("Saved mp3 file with new name and artist set to 'A new artist'");
         }
 </code>
+
+More can be learned from looking at the included command-line applications in the com.mpatric.mp3agic.app package.
 
 ## Copyright
 
