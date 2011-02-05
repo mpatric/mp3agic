@@ -19,7 +19,7 @@ public class BufferToolsTest extends TestCase {
 	private static final byte BYTE_E0 = -0x20;
 	private static final byte BYTE_F0 = -0x10;
 	private static final byte BYTE_81 = -0x7F;
-	private static final byte BYTE_SPECIAL_CHARACTER = -0x18;
+	private static final byte BYTE_ESZETT = -0x21;
 
 	public void testShouldExtractStringFromStartOfBuffer() {
 		byte[] buffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH};
@@ -306,7 +306,7 @@ public class BufferToolsTest extends TestCase {
 	}
 	
 	public void testShouldConvertBufferContainingHighAscii() {
-		byte[] buffer = {BYTE_T, BYTE_SPECIAL_CHARACTER, BYTE_G};
-		assertEquals("TèG", BufferTools.byteBufferToString(buffer, 0, 3));
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G};
+		assertEquals("TﬂG", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
 }
