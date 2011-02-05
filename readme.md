@@ -18,8 +18,9 @@ A simple set of command-line tools built on top of the library are included whic
 
 You will need:
 
-* j2sdk 1.5.0 or higher
-* ant 1.6 or higher
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
+* [ant](http://ant.apache.org/ "ant") 1.6 or higher
+* [junit](http://www.junit.org/ "junit") 3.8.1 or higher
 * A bash shell to run the command-line scripts (if you're on MacOS or a flavor of Unix, you're set, if you're on Windows, try [Cygwin](http://www.cygwin.com/ "Cygwin") or rewrite the bash scripts as bat/cmd files).
 
 Settings you might need to change in ant.properties:
@@ -64,4 +65,4 @@ More can be learned from looking at the included command-line applications in th
 
 ## Copyright
 
-Copyright (c) 2006-2010 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2011 Michael Patricios. See mit-license.txt for details.
