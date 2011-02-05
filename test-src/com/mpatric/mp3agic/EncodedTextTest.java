@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 public class EncodedTextTest extends TestCase {
 	
 	private static final String TEST_STRING = "This is a string!";
-	private static final byte[] BUFFER_WITH_A_SPECIAL_CHARACTER = {(byte) 0x49, (byte) 0x60, (byte) 0x6D};
+	private static final byte[] BUFFER_WITH_A_BACKTICK = {(byte) 0x49, (byte) 0x60, (byte) 0x6D};
 
 	public void testShouldEncodedAndDecodeISO8859_1Text() throws Exception {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_STRING);
@@ -59,7 +59,7 @@ public class EncodedTextTest extends TestCase {
 	}
 	
 	public void testShouldHandleBacktickCharacterInString() throws Exception {
-		EncodedText encodedText = new EncodedText((byte)0, BUFFER_WITH_A_SPECIAL_CHARACTER);
-		assertEquals("I`m", encodedText.toString());
+		EncodedText encodedText = new EncodedText((byte)0, BUFFER_WITH_A_BACKTICK);
+		assertEquals("I" + (char)(96) + "m", encodedText.toString());
 	}
 }

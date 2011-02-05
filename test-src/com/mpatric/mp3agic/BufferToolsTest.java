@@ -307,6 +307,6 @@ public class BufferToolsTest extends TestCase {
 	
 	public void testShouldConvertBufferContainingHighAscii() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G};
-		assertEquals("TßG", BufferTools.byteBufferToString(buffer, 0, 3));
+		assertEquals("T" + (char)(223) + "G", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
 }
