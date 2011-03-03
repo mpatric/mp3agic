@@ -4,12 +4,14 @@ import com.mpatric.mp3agic.app.Mp3Catalog;
 
 import junit.framework.TestCase;
 
+import java.lang.System;
+
 public class Mp3CatalogTest extends TestCase {
 
 	private static final String INVALID_FILENAME = "InvalidFile.mp3";
-	private static final String UNSUPPORTED_VERSION_FILENAME = "test-res/v1andunsupportedv2tags.mp3";
-	private static final String VALID_MP3_FILENAME_WITH_ALBUM_IMAGE = "test-res/v1andv23tagswithalbumimage.mp3";
-	private static final String VALID_MP3_FILENAME_WITH_CUSTOM_TAG = "test-res/v1andv23andcustomtags.mp3";
+	private static final String UNSUPPORTED_VERSION_FILENAME = "src/test/resources/v1andunsupportedv2tags.mp3";
+	private static final String VALID_MP3_FILENAME_WITH_ALBUM_IMAGE = "src/test/resources/v1andv23tagswithalbumimage.mp3";
+	private static final String VALID_MP3_FILENAME_WITH_CUSTOM_TAG = "src/test/resources/v1andv23andcustomtags.mp3";
 	
 	public void testShouldPrintErrorForFileNotFound() throws Exception {
 		Mp3CatalogForTesting mp3Catalog = new Mp3CatalogForTesting(INVALID_FILENAME);

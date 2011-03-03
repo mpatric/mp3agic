@@ -134,7 +134,7 @@ public class ID3v1TagTest extends TestCase {
 	}
 	
 	public void testShouldReadTagFieldsFromMp3() throws Exception {
-		byte[] buffer = loadFile("test-res/v1andv23tags.mp3");
+		byte[] buffer = loadFile("src/test/resources/v1andv23tags.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
 		ID3v1 id3tag = new ID3v1Tag(tagBuffer);
 		assertEquals("1", id3tag.getTrack());
@@ -162,7 +162,7 @@ public class ID3v1TagTest extends TestCase {
 	}
 	
 	public void testShouldReturnEmptyTrackIfNotSetOn11Tag() throws Exception {
-		byte[] buffer = loadFile("test-res/v1tagwithnotrack.mp3");
+		byte[] buffer = loadFile("src/test/resources/v1tagwithnotrack.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
 		ID3v1 id3tag = new ID3v1Tag(tagBuffer);
 		assertEquals("", id3tag.getTrack());

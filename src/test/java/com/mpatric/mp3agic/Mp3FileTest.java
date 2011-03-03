@@ -16,12 +16,12 @@ import junit.framework.TestCase;
 
 public class Mp3FileTest extends TestCase {
 
-	private static final String MP3_WITH_NO_TAGS = "test-res/notags.mp3";
-	private static final String MP3_WITH_ID3V1_AND_ID3V23_TAGS = "test-res/v1andv23tags.mp3";
-	private static final String MP3_WITH_DUMMY_START_AND_END_FRAMES = "test-res/dummyframes.mp3";
-	private static final String MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS = "test-res/v1andv23andcustomtags.mp3";
-	private static final String NOT_AN_MP3 = "test-res/notanmp3.mp3";
-	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "test-res/incompletempegframe.mp3";
+	private static final String MP3_WITH_NO_TAGS = "src/test/resources/notags.mp3";
+	private static final String MP3_WITH_ID3V1_AND_ID3V23_TAGS = "src/test/resources/v1andv23tags.mp3";
+	private static final String MP3_WITH_DUMMY_START_AND_END_FRAMES = "src/test/resources/dummyframes.mp3";
+	private static final String MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS = "src/test/resources/v1andv23andcustomtags.mp3";
+	private static final String NOT_AN_MP3 = "src/test/resources/notanmp3.mp3";
+	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "src/test/resources/incompletempegframe.mp3";
 	
 	public void testShouldLoadMp3WithNoTags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 41);

@@ -2,3 +2,8 @@
 bin
 test-bin
 build
+*.iml
+*.project
+*.classpath
+target
+.settings

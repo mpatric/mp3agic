@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 public class FileWrapperTest extends TestCase {
 
-	private static final String VALID_FILENAME = "test-res/notags.mp3";
+	private static final String VALID_FILENAME = "src/test/resources/notags.mp3";
 	private static final long VALID_FILE_LENGTH = 2869;
 	private static final String NON_EXISTANT_FILENAME = "just-not.there";	
 	private static final String MALFORMED_FILENAME = "malformed.?";

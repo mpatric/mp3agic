@@ -15,14 +15,14 @@ import junit.framework.TestCase;
 
 public class Mp3RetagTest extends TestCase {
 
-	private static final String TEST_FILE_WITH_ALL_TAGS_SET = "test-res/v1andv23tags.mp3";
-	private static final String TEST_FILE_WITH_ID3V1_ONLY = "test-res/v1tag.mp3";
-	private static final String TEST_FILE_WITH_ID3V2_ONLY = "test-res/v23tag.mp3";
-	private static final String TEST_FILE_WITH_IMAGE = "test-res/formatchingimage.mp3";
-	private static final String TEST_FILE_WITH_IMAGE_WITH_ARTIST_AND = "test-res/formatchingimage2.mp3";
-	private static final String TEST_FILE_WITH_SOME_TAGS_SET = "test-res/mixedfields1.mp3";
-	private static final String ANOTHER_TEST_FILE_WITH_SOME_TAGS_SET = "test-res/mixedfields2.mp3";
-	private static final String TEST_FILE_WITH_NON_NUMERIC_ID3V2_TRACK = "test-res/nonnumeric23track.mp3";
+	private static final String TEST_FILE_WITH_ALL_TAGS_SET = "src/test/resources/v1andv23tags.mp3";
+	private static final String TEST_FILE_WITH_ID3V1_ONLY = "src/test/resources/v1tag.mp3";
+	private static final String TEST_FILE_WITH_ID3V2_ONLY = "src/test/resources/v23tag.mp3";
+	private static final String TEST_FILE_WITH_IMAGE = "src/test/resources/formatchingimage.mp3";
+	private static final String TEST_FILE_WITH_IMAGE_WITH_ARTIST_AND = "src/test/resources/formatchingimage2.mp3";
+	private static final String TEST_FILE_WITH_SOME_TAGS_SET = "src/test/resources/mixedfields1.mp3";
+	private static final String ANOTHER_TEST_FILE_WITH_SOME_TAGS_SET = "src/test/resources/mixedfields2.mp3";
+	private static final String TEST_FILE_WITH_NON_NUMERIC_ID3V2_TRACK = "src/test/resources/nonnumeric23track.mp3";
 	
 	public void setUp() {
 		Mp3Retag.attachImage = false;
@@ -107,37 +107,37 @@ public class Mp3RetagTest extends TestCase {
 	}
 	
 	public void testShouldAddAlbumImageForFullImageFilename() throws Exception {
-		String imageFilename = "test-res/Some Artist - Some Album.png";
+		String imageFilename = "src/test/resources/Some Artist - Some Album.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForCompressedImageFilename() throws Exception {
-		String imageFilename = "test-res/SomeArtist-SomeAlbum.png";
+		String imageFilename = "src/test/resources/SomeArtist-SomeAlbum.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForJustAlbumImageFilename() throws Exception {
-		String imageFilename = "test-res/Some Album.png";
+		String imageFilename = "src/test/resources/Some Album.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForJustCompressedAlbumImageFilename() throws Exception {
-		String imageFilename = "test-res/SomeAlbum.png";
+		String imageFilename = "src/test/resources/SomeAlbum.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForFolderFilename() throws Exception {
-		String imageFilename = "test-res/folder.png";
+		String imageFilename = "src/test/resources/folder.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForArtistWithoutAndBitAndAlbumFilename() throws Exception {
-		String imageFilename = "test-res/Some Artist - Some Album.png";
+		String imageFilename = "src/test/resources/Some Artist - Some Album.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE_WITH_ARTIST_AND, imageFilename);
 	}
 	
 	public void testShouldAddAlbumImageForCompressedArtistWithoutAndBitAndAlbumFilename() throws Exception {
-		String imageFilename = "test-res/SomeArtist-SomeAlbum.png";
+		String imageFilename = "src/test/resources/SomeArtist-SomeAlbum.png";
 		tryAddImage(TEST_FILE_WITH_IMAGE_WITH_ARTIST_AND, imageFilename);
 	}
 	
@@ -154,7 +154,7 @@ public class Mp3RetagTest extends TestCase {
 	}
 	
 	public void testShouldRenameOneFileToBackupAndOtherFileToOriginalName() throws Exception {
-		String filename = "test-res/forrenaming.mp3";
+		String filename = "src/test/resources/forrenaming.mp3";
 		try {
 			RandomAccessFile raFile = null;
 			try {
@@ -223,7 +223,7 @@ public class Mp3RetagTest extends TestCase {
 		assertEquals("image/png", mp3file.getId3v2Tag().getAlbumImageMimeType());
 		RandomAccessFile file = null;
 		try {
-			file = new RandomAccessFile("test-res/image.png", "r");
+			file = new RandomAccessFile("src/test/resources/image.png", "r");
 			byte[] bytes = new byte[(int) file.length()];
 			file.read(bytes);
 			assertTrue(Arrays.equals(bytes, mp3file.getId3v2Tag().getAlbumImage()));
@@ -234,7 +234,7 @@ public class Mp3RetagTest extends TestCase {
 	
 	private void tryAddImage(String mp3Filename, String imageFilename) throws IOException, UnsupportedTagException, InvalidDataException {
 		try {
-			copyFile("test-res/image.png", imageFilename);
+			copyFile("src/test/resources/image.png", imageFilename);
 			Mp3Retag.attachImage = true;
 			Mp3RetagForTesting mp3Retag = new Mp3RetagForTesting(mp3Filename);
 			assertNull(mp3Retag.lastError);

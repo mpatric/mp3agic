@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>mp3agic</groupId>
+    <artifactId>mp3agic</artifactId>
+    <version>0.6</version>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/mpatric/mp3agic</connection>
+        <url>http://github.com/mpatric/mp3agic</url>
+    </scm>
+ 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <debug>false</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                   <show>private</show>
+                   <doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
+                   <bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2010 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>    
+</project>
