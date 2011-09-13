@@ -41,7 +41,6 @@ A small snippet of java code which loads an mp3 file, prints out the length in s
 (if found) and the artist and version from the ID3v2 tag (if found). It then changes the artist on an existing ID3v2 tag and saves the
 mp3 (including this change) with a new filename.
 
-<code>
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         System.out.println("Length of this mp3 in seconds is: " + mp3file.getLengthInSeconds());
 
@@ -59,7 +58,6 @@ mp3 (including this change) with a new filename.
           mp3file.save("ASavedMp3File.mp3");
           System.out("Saved mp3 file with new name and artist set to 'A new artist'");
         }
-</code>
 
 More can be learned from looking at the included command-line applications in the com.mpatric.mp3agic.app package.
 
