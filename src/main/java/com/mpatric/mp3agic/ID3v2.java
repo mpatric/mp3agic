@@ -16,6 +16,9 @@ public interface ID3v2 extends ID3v1 {
 	String getComposer();
 	void setComposer(String composer);
 	
+	String getPublisher();
+	void setPublisher(String publisher);
+	
 	String getOriginalArtist();
 	void setOriginalArtist(String originalArtist);
 	
