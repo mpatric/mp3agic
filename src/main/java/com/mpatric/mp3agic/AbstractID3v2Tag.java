@@ -1,4 +1,4 @@
-package mp3agic;
+package com.mpatric.mp3agic;
 
 import java.util.Iterator;
 import java.util.Map;
