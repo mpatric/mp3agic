@@ -1,4 +1,4 @@
-package com.mpatric.mp3agic;
+package mp3agic;
 
 import java.util.Map;
 
@@ -15,6 +15,9 @@ public interface ID3v2 extends ID3v1 {
 	
 	String getComposer();
 	void setComposer(String composer);
+	
+	String getPublisher();
+	void setPublisher(String publisher);
 	
 	String getOriginalArtist();
 	void setOriginalArtist(String originalArtist);
