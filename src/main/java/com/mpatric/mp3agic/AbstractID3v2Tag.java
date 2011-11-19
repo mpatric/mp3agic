@@ -1,4 +1,4 @@
-package com.mpatric.mp3agic;
+package mp3agic;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -12,6 +12,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_COPYRIGHT = "TCOP";
 	public static final String ID_ORIGINAL_ARTIST = "TOPE";
 	public static final String ID_COMPOSER = "TCOM";
+	public static final String ID_PUBLISHER = "TPUB";
 	public static final String ID_COMMENT = "COMM";
 	public static final String ID_GENRE = "TCON";
 	public static final String ID_YEAR = "TYER";
@@ -25,6 +26,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_COPYRIGHT_OBSELETE = "TCR";
 	public static final String ID_ORIGINAL_ARTIST_OBSELETE = "TOA";
 	public static final String ID_COMPOSER_OBSELETE = "TCM";
+	public static final String ID_PUBLISHER_OBSELETE = "TBP";
 	public static final String ID_COMMENT_OBSELETE = "COM";
 	public static final String ID_GENRE_OBSELETE = "TCO";
 	public static final String ID_YEAR_OBSELETE = "TYE";
@@ -538,6 +540,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			invalidateDataLength();
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText((byte)0, composer));
 			addFrame(createFrame(ID_COMPOSER, frameData.toBytes()), true);
+		}
+	}
+	
+	public String getPublisher() {
+		ID3v2TextFrameData frameData;
+		if (obseleteFormat) frameData = extractTextFrameData(ID_PUBLISHER_OBSELETE);
+		else frameData = extractTextFrameData(ID_PUBLISHER); 
+		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
+		return null;
+	}
+
+	public void setPublisher(String publisher) {
+		if (publisher != null && publisher.length() > 0) {
+			invalidateDataLength();
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText((byte)0, publisher));
+			addFrame(createFrame(ID_PUBLISHER, frameData.toBytes()), true);
 		}
 	}
 	
