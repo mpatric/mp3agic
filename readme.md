@@ -56,7 +56,7 @@ mp3 (including this change) with a new filename.
   
           id3v2tag.setArtist("A new artist");
           mp3file.save("ASavedMp3File.mp3");
-          System.out("Saved mp3 file with new name and artist set to 'A new artist'");
+          System.out.println("Saved mp3 file with new name and artist set to 'A new artist'");
         }
 
 More can be learned from looking at the included command-line applications in the com.mpatric.mp3agic.app package.
