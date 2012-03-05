@@ -189,6 +189,20 @@ public class ID3Wrapper {
 		}
 	}
 
+	public void setAlbumArtist(String albumArtist) {
+		if (id3v2Tag != null) {
+			id3v2Tag.setAlbumArtist(albumArtist);
+		}
+	}
+
+	public String getAlbumArtist() {
+		if (id3v2Tag != null) {
+			return id3v2Tag.getAlbumArtist();
+		} else {
+			return null;
+		}
+	}
+
 	public String getCopyright() {
 		if (id3v2Tag != null) {
 			return id3v2Tag.getCopyright();

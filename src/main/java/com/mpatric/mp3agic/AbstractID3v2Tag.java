@@ -19,6 +19,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_ALBUM = "TALB";
 	public static final String ID_TITLE = "TIT2";
 	public static final String ID_ARTIST = "TPE1";
+	public static final String ID_ALBUM_ARTIST = "TPE2";
 	public static final String ID_TRACK = "TRCK";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
 	public static final String ID_ENCODER_OBSELETE = "TEN";
@@ -33,6 +34,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_ALBUM_OBSELETE = "TAL";
 	public static final String ID_TITLE_OBSELETE = "TT2";
 	public static final String ID_ARTIST_OBSELETE = "TP1";
+	public static final String ID_ALBUM_ARTIST_OBSELETE = "TP2";
 	public static final String ID_TRACK_OBSELETE = "TRK";
 	
 	protected static final String TAG = "ID3";
@@ -360,6 +362,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 	
+	public String getAlbumArtist() {
+		ID3v2TextFrameData frameData;
+		if (obseleteFormat) frameData = extractTextFrameData(ID_ALBUM_ARTIST_OBSELETE);
+		else frameData = extractTextFrameData(ID_ALBUM_ARTIST);
+		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
+		return null;
+	}
+
+	public void setAlbumArtist(String albumArtist) {
+	if (albumArtist != null && albumArtist.length() > 0) {
+		invalidateDataLength();
+		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText((byte)0, albumArtist));
+		addFrame(createFrame(ID_ALBUM_ARTIST, frameData.toBytes()), true);
+		}
+	}
+
 	public String getTitle() {
 		ID3v2TextFrameData frameData;
 		if (obseleteFormat) frameData = extractTextFrameData(ID_TITLE_OBSELETE);
