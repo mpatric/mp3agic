@@ -98,6 +98,61 @@ public class Mp3FileTest extends TestCase {
 		assertTrue(mp3File.hasId3v2Tag());
 	}
 	
+	public void testShouldRemoveId3v1Tag() throws Exception {
+		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
+		String saveFilename = filename + ".copy";
+		try {
+			Mp3File mp3File = new Mp3File(filename);
+			assertEquals(6, mp3File.getFrameCount());
+			assertTrue(mp3File.hasId3v1Tag());
+			assertTrue(mp3File.hasId3v2Tag());
+			mp3File.setId3v1Tag(null);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertFalse(newMp3File.hasId3v1Tag());
+			assertTrue(newMp3File.hasId3v2Tag());
+		} finally {
+			deleteFile(saveFilename);
+		}
+	}
+	
+	public void testShouldRemoveId3v2Tag() throws Exception {
+		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
+		String saveFilename = filename + ".copy";
+		try {
+			Mp3File mp3File = new Mp3File(filename);
+			assertEquals(6, mp3File.getFrameCount());
+			assertTrue(mp3File.hasId3v1Tag());
+			assertTrue(mp3File.hasId3v2Tag());
+			mp3File.setId3v2Tag(null);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertTrue(newMp3File.hasId3v1Tag());
+			assertFalse(newMp3File.hasId3v2Tag());
+		} finally {
+			deleteFile(saveFilename);
+		}
+	}
+	
+	public void testShouldRemoveId3v1AndId3v2Tags() throws Exception {
+		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
+		String saveFilename = filename + ".copy";
+		try {
+			Mp3File mp3File = new Mp3File(filename);
+			assertEquals(6, mp3File.getFrameCount());
+			assertTrue(mp3File.hasId3v1Tag());
+			assertTrue(mp3File.hasId3v2Tag());
+			mp3File.setId3v1Tag(null);
+			mp3File.setId3v2Tag(null);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertFalse(newMp3File.hasId3v1Tag());
+			assertFalse(newMp3File.hasId3v2Tag());
+		} finally {
+			deleteFile(saveFilename);
+		}
+	}
+	
 	private Mp3File copyAndCheckTestMp3WithCustomTag(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
 		String saveFilename = null;
 		try {
