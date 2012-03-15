@@ -4,8 +4,6 @@ import com.mpatric.mp3agic.app.Mp3Catalog;
 
 import junit.framework.TestCase;
 
-import java.lang.System;
-
 public class Mp3CatalogTest extends TestCase {
 
 	private static final String INVALID_FILENAME = "InvalidFile.mp3";
