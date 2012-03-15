@@ -363,6 +363,10 @@ public class Mp3File extends FileWrapper {
 		this.id3v1Tag = id3v1Tag;
 	}
 	
+	public void removeId3v1Tag() {
+		this.id3v1Tag = null;
+	}
+	
 	public boolean hasId3v2Tag() {
 		return id3v2Tag != null;
 	}
@@ -375,6 +379,10 @@ public class Mp3File extends FileWrapper {
 		this.id3v2Tag = id3v2Tag;
 	}
 	
+	public void removeId3v2Tag() {
+		this.id3v2Tag = null;
+	}
+	
 	public boolean hasCustomTag() {
 		return customTag != null;
 	}
@@ -385,6 +393,10 @@ public class Mp3File extends FileWrapper {
 
 	public void setCustomTag(byte[] customTag) {
 		this.customTag = customTag;
+	}
+	
+	public void removeCustomTag() {
+		this.customTag = null;
 	}
 	
 	public void save(String newFilename) throws IOException, NotSupportedException {
