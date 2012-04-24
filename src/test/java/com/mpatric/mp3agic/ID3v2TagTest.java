@@ -243,6 +243,15 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("ALBUM1234567890123456789012345678901234567890", id3tag.getAlbum());
 		assertEquals("COMMENTS1234567890123456789012345678901234567890", id3tag.getComment());
 	}
+	
+	public void testShouldReadTagFieldsWithUnicodeDataFromMp3() throws Exception {
+		byte[] buffer = loadFile("src/test/resources/v23unicodetags.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals("\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5", id3tag.getArtist()); // greek
+		assertEquals("\u4E2D\u6587", id3tag.getTitle()); // chinese
+		assertEquals("\u3053\u3093\u306B\u3061\u306F", id3tag.getAlbum()); // japanese
+		assertEquals("\u0AB9\u0AC7\u0AB2\u0ACD\u0AB2\u0ACB", id3tag.getComposer()); // gujarati
+	}
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
