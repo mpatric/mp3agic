@@ -52,7 +52,7 @@ public class EncodedText {
 	
 	public EncodedText(byte textEncoding, String string) {
 		this.textEncoding = textEncoding;
-		value = stringToUnicodeBytes(string, characterSetForTextEncoding(textEncoding));
+		value = stringToBytes(string, characterSetForTextEncoding(textEncoding));
 		this.stripBomAndTerminator();
 	}
 	
@@ -106,8 +106,17 @@ public class EncodedText {
 		return textEncoding;
 	}
 
-	public void setTextEncoding(byte textEncoding) {
-		this.textEncoding = textEncoding;
+	public void setTextEncoding(byte textEncoding) throws CharacterCodingException {
+		setTextEncoding(textEncoding, true);
+	}
+	
+	public void setTextEncoding(byte textEncoding, boolean transcode) throws CharacterCodingException {
+		if (this.textEncoding != textEncoding) {
+			CharBuffer charBuffer = bytesToCharBuffer(this.value, characterSetForTextEncoding(this.textEncoding));
+			byte[] transcodedBytes = charBufferToBytes(charBuffer, characterSetForTextEncoding(textEncoding));
+			this.textEncoding = textEncoding;
+			this.value = transcodedBytes;
+		}
 	}
 
 	public byte[] toBytes() {
@@ -140,7 +149,11 @@ public class EncodedText {
 	}
 	
 	public String toString() {
-		return unicodeBytesToString(value, characterSetForTextEncoding(textEncoding));
+		try {
+			return bytesToString(value, characterSetForTextEncoding(textEncoding));
+		} catch (CharacterCodingException e) {
+			return null;
+		}
 	}
 
 	public String getCharacterSet() {
@@ -156,29 +169,32 @@ public class EncodedText {
 		return true;
 	}
 	
-	public static String unicodeBytesToString(byte[] bytes, String characterSet) {
+	public static String bytesToString(byte[] bytes, String characterSet) throws CharacterCodingException {
+		CharBuffer cbuf = bytesToCharBuffer(bytes, characterSet);
+		String s = cbuf.toString();
+		int length = s.indexOf(0);
+		if (length == -1) return s;
+		return s.substring(0, length);
+	}
+	
+	protected static CharBuffer bytesToCharBuffer(byte[] bytes, String characterSet) throws CharacterCodingException {
 		Charset charset = Charset.forName(characterSet);
 		CharsetDecoder decoder = charset.newDecoder();
+		return decoder.decode(ByteBuffer.wrap(bytes));
+	}
+	
+	public static byte[] stringToBytes(String s, String characterSet) {
 		try {
-			CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(bytes));
-			String s = cbuf.toString();
-			int length = s.indexOf(0);
-			if (length == -1) return s;
-			return s.substring(0, length);
+			return charBufferToBytes(CharBuffer.wrap(s), characterSet);
 		} catch (CharacterCodingException e) {
 			return null;
 		}
 	}
 	
-	public static byte[] stringToUnicodeBytes(String s, String characterSet) {
+	protected static byte[] charBufferToBytes(CharBuffer charBuffer, String characterSet) throws CharacterCodingException {
 		Charset charset = Charset.forName(characterSet);
 		CharsetEncoder encoder = charset.newEncoder();
-		ByteBuffer byteBuffer;
-		try {
-			byteBuffer = encoder.encode(CharBuffer.wrap(s));
-			return BufferTools.copyBuffer(byteBuffer.array(), 0, byteBuffer.limit());
-		} catch (CharacterCodingException e) {
-			return null;
-		}
+		ByteBuffer byteBuffer = encoder.encode(charBuffer);
+		return BufferTools.copyBuffer(byteBuffer.array(), 0, byteBuffer.limit()); 
 	}
 }
