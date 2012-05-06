@@ -43,6 +43,17 @@ public class EncodedTextTest extends TestCase {
 		assertEquals(encodedText, encodedText2);
 	}
 	
+	public void testShouldUseAppropriateEncodingWhenConstructingFromStringOnly() throws Exception {
+		EncodedText encodedText;
+		String s;
+		encodedText = new EncodedText(TEST_STRING);
+		s = encodedText.toString();
+		assertNotNull(s);
+		encodedText = new EncodedText(UNICODE_TEST_STRING);
+		s = encodedText.toString();
+		assertNotNull(s);
+	}
+	
 	public void testShouldEncodeAndDecodeISO8859_1Text() throws Exception {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_STRING);
 		assertEquals(EncodedText.CHARSET_ISO_8859_1, encodedText.getCharacterSet());

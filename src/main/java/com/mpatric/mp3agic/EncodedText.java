@@ -26,6 +26,8 @@ public class EncodedText {
 		CHARSET_UTF_16BE,
 		CHARSET_UTF_8
 	};
+	
+	private static final byte[] textEncodingFallback = {0, 2, 1, 3};
 
 	private static final byte[][] boms = {
 		{},
@@ -50,6 +52,18 @@ public class EncodedText {
 		this.stripBomAndTerminator();
 	}
 	
+	public EncodedText(String string) throws IllegalArgumentException {
+		for (byte textEncoding : textEncodingFallback) {
+			this.textEncoding = textEncoding;
+			value = stringToBytes(string, characterSetForTextEncoding(textEncoding));
+			if (value != null && this.toString() != null) {
+				this.stripBomAndTerminator();
+				return;
+			}
+		}
+		throw new IllegalArgumentException("Invalid string, could not find appropriate encoding");
+	}
+	
 	public EncodedText(byte textEncoding, String string) {
 		this.textEncoding = textEncoding;
 		value = stringToBytes(string, characterSetForTextEncoding(textEncoding));
@@ -72,7 +86,7 @@ public class EncodedText {
 		}
 	}
 	
-	private String characterSetForTextEncoding(byte textEncoding) {
+	private static String characterSetForTextEncoding(byte textEncoding) {
 		try {
 			return characterSets[textEncoding];
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -195,6 +209,6 @@ public class EncodedText {
 		Charset charset = Charset.forName(characterSet);
 		CharsetEncoder encoder = charset.newEncoder();
 		ByteBuffer byteBuffer = encoder.encode(charBuffer);
-		return BufferTools.copyBuffer(byteBuffer.array(), 0, byteBuffer.limit()); 
+		return BufferTools.copyBuffer(byteBuffer.array(), 0, byteBuffer.limit());
 	}
 }
