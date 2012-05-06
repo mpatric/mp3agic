@@ -64,6 +64,11 @@ public class EncodedText {
 		throw new IllegalArgumentException("Invalid string, could not find appropriate encoding");
 	}
 	
+	public EncodedText(String string, byte transcodeToTextEncoding) throws IllegalArgumentException, CharacterCodingException {
+		this(string);
+		setTextEncoding(transcodeToTextEncoding, true);
+	}
+	
 	public EncodedText(byte textEncoding, String string) {
 		this.textEncoding = textEncoding;
 		value = stringToBytes(string, characterSetForTextEncoding(textEncoding));
