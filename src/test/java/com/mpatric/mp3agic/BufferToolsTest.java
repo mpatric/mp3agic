@@ -21,52 +21,52 @@ public class BufferToolsTest extends TestCase {
 	private static final byte BYTE_81 = -0x7F;
 	private static final byte BYTE_ESZETT = -0x21;
 
-	public void testShouldExtractStringFromStartOfBuffer() {
+	public void testShouldExtractStringFromStartOfBuffer() throws Exception {
 		byte[] buffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
 	
-	public void testShouldExtractStringFromEndOfBuffer() {
+	public void testShouldExtractStringFromEndOfBuffer() throws Exception {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 	
-	public void testShouldExtractStringFromMiddleOfBuffer() {
+	public void testShouldExtractStringFromMiddleOfBuffer() throws Exception {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 	
-	public void testShouldThrowExceptionForOffsetBeforeStartOfArray() {
+	public void testShouldThrowExceptionForOffsetBeforeStartOfArray() throws Exception {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, -1, 4);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
-		} catch (ArrayIndexOutOfBoundsException e) {
+			fail("StringIndexOutOfBoundsException expected but not thrown");
+		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
 	}
 	
-	public void testShouldThrowExceptionForOffsetAfterEndOfArray() {
+	public void testShouldThrowExceptionForOffsetAfterEndOfArray() throws Exception {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, buffer.length, 1);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
-		} catch (ArrayIndexOutOfBoundsException e) {
+			fail("StringIndexOutOfBoundsException expected but not thrown");
+		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
 	}
 	
-	public void testShouldThrowExceptionForLengthExtendingBeyondEndOfArray() {
+	public void testShouldThrowExceptionForLengthExtendingBeyondEndOfArray() throws Exception {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, buffer.length - 2, 3);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
-		} catch (ArrayIndexOutOfBoundsException e) {
+			fail("StringIndexOutOfBoundsException expected but not thrown");
+		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
 	}
 	
-	public void testShouldConvertStringToBufferAndBack() {
+	public void testShouldConvertStringToBufferAndBack() throws Exception {
 		String original = "1234567890QWERTYUIOP";
 		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length());
 		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length);
@@ -109,7 +109,7 @@ public class BufferToolsTest extends TestCase {
 		assertTrue(Arrays.equals(expectedBuffer, buffer));
 	}
 	
-	public void testShouldRightTrimStringsCorrectly() {
+	public void testShouldRightTrimStringsCorrectly() throws Exception {
 		assertEquals("", BufferTools.trimStringRight(""));
 		assertEquals("", BufferTools.trimStringRight(" "));
 		assertEquals("TEST", BufferTools.trimStringRight("TEST"));
@@ -305,7 +305,7 @@ public class BufferToolsTest extends TestCase {
 		}
 	}
 	
-	public void testShouldConvertBufferContainingHighAscii() {
+	public void testShouldConvertBufferContainingHighAscii() throws Exception {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G};
 		assertEquals("T" + (char)(223) + "G", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
