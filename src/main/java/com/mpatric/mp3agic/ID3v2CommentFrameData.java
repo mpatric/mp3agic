@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
+
 public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 
 	private static final String DEFAULT_LANGUAGE = "eng";
@@ -25,7 +27,11 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	}
 	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		language = BufferTools.byteBufferToString(bytes, 1, 3);
+		try {
+			language = BufferTools.byteBufferToString(bytes, 1, 3);
+		} catch (UnsupportedEncodingException e) {
+			language = "eng";
+		}
 		int marker;
 		for (marker = 4; marker < bytes.length; marker++) {
 			if (bytes[marker] == 0) break;
@@ -51,7 +57,10 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		} else {
 			langPadded = BufferTools.padStringRight(language, 3, ' ');
 		}
-		BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
+		try {
+			BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
+		} catch (UnsupportedEncodingException e) {
+		}
 		int descriptionLength = 0;
 		if (description != null && description.toBytes().length > 0) {
 			descriptionLength = description.toBytes().length; 

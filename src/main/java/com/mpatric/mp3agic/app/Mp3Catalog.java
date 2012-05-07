@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic.app;
 
+import java.io.UnsupportedEncodingException;
+
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.BufferTools;
 import com.mpatric.mp3agic.ID3Wrapper;
@@ -83,8 +85,12 @@ public class Mp3Catalog extends BaseApp {
 			catalogLastField(cat, "");
 		} else {
 			int length = Math.min(bytes.length, MAX_CUSTOM_TAG_BYTES_TO_SHOW);
-			String s = BufferTools.byteBufferToString(bytes, 0, length);
-			catalogLastField(cat, BufferTools.asciiOnly(s));
+			try {
+				String s = BufferTools.byteBufferToString(bytes, 0, length);
+				catalogLastField(cat, BufferTools.asciiOnly(s));
+			} catch (UnsupportedEncodingException e) {
+				catalogLastField(cat, "");
+			}
 		}
 	}
 

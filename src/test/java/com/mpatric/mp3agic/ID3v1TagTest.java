@@ -36,7 +36,7 @@ public class ID3v1TagTest extends TestCase {
 		}
 	}
 	
-	public void testShouldExtractMaximumLengthFieldsFromValid10Tag() throws NoSuchTagException {
+	public void testShouldExtractMaximumLengthFieldsFromValid10Tag() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG, 0, VALID_TAG.length());
 		buffer[buffer.length - 1] = -0x73; // 0x8D as a signed byte
 		ID3v1Tag id3v1tag = new ID3v1Tag(buffer);
@@ -50,7 +50,7 @@ public class ID3v1TagTest extends TestCase {
 		assertEquals("Synthpop", id3v1tag.getGenreDescription());
 	}
 	
-	public void testShouldExtractMaximumLengthFieldsFromValid11Tag() throws NoSuchTagException {
+	public void testShouldExtractMaximumLengthFieldsFromValid11Tag() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG, 0, VALID_TAG.length());
 		buffer[buffer.length - 3] = 0x00;
 		buffer[buffer.length - 2] = 0x01;
@@ -66,7 +66,7 @@ public class ID3v1TagTest extends TestCase {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 	
-	public void testShouldExtractTrimmedFieldsFromValid11TagWithWhitespace() throws NoSuchTagException {
+	public void testShouldExtractTrimmedFieldsFromValid11TagWithWhitespace() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
 		buffer[buffer.length - 3] = 0x00;
 		buffer[buffer.length - 2] = 0x01;
@@ -82,7 +82,7 @@ public class ID3v1TagTest extends TestCase {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 	
-	public void testShouldExtractTrimmedFieldsFromValid11TagWithNullspace() throws NoSuchTagException {
+	public void testShouldExtractTrimmedFieldsFromValid11TagWithNullspace() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
 		replaceSpacesWithNulls(buffer);
 		buffer[buffer.length - 3] = 0x00;
@@ -99,7 +99,7 @@ public class ID3v1TagTest extends TestCase {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 	
-	public void testShouldGenerateValidTagBuffer() {
+	public void testShouldGenerateValidTagBuffer() throws Exception {
 		ID3v1Tag id3v1tag = new ID3v1Tag();
 		id3v1tag.setTitle("TITLE");
 		id3v1tag.setArtist("ARTIST");
@@ -116,7 +116,7 @@ public class ID3v1TagTest extends TestCase {
 		assertTrue(Arrays.equals(expectedBuffer, id3v1tag.toBytes()));
 	}
 	
-	public void testShouldGenerateValidTagBufferWithHighGenreAndTrackNumber() {
+	public void testShouldGenerateValidTagBufferWithHighGenreAndTrackNumber() throws Exception {
 		ID3v1Tag id3v1tag = new ID3v1Tag();
 		id3v1tag.setTitle("TITLE");
 		id3v1tag.setArtist("ARTIST");

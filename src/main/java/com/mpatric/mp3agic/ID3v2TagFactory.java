@@ -25,7 +25,7 @@ public class ID3v2TagFactory {
 		if (bytes.length < AbstractID3v2Tag.HEADER_LENGTH) {
 			throw new NoSuchTagException("Buffer too short");
 		}
-		if (! AbstractID3v2Tag.TAG.equals(BufferTools.byteBufferToString(bytes, 0, AbstractID3v2Tag.TAG.length()))) {
+		if (! AbstractID3v2Tag.TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, AbstractID3v2Tag.TAG.length()))) {
 			throw new NoSuchTagException();
 		}
 		int majorVersion = bytes[AbstractID3v2Tag.MAJOR_VERSION_OFFSET];

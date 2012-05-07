@@ -16,7 +16,7 @@ public class ID3v2ObseleteFrame extends ID3v2Frame {
 	}
 	
 	protected int unpackHeader(byte[] buffer, int offset) {
-		id = BufferTools.byteBufferToString(buffer, offset + ID_OFFSET, ID_LENGTH);
+		id = BufferTools.byteBufferToStringIgnoringEncodingIssues(buffer, offset + ID_OFFSET, ID_LENGTH);
 		unpackDataLength(buffer, offset);
 		return offset + HEADER_LENGTH;
 	}

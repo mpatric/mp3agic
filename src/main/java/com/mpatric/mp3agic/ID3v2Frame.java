@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class ID3v2Frame {
@@ -48,7 +49,7 @@ public class ID3v2Frame {
 	}
 
 	protected int unpackHeader(byte[] buffer, int offset) {
-		id = BufferTools.byteBufferToString(buffer, offset + ID_OFFSET, ID_LENGTH);
+		id = BufferTools.byteBufferToStringIgnoringEncodingIssues(buffer, offset + ID_OFFSET, ID_LENGTH);
 		unpackDataLength(buffer, offset);
 		unpackFlags(buffer, offset);
 		return offset + HEADER_LENGTH;
@@ -93,7 +94,10 @@ public class ID3v2Frame {
 	}
 
 	private void packHeader(byte[] bytes, int i) {
-		BufferTools.stringIntoByteBuffer(id, 0, id.length(), bytes, 0);
+		try {
+			BufferTools.stringIntoByteBuffer(id, 0, id.length(), bytes, 0);
+		} catch (UnsupportedEncodingException e) {
+		}
 		BufferTools.copyIntoByteBuffer(packDataLength(), 0, 4, bytes, 4);
 		BufferTools.copyIntoByteBuffer(packFlags(), 0, 2, bytes, 8);
 	}

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.BufferTools;
+import com.mpatric.mp3agic.EncodedText;
 import com.mpatric.mp3agic.ID3Wrapper;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v23Tag;
@@ -231,15 +232,18 @@ public class Mp3Retag extends BaseApp {
 		byte[] newCustomTag = null;
 		if (keepCustomTag && existingCustomTag != null && existingCustomTag.length > 0) {
 			if (customTag != null && customTag.length() > 0) {
-				int newLength = existingCustomTag.length + customTag.length();
+				EncodedText customTagEncodedText = new EncodedText(customTag);
+				byte bytes[] = customTagEncodedText.toBytes(true);
+				int newLength = existingCustomTag.length + bytes.length;
 				newCustomTag = new byte[newLength];
 				BufferTools.copyIntoByteBuffer(existingCustomTag, 0, existingCustomTag.length, newCustomTag, 0);
-				BufferTools.stringIntoByteBuffer(customTag, 0, customTag.length(), newCustomTag, existingCustomTag.length);
+				BufferTools.copyIntoByteBuffer(bytes, 0, bytes.length, newCustomTag, existingCustomTag.length);
 			} else {
 				newCustomTag = mp3file.getCustomTag();
 			}
 		} else if (customTag != null && customTag.length() > 0) {
-			newCustomTag = BufferTools.stringToByteBuffer(customTag, 0, customTag.length());
+			EncodedText customTagEncodedText = new EncodedText(customTag);
+			newCustomTag = customTagEncodedText.toBytes(true);
 		}
 		mp3file.setCustomTag(newCustomTag);
 	}

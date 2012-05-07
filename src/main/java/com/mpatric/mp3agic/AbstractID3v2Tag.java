@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -161,7 +162,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 	
 	private int unpackFooter(byte[] bytes, int offset) throws InvalidDataException {
-		if (! FOOTER_TAG.equals(BufferTools.byteBufferToString(bytes, offset, FOOTER_TAG.length()))) {
+		if (! FOOTER_TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, offset, FOOTER_TAG.length()))) {
 			throw new InvalidDataException("Invalid footer");
 		}
 		return FOOTER_LENGTH;
@@ -185,7 +186,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 	
 	private int packHeader(byte[] bytes, int offset) {
-		BufferTools.stringIntoByteBuffer(TAG, 0, TAG.length(), bytes, offset);
+		try {
+			BufferTools.stringIntoByteBuffer(TAG, 0, TAG.length(), bytes, offset);
+		} catch (UnsupportedEncodingException e) {
+		}
 		String s[] = version.split("\\.");
 		if (s.length > 0) {
 			byte majorVersion = Byte.parseByte(s[0]);
@@ -234,7 +238,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 	
 	private int packFooter(byte[] bytes, int offset) {
-		BufferTools.stringIntoByteBuffer(FOOTER_TAG, 0, FOOTER_TAG.length(), bytes, offset);
+		try {
+			BufferTools.stringIntoByteBuffer(FOOTER_TAG, 0, FOOTER_TAG.length(), bytes, offset);
+		} catch (UnsupportedEncodingException e) {
+		}
 		String s[] = version.split(".");
 		if (s.length > 0) {
 			byte majorVersion = Byte.parseByte(s[0]);

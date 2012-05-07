@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
+
 public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 
 	protected String url;
@@ -31,7 +33,11 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 			if (bytes[i] == 0) break;
 			length++;
 		}
-		url = BufferTools.byteBufferToString(bytes, marker + 1, length);
+		try {
+			url = BufferTools.byteBufferToString(bytes, marker + 1, length);
+		} catch (UnsupportedEncodingException e) {
+			url = "";
+		}
 	}
 	
 	protected byte[] packFrameData() {
@@ -45,7 +51,10 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		}
 		bytes[descriptionLength + 1] = 0;
 		if (url != null && url.length() > 0) {
-			BufferTools.stringIntoByteBuffer(url, 0, url.length(), bytes, descriptionLength + 2);
+			try {
+				BufferTools.stringIntoByteBuffer(url, 0, url.length(), bytes, descriptionLength + 2);
+			} catch (UnsupportedEncodingException e) {
+			}
 		}
 		return bytes;
 	}

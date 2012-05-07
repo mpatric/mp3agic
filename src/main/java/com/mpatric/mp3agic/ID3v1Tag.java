@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class ID3v1Tag implements ID3v1 {
@@ -41,19 +42,19 @@ public class ID3v1Tag implements ID3v1 {
 
 	private void unpackTag(byte[] bytes) throws NoSuchTagException {
 		sanityCheckTag(bytes);
-		title = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, TITLE_OFFSET, TITLE_LENGTH));
-		artist = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, ARTIST_OFFSET, ARTIST_LENGTH));
-		album = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, ALBUM_OFFSET, ALBUM_LENGTH));
-		year = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, YEAR_OFFSET, YEAR_LENGTH));
+		title = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, TITLE_OFFSET, TITLE_LENGTH));
+		artist = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, ARTIST_OFFSET, ARTIST_LENGTH));
+		album = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, ALBUM_OFFSET, ALBUM_LENGTH));
+		year = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, YEAR_OFFSET, YEAR_LENGTH));
 		genre = bytes[GENRE_OFFSET] & 0xFF;
 		if (genre == 0xFF) {
 			genre = -1;
 		}
 		if (bytes[TRACK_MARKER_OFFSET] != 0) {
-			comment = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, COMMENT_OFFSET, COMMENT_LENGTH_V1_0));
+			comment = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, COMMENT_OFFSET, COMMENT_LENGTH_V1_0));
 			track = null;
 		} else {
-			comment = BufferTools.trimStringRight(BufferTools.byteBufferToString(bytes, COMMENT_OFFSET, COMMENT_LENGTH_V1_1));
+			comment = BufferTools.trimStringRight(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, COMMENT_OFFSET, COMMENT_LENGTH_V1_1));
 			int trackInt = bytes[TRACK_OFFSET];
 			if (trackInt == 0) {
 				track = "";
@@ -67,7 +68,7 @@ public class ID3v1Tag implements ID3v1 {
 		if (bytes.length != TAG_LENGTH) {
 			throw new NoSuchTagException("Buffer length wrong");
 		}
-		if (! TAG.equals(BufferTools.byteBufferToString(bytes, 0, TAG.length()))) {
+		if (! TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, TAG.length()))) {
 			throw new NoSuchTagException();
 		}
 	}
@@ -84,7 +85,10 @@ public class ID3v1Tag implements ID3v1 {
 
 	public void packTag(byte[] bytes) {
 		Arrays.fill(bytes, (byte)0);
-		BufferTools.stringIntoByteBuffer(TAG, 0, 3, bytes, 0);
+		try {
+			BufferTools.stringIntoByteBuffer(TAG, 0, 3, bytes, 0);
+		} catch (UnsupportedEncodingException e) {
+		}
 		packField(bytes, title, TITLE_LENGTH, TITLE_OFFSET);
 		packField(bytes, artist, ARTIST_LENGTH, ARTIST_OFFSET);
 		packField(bytes, album, ALBUM_LENGTH, ALBUM_OFFSET);
@@ -112,7 +116,10 @@ public class ID3v1Tag implements ID3v1 {
 
 	private void packField(byte[] bytes, String value, int maxLength, int offset) {
 		if (value != null) {
-			BufferTools.stringIntoByteBuffer(value, 0, Math.min(value.length(), maxLength), bytes, offset);
+			try {
+				BufferTools.stringIntoByteBuffer(value, 0, Math.min(value.length(), maxLength), bytes, offset);
+			} catch (UnsupportedEncodingException e) {
+			}
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
@@ -31,7 +32,11 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		for (marker = 1; marker < bytes.length; marker++) {
 			if (bytes[marker] == 0) break;
 		}
-		mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
+		try {
+			mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
+		} catch (UnsupportedEncodingException e) {
+			mimeType = "image/unknown";
+		}
 		pictureType = bytes[marker + 1];
 		marker += 2;
 		int marker2;
@@ -49,7 +54,10 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		int mimeTypeLength = 0;
 		if (mimeType != null && mimeType.length() > 0) {
 			mimeTypeLength = mimeType.length();
-			BufferTools.stringIntoByteBuffer(mimeType, 0, mimeTypeLength, bytes, 1);
+			try {
+				BufferTools.stringIntoByteBuffer(mimeType, 0, mimeTypeLength, bytes, 1);
+			} catch (UnsupportedEncodingException e) {
+			}
 		}
 		bytes[mimeTypeLength + 1] = 0;
 		bytes[mimeTypeLength + 2] = pictureType;
