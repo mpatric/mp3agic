@@ -1,6 +1,5 @@
 package com.mpatric.mp3agic;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
@@ -110,7 +109,7 @@ public class Mp3FileTest extends TestCase {
 			assertTrue(newMp3File.hasId3v2Tag());
 			assertTrue(newMp3File.hasCustomTag());
 		} finally {
-			deleteFile(saveFilename);
+			TestHelper.deleteFile(saveFilename);
 		}
 	}
 	
@@ -126,7 +125,7 @@ public class Mp3FileTest extends TestCase {
 			assertFalse(newMp3File.hasId3v2Tag());
 			assertTrue(newMp3File.hasCustomTag());
 		} finally {
-			deleteFile(saveFilename);
+			TestHelper.deleteFile(saveFilename);
 		}
 	}
 	
@@ -142,7 +141,7 @@ public class Mp3FileTest extends TestCase {
 			assertTrue(newMp3File.hasId3v2Tag());
 			assertFalse(newMp3File.hasCustomTag());
 		} finally {
-			deleteFile(saveFilename);
+			TestHelper.deleteFile(saveFilename);
 		}
 	}
 	
@@ -160,7 +159,7 @@ public class Mp3FileTest extends TestCase {
 			assertFalse(newMp3File.hasId3v2Tag());
 			assertFalse(newMp3File.hasCustomTag());
 		} finally {
-			deleteFile(saveFilename);
+			TestHelper.deleteFile(saveFilename);
 		}
 	}
 	
@@ -176,7 +175,7 @@ public class Mp3FileTest extends TestCase {
 			assertTrue(Arrays.equals(mp3file.getCustomTag(), copyMp3file.getCustomTag()));
 			return copyMp3file;
 		} finally {
-			deleteFile(saveFilename);
+			TestHelper.deleteFile(saveFilename);
 		}
 	}
 
@@ -233,11 +232,6 @@ public class Mp3FileTest extends TestCase {
 		assertEquals(1, ((MutableInteger)mp3File.getBitrates().get(new Integer(32))).getValue());
 		assertEquals(156, mp3File.getLengthInMilliseconds());
 		return mp3File;
-	}
-	
-	private void deleteFile(String filename) {
-		File file = new File(filename);
-		file.delete();
 	}
 	
 	private class Mp3FileForTesting extends Mp3File {

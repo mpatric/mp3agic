@@ -1,7 +1,6 @@
 package com.mpatric.mp3agic;
 
 import java.nio.charset.CharacterCodingException;
-import java.util.Arrays;
 
 import com.mpatric.mp3agic.BufferTools;
 import com.mpatric.mp3agic.EncodedText;
@@ -19,13 +18,6 @@ public class EncodedTextTest extends TestCase {
 	private static final String UNICODE_TEST_STRING_HEX_UTF16BE = "03 b3 03 b5 03 b9 03 ac 00 20 03 c3 03 bf 03 c5";
 	
 	private static final byte[] BUFFER_WITH_A_BACKTICK = {(byte) 0x49, (byte) 0x60, (byte) 0x6D};
-	
-	public void testShouldConvertBytesToHexAndBack() throws Exception {
-		byte bytes[] = {(byte)0x48, (byte)0x45, (byte)0x4C, (byte)0x4C, (byte)0x4F, (byte)0x20, (byte)0x74, (byte)0x68, (byte)0x65, (byte)0x72, (byte)0x65, (byte)0x21};
-		String hexString = TestHelper.bytesToHexString(bytes);
-		assertEquals("48 45 4c 4c 4f 20 74 68 65 72 65 21", hexString);
-		assertTrue(Arrays.equals(bytes, TestHelper.hexStringToBytes(hexString)));
-	}
 	
 	public void testShouldConstructFromStringOrBytes() throws Exception {
 		EncodedText encodedText, encodedText2;

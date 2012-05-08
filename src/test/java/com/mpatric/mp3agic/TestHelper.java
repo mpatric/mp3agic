@@ -1,6 +1,13 @@
 package com.mpatric.mp3agic;
 
-public class TestHelper {
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
+
+import junit.framework.TestCase;
+
+public class TestHelper extends TestCase {
 	public static String bytesToHexString(byte[] bytes) {     
 		StringBuffer hexString = new StringBuffer();
 		for (int i = 0; i < bytes.length; i++) {
@@ -19,5 +26,42 @@ public class TestHelper {
 	        bytes[i / 3] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
 	    }
 		return bytes;
+	}
+	
+	public static byte[] loadFile(String filename) throws IOException {
+		RandomAccessFile file = new RandomAccessFile(filename, "r");
+		byte[] buffer = new byte[(int) file.length()];
+		file.read(buffer);
+		return buffer;
+	}
+	
+	public static void deleteFile(String filename) {
+		File file = new File(filename);
+		file.delete();
+	}
+	
+	public static void replaceSpacesWithNulls(byte[] buffer) {
+		for (int i = 0; i < buffer.length; i++) {
+			if (buffer[i] == 0x20) {
+				buffer[i] = 0x00;
+			}
+		}
+	}
+	
+	public static void replaceNumbersWithBytes(byte[] bytes, int offset) {
+		for (int i = offset; i < bytes.length; i++) {
+			if (bytes[i] >= '0' && bytes[i] <= '9') {
+				bytes[i] -= (byte)48;
+			}
+		}
+	}
+	
+	// self tests
+	
+	public void testShouldConvertBytesToHexAndBack() throws Exception {
+		byte bytes[] = {(byte)0x48, (byte)0x45, (byte)0x4C, (byte)0x4C, (byte)0x4F, (byte)0x20, (byte)0x74, (byte)0x68, (byte)0x65, (byte)0x72, (byte)0x65, (byte)0x21};
+		String hexString = TestHelper.bytesToHexString(bytes);
+		assertEquals("48 45 4c 4c 4f 20 74 68 65 72 65 21", hexString);
+		assertTrue(Arrays.equals(bytes, TestHelper.hexStringToBytes(hexString)));
 	}
 }

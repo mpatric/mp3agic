@@ -1,7 +1,5 @@
 package com.mpatric.mp3agic;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 import com.mpatric.mp3agic.BufferTools;
@@ -84,7 +82,7 @@ public class ID3v1TagTest extends TestCase {
 	
 	public void testShouldExtractTrimmedFieldsFromValid11TagWithNullspace() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
-		replaceSpacesWithNulls(buffer);
+		TestHelper.replaceSpacesWithNulls(buffer);
 		buffer[buffer.length - 3] = 0x00;
 		buffer[buffer.length - 2] = 0x01;
 		buffer[buffer.length - 1] = 0x0D;
@@ -109,7 +107,7 @@ public class ID3v1TagTest extends TestCase {
 		id3v1tag.setTrack("1");
 		id3v1tag.setGenre(0x0d);
 		byte[] expectedBuffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
-		replaceSpacesWithNulls(expectedBuffer);
+		TestHelper.replaceSpacesWithNulls(expectedBuffer);
 		expectedBuffer[expectedBuffer.length - 3] = 0x00;
 		expectedBuffer[expectedBuffer.length - 2] = 0x01;
 		expectedBuffer[expectedBuffer.length - 1] = 0x0D;
@@ -126,7 +124,7 @@ public class ID3v1TagTest extends TestCase {
 		id3v1tag.setTrack("254");
 		id3v1tag.setGenre(0x8d);
 		byte[] expectedBuffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
-		replaceSpacesWithNulls(expectedBuffer);
+		TestHelper.replaceSpacesWithNulls(expectedBuffer);
 		expectedBuffer[expectedBuffer.length - 3] = 0x00;
 		expectedBuffer[expectedBuffer.length - 2] = -0x02; // 254 as a signed byte
 		expectedBuffer[expectedBuffer.length - 1] = -0x73; // 0x8D as a signed byte
@@ -134,7 +132,7 @@ public class ID3v1TagTest extends TestCase {
 	}
 	
 	public void testShouldReadTagFieldsFromMp3() throws Exception {
-		byte[] buffer = loadFile("src/test/resources/v1andv23tags.mp3");
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v1andv23tags.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
 		ID3v1 id3tag = new ID3v1Tag(tagBuffer);
 		assertEquals("1", id3tag.getTrack());
@@ -162,24 +160,9 @@ public class ID3v1TagTest extends TestCase {
 	}
 	
 	public void testShouldReturnEmptyTrackIfNotSetOn11Tag() throws Exception {
-		byte[] buffer = loadFile("src/test/resources/v1tagwithnotrack.mp3");
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v1tagwithnotrack.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
 		ID3v1 id3tag = new ID3v1Tag(tagBuffer);
 		assertEquals("", id3tag.getTrack());
-	}
-
-	private byte[] loadFile(String filename) throws IOException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
-		byte[] buffer = new byte[(int) file.length()];
-		file.read(buffer);
-		return buffer;
-	}
-
-	private void replaceSpacesWithNulls(byte[] buffer) {
-		for (int i = 0; i < buffer.length; i++) {
-			if (buffer[i] == 0x20) {
-				buffer[i] = 0x00;
-			}
-		}
 	}
 }
