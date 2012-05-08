@@ -37,10 +37,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 			if (bytes[marker] == 0) break;
 		}
 		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
-		marker++;
-		if (marker < bytes.length && bytes[marker] == 0) {
-			marker++;
-		}
+		marker += description.getTerminator().length;
 		int length = 0;
 		for (int i = marker; i < bytes.length; i++) {
 			if (bytes[i] == 0) break;
