@@ -37,12 +37,16 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 			if (bytes[marker] == 0) break;
 		}
 		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
+		marker++;
+		if (marker < bytes.length && bytes[marker] == 0) {
+			marker++;
+		}
 		int length = 0;
-		for (int i = marker + 1; i < bytes.length; i++) {
+		for (int i = marker; i < bytes.length; i++) {
 			if (bytes[i] == 0) break;
 			length++;
 		}
-		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker + 1, length));
+		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, length));
 	}
 
 	protected byte[] packFrameData() {
@@ -61,22 +65,23 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 			BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
 		} catch (UnsupportedEncodingException e) {
 		}
-		int descriptionLength = 0;
-		if (description != null && description.toBytes().length > 0) {
-			descriptionLength = description.toBytes().length; 
-			BufferTools.copyIntoByteBuffer(description.toBytes(), 0, descriptionLength, bytes, 4);
+		int marker = 4;
+		if (description != null) {
+			byte[] descriptionBytes = description.toBytes(true, true);
+			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
+			marker += descriptionBytes.length;
 		}
-		bytes[descriptionLength + 4] = 0;
-		if (comment != null && comment.toBytes().length > 0) {
-			BufferTools.copyIntoByteBuffer(comment.toBytes(), 0, comment.toBytes().length, bytes, descriptionLength + 5);
+		if (comment != null) {
+			byte[] commentBytes = comment.toBytes(true, false);
+			BufferTools.copyIntoByteBuffer(commentBytes, 0, commentBytes.length, bytes, marker);
 		}
 		return bytes;
 	}
 
 	protected int getLength() {
-		int length = 5;
-		if (description != null) length += description.toBytes().length;
-		if (comment != null) length += comment.toBytes().length;
+		int length = 4;
+		if (description != null) length += description.toBytes(true, true).length;
+		if (comment != null) length += comment.toBytes(true, false).length;
 		return length;
 	}
 	
