@@ -138,6 +138,10 @@ public class EncodedText {
 		}
 	}
 
+	public byte[] getTerminator() {
+		return terminators[textEncoding];
+	}
+	
 	public byte[] toBytes() {
 		return toBytes(false, false);
 	}
@@ -148,7 +152,7 @@ public class EncodedText {
 	
 	public byte[] toBytes(boolean includeBom, boolean includeTerminator) {
 		characterSetForTextEncoding(textEncoding); // ensured textEncoding is valid
-		int newLength = value.length + (includeBom ? boms[textEncoding].length : 0) + (includeTerminator ? terminators[textEncoding].length : 0);
+		int newLength = value.length + (includeBom ? boms[textEncoding].length : 0) + (includeTerminator ? getTerminator().length : 0);
 		if (newLength == value.length) {
 			return value;
 		} else {
@@ -161,7 +165,8 @@ public class EncodedText {
 			System.arraycopy(value, 0, bytes, i, value.length);
 			i += value.length;
 			if (includeTerminator) {
-				System.arraycopy(terminators[textEncoding], 0, bytes, i, terminators[textEncoding].length);
+				byte[] terminator = getTerminator();
+				System.arraycopy(terminator, 0, bytes, i, terminator.length);
 			}
 			return bytes;
 		}
