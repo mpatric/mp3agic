@@ -44,7 +44,8 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 			if (bytes[marker2] == 0) break;
 		}
 		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, marker2 - marker));
-		imageData = BufferTools.copyBuffer(bytes, marker2 + 1, bytes.length - marker2 - 1);
+		marker2 += description.getTerminator().length;
+		imageData = BufferTools.copyBuffer(bytes, marker2, bytes.length - marker2);
 	}
 	
 	protected byte[] packFrameData() {
@@ -59,24 +60,24 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 			} catch (UnsupportedEncodingException e) {
 			}
 		}
-		bytes[mimeTypeLength + 1] = 0;
-		bytes[mimeTypeLength + 2] = pictureType;
-		int descriptionLength = 0; 
+		int marker = mimeTypeLength + 1;
+		bytes[marker++] = 0;
+		bytes[marker++] = pictureType; 
 		if (description != null && description.toBytes().length > 0) {
-			descriptionLength = description.toBytes().length;
-			BufferTools.copyIntoByteBuffer(description.toBytes(), 0, descriptionLength, bytes, mimeTypeLength + 3);
+			byte[] descriptionBytes = description.toBytes(true, true);
+			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
+			marker += descriptionBytes.length;
 		}
-		bytes[mimeTypeLength + descriptionLength + 3] = 0;
 		if (imageData != null && imageData.length > 0) {
-			BufferTools.copyIntoByteBuffer(imageData, 0, imageData.length, bytes, mimeTypeLength + descriptionLength + 4);
+			BufferTools.copyIntoByteBuffer(imageData, 0, imageData.length, bytes, marker);
 		}
 		return bytes;
 	}
 
 	protected int getLength() {
-		int length = 4;
+		int length = 3;
 		if (mimeType != null) length += mimeType.length();
-		if (description != null) length += description.toBytes().length;
+		if (description != null) length += description.toBytes(true, true).length;
 		if (imageData != null) length += imageData.length;
 		return length;
 	}
