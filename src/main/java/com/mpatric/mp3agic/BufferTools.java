@@ -159,7 +159,9 @@ public class BufferTools {
 	}
 
 	public static byte[] unsynchroniseBuffer(byte[] bytes) {
-		// unsynchronisation is replacing instances of 11111111 111xxxxx with 11111111 00000000 111xxxxx
+		// unsynchronisation is replacing instances of:
+		// 11111111 111xxxxx with 11111111 00000000 111xxxxx and
+		// 11111111 00000000 with 11111111 00000000 00000000 
 		int count = sizeUnsynchronisationWouldAdd(bytes);
 		if (count == 0) return bytes;
 		byte[] newBuffer = new byte[bytes.length + count];
@@ -189,7 +191,9 @@ public class BufferTools {
 	}
 
 	public static byte[] synchroniseBuffer(byte[] bytes) {
-		// synchronisation is replacing instances of 11111111 00000000 111xxxxx with 11111111 111xxxxx
+		// synchronisation is replacing instances of:
+		// 11111111 00000000 111xxxxx with 11111111 111xxxxx and
+		// 11111111 00000000 00000000 with 11111111 00000000
 		int count = sizeSynchronisationWouldSubtract(bytes);
 		if (count == 0) return bytes;
 		byte[] newBuffer = new byte[bytes.length - count];
