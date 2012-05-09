@@ -26,15 +26,16 @@ public class ID3v2TextFrameData extends AbstractID3v2FrameData {
 		byte[] bytes = new byte[getLength()];
 		if (text != null) bytes[0] = text.getTextEncoding();
 		else bytes[0] = 0;
-		if (text != null && text.toBytes().length > 0) {
-			BufferTools.copyIntoByteBuffer(text.toBytes(), 0, text.toBytes().length, bytes, 1);
+		byte[] textBytes = text.toBytes(true, false);
+		if (textBytes.length > 0) {
+			BufferTools.copyIntoByteBuffer(textBytes, 0, textBytes.length, bytes, 1);
 		}
 		return bytes;
 	}
 	
 	protected int getLength() {
 		int length = 1;
-		if (text != null) length += text.toBytes().length;
+		if (text != null) length += text.toBytes(true, false).length;
 		return length;
 	}
 
