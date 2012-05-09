@@ -288,6 +288,13 @@ public class BufferToolsTest extends TestCase {
 		assertEquals("\u03B3  ", BufferTools.padStringRight("\u03B3", 3, ' '));
 	}
 	
+	public void testShouldPadRightWithNullCharacters() throws Exception {
+		assertEquals("123", BufferTools.padStringRight("123", 3, '\00'));
+		assertEquals("12\00", BufferTools.padStringRight("12", 3, '\00'));
+		assertEquals("1\00\00", BufferTools.padStringRight("1", 3, '\00'));
+		assertEquals("\00\00\00", BufferTools.padStringRight("", 3, '\00'));
+	}
+	
 	public void testShouldExtractBitsCorrectly() {
 		byte b = -0x36; // 11001010
 		assertFalse(BufferTools.checkBit(b, 0));
