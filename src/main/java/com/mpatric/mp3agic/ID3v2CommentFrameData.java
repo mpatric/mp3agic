@@ -30,7 +30,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
 		} catch (UnsupportedEncodingException e) {
-			language = "eng";
+			language = "";
 		}
 		int marker;
 		for (marker = 4; marker < bytes.length; marker++) {
@@ -56,7 +56,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		} else if (language.length() > 3) {
 			langPadded = language.substring(0, 3);
 		} else {
-			langPadded = BufferTools.padStringRight(language, 3, ' ');
+			langPadded = BufferTools.padStringRight(language, 3, '\00');
 		}
 		try {
 			BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
