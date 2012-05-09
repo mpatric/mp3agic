@@ -30,6 +30,15 @@ public class ID3v2CommentFrameDataTest extends TestCase {
 		assertEquals(frameData, frameDataCopy);
 	}
 	
+	public void testShouldConvertFrameDataWithBlankDescriptionAndLanguageToBytesAndBackToEquivalentObject() throws Exception {
+		byte[] bytes = {0, 0, 0, 0, 0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'};
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("\00\00\00", frameData.getLanguage());
+		assertEquals(new EncodedText(""), frameData.getDescription());
+		assertEquals(new EncodedText(TEST_VALUE), frameData.getComment());
+		assertTrue(Arrays.equals(bytes, frameData.toBytes()));
+	}
+	
 	public void testShouldConvertFrameDataWithUnicodeToBytesAndBackToEquivalentObject() throws Exception {
 		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_DESCRIPTION_UNICODE), new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_VALUE_UNICODE));
 		byte[] bytes = frameData.toBytes();
