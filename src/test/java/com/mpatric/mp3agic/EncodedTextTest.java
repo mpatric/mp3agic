@@ -1,6 +1,7 @@
 package com.mpatric.mp3agic;
 
 import java.nio.charset.CharacterCodingException;
+import java.util.Arrays;
 
 import com.mpatric.mp3agic.BufferTools;
 import com.mpatric.mp3agic.EncodedText;
@@ -234,5 +235,59 @@ public class EncodedTextTest extends TestCase {
 	public void testShouldHandleBacktickCharacterInString() throws Exception {
 		EncodedText encodedText = new EncodedText((byte)0, BUFFER_WITH_A_BACKTICK);
 		assertEquals("I" + (char)(96) + "m", encodedText.toString());
+	}
+	
+	public void testShouldStillReturnBytesWhenStringIsEmpty() throws Exception {
+		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, "");
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)));
+	}
+	
+	public void testShouldStillReturnBytesWhenUnicodeStringIsEmpty() throws Exception {
+		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, "");
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
+	}
+	
+	public void testShouldStillReturnBytesWhenDataIsEmpty() throws Exception {
+		EncodedText encodedText;
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, new byte[] {});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)));
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, new byte[] {0});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)));
+	}
+	
+	public void testShouldStillReturnBytesWhenUnicodeDataIsEmpty() throws Exception {
+		EncodedText encodedText;
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {0});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe, 0});
+		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
+		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
+		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
 	}
 }

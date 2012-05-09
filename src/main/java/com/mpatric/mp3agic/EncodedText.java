@@ -108,7 +108,7 @@ public class EncodedText {
 		}
 		int trailingCharsToRemove = 0;
 		for (int i = 1; i <= 2; i++) {
-			if ((value.length - leadingCharsToRemove - trailingCharsToRemove) > i && value[value.length - i] == 0) {
+			if ((value.length - leadingCharsToRemove - trailingCharsToRemove) >= i && value[value.length - i] == 0) {
 				trailingCharsToRemove++;
 			} else {
 				break;
@@ -170,8 +170,8 @@ public class EncodedText {
 			}
 			if (value.length > 0) {
 				System.arraycopy(value, 0, bytes, i, value.length);
+				i += value.length;
 			}
-			i += value.length;
 			if (includeTerminator) {
 				byte[] terminator = getTerminator();
 				if (terminator.length > 0) {
