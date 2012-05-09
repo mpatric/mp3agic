@@ -67,6 +67,8 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 			byte[] descriptionBytes = description.toBytes(true, true);
 			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
 			marker += descriptionBytes.length;
+		} else {
+			bytes[marker++] = 0;
 		}
 		if (imageData != null && imageData.length > 0) {
 			BufferTools.copyIntoByteBuffer(imageData, 0, imageData.length, bytes, marker);
@@ -78,6 +80,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		int length = 3;
 		if (mimeType != null) length += mimeType.length();
 		if (description != null) length += description.toBytes(true, true).length;
+		else length++;
 		if (imageData != null) length += imageData.length;
 		return length;
 	}

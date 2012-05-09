@@ -67,6 +67,8 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 			byte[] descriptionBytes = description.toBytes(true, true);
 			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
 			marker += descriptionBytes.length;
+		} else {
+			bytes[marker++] = 0;
 		}
 		if (comment != null) {
 			byte[] commentBytes = comment.toBytes(true, false);
@@ -78,6 +80,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	protected int getLength() {
 		int length = 4;
 		if (description != null) length += description.toBytes(true, true).length;
+		else length++;
 		if (comment != null) length += comment.toBytes(true, false).length;
 		return length;
 	}
