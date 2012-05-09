@@ -48,7 +48,9 @@ public class BufferTools {
 	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset, String charsetName) throws UnsupportedEncodingException {
 		String stringToCopy = s.substring(offset, offset + length);
 		byte[] srcBytes = stringToCopy.getBytes(charsetName);
-		System.arraycopy(srcBytes, 0, bytes, destOffset, srcBytes.length);
+		if (srcBytes.length > 0) {
+			System.arraycopy(srcBytes, 0, bytes, destOffset, srcBytes.length);
+		}
 	}
 
 	public static String trimStringRight(String s) {
@@ -139,12 +141,16 @@ public class BufferTools {
 
 	public static byte[] copyBuffer(byte[] bytes, int offset, int length) {
 		byte[] copy = new byte[length];
-		System.arraycopy(bytes, offset, copy, 0, length);
+		if (length > 0) {
+			System.arraycopy(bytes, offset, copy, 0, length);
+		}
 		return copy;
 	}
 	
 	public static void copyIntoByteBuffer(byte[] bytes, int offset, int length, byte[] destBuffer, int destOffset) {
-		System.arraycopy(bytes, offset, destBuffer, destOffset, length);		
+		if (length > 0) {
+			System.arraycopy(bytes, offset, destBuffer, destOffset, length);
+		}
 	}
 	
 	public static int sizeUnsynchronisationWouldAdd(byte[] bytes) {

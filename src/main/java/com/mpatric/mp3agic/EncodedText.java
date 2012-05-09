@@ -115,8 +115,11 @@ public class EncodedText {
 			}
 		}
 		if (leadingCharsToRemove + trailingCharsToRemove > 0) {
-			byte[] newValue = new byte[value.length - leadingCharsToRemove - trailingCharsToRemove];
-			System.arraycopy(value, leadingCharsToRemove, newValue, 0, newValue.length);
+			int newLength = value.length - leadingCharsToRemove - trailingCharsToRemove;
+			byte[] newValue = new byte[newLength];
+			if (newLength > 0) {
+				System.arraycopy(value, leadingCharsToRemove, newValue, 0, newValue.length);
+			}
 			value = newValue;
 		}
 	}
@@ -159,14 +162,21 @@ public class EncodedText {
 			byte bytes[] = new byte[newLength];
 			int i = 0;
 			if (includeBom) {
-				System.arraycopy(boms[textEncoding], 0, bytes, i, boms[textEncoding].length);
-				i += boms[textEncoding].length;
+				byte[] bom = boms[textEncoding];
+				if (bom.length > 0) {
+					System.arraycopy(boms[textEncoding], 0, bytes, i, boms[textEncoding].length);
+					i += boms[textEncoding].length;
+				}
 			}
-			System.arraycopy(value, 0, bytes, i, value.length);
+			if (value.length > 0) {
+				System.arraycopy(value, 0, bytes, i, value.length);
+			}
 			i += value.length;
 			if (includeTerminator) {
 				byte[] terminator = getTerminator();
-				System.arraycopy(terminator, 0, bytes, i, terminator.length);
+				if (terminator.length > 0) {
+					System.arraycopy(terminator, 0, bytes, i, terminator.length);
+				}
 			}
 			return bytes;
 		}
