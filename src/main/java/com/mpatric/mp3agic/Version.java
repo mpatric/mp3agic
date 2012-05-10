@@ -2,7 +2,7 @@ package com.mpatric.mp3agic;
 
 public class Version {
 	private static final int MAJOR_VERSION = 0;
-	private static final int MINOR_VERSION = 6;
+	private static final int MINOR_VERSION = 7;
 	private static final String URL = "http://github.com/mpatric/mp3agic";
 	
 	public static String asString() {
