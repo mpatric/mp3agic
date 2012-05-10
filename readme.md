@@ -13,6 +13,7 @@ A simple set of command-line tools built on top of the library are included whic
 * read and write embedded images (such as album art)
 * read obsolete 3-letter ID3v2 tags (but not write them)
 * add or remove custom messages between the end of the mpeg frames and the ID3v1 tag
+* unicode support
 
 ## Building
 
@@ -35,7 +36,56 @@ Useful ant targets:
 * deploy - copies the jar and scripts to the deploy directory defined in ant.properties
 * doc - generate the javadocs
 
-## Some example code
+## How to use it
+
+### Opening an mp3 file
+
+        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+        System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
+        System.out.println("Bitrate: " + mp3file.getLengthInSeconds() + " kbps " + (mp3file.isVbr() ? "(VBR)" : "(CBR)"));
+        System.out.println("Sample rate: " + mp3file.getSampleRate() + " Hz");
+        System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"));
+        System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
+        System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
+
+### Saving an mp3 file
+
+        mp3file.save("MyMp3File.mp3");
+
+### Removing id3 and custom tags from an mp3 file
+
+        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+        if (mp3file.hasId3v1Tag()) {
+          mp3file.removeId3v1Tag();
+        }
+        if (mp3file.hasId3v2Tag()) {
+          mp3file.removeId3v2Tag();
+        }
+        if (mp3file.hasCustomTag()) {
+          mp3file.removeCustomTag();
+        }
+        mp3file.save("Mp3FileWithoutTags.mp3");
+
+### Getting id3v1 field values
+
+        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+        if (mp3file.hasId3v1Tag()) {
+          ID3v1 id3v1 = mp3file.getId3v1Tag();
+          System.out.println("Track: " + id3v1.getTrack());
+          System.out.println("Artist: " + id3v1.getArtist());
+          System.out.println("Title: " + id3v1.getTitle());
+          System.out.println("Album: " + id3v1.getAlbum());
+          System.out.println("Year: " + id3v1.getYear());
+          System.out.println("Genre: " + id3v1.getGenre() + " (" + id3v1.getGenreDescription() + ")");
+          System.out.println("Comment: " + id3v1.getComment());
+        }
+
+### Setting id3v1 field values
+
+        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+        ID3v1 id3v1 = (mp3file.hasId3v1Tag() ? mp3file.getId3v1Tag() : new ID3v1Tag());
+
+## Example
 
 A small snippet of java code which loads an mp3 file, prints out the length in seconds. It also prints out the artist from the ID3v1 tag
 (if found) and the artist and version from the ID3v2 tag (if found). It then changes the artist on an existing ID3v2 tag and saves the
@@ -63,4 +113,4 @@ More can be learned from looking at the included command-line applications in th
 
 ## Copyright
 
-Copyright (c) 2006-2011 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2012 Michael Patricios. See mit-license.txt for details.
