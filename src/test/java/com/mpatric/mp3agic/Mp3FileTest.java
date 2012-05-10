@@ -19,6 +19,7 @@ public class Mp3FileTest extends TestCase {
 	private static final String MP3_WITH_ID3V1_AND_ID3V23_TAGS = "src/test/resources/v1andv23tags.mp3";
 	private static final String MP3_WITH_DUMMY_START_AND_END_FRAMES = "src/test/resources/dummyframes.mp3";
 	private static final String MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS = "src/test/resources/v1andv23andcustomtags.mp3";
+	private static final String MP3_WITH_ID3V23_UNICODE_TAGS = "src/test/resources/v23unicodetags.mp3";
 	private static final String NOT_AN_MP3 = "src/test/resources/notanmp3.mp3";
 	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "src/test/resources/incompletempegframe.mp3";
 	
@@ -79,6 +80,20 @@ public class Mp3FileTest extends TestCase {
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 1024);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 5000);
+	}
+	
+	public void testShouldLoadAndCheckMp3ContainingUnicodeFields() throws Exception {
+		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
+		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
+		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 1024);
+		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 5000);
+	}
+	
+	public void testShouldSaveLoadedMp3WithUnicodeFieldsWhichIsEquivalentToOriginal() throws Exception {
+		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
+		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
+		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 1024);
+		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 5000);
 	}
 	
 	public void testShouldIgnoreIncompleteMpegFrame() throws Exception {
@@ -178,6 +193,20 @@ public class Mp3FileTest extends TestCase {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
+	
+	private Mp3File copyAndCheckTestMp3WithUnicodeFields(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
+		String saveFilename = null;
+		try {
+			Mp3File mp3file = loadAndCheckTestMp3WithUnicodeFields(filename, bufferLength);
+			saveFilename = filename + ".copy";
+			mp3file.save(saveFilename);
+			Mp3File copyMp3file = loadAndCheckTestMp3WithUnicodeFields(saveFilename, 5000);
+			assertEquals(mp3file.getId3v2Tag(), copyMp3file.getId3v2Tag());
+			return copyMp3file;
+		} finally {
+			TestHelper.deleteFile(saveFilename);
+		}
+	}
 
 	private Mp3File loadAndCheckTestMp3WithNoTags(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
@@ -196,6 +225,17 @@ public class Mp3FileTest extends TestCase {
 		assertEquals(0x5EC, mp3File.getStartOffset());
 		assertEquals(0xF7F, mp3File.getEndOffset());
 		assertTrue(mp3File.hasId3v1Tag());
+		assertTrue(mp3File.hasId3v2Tag());
+		assertFalse(mp3File.hasCustomTag());
+		return mp3File;
+	}
+	
+	private Mp3File loadAndCheckTestMp3WithUnicodeFields(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
+		assertEquals(0x0CA, mp3File.getXingOffset());
+		assertEquals(0x26B, mp3File.getStartOffset());
+		assertEquals(0xBFE, mp3File.getEndOffset());
+		assertFalse(mp3File.hasId3v1Tag());
 		assertTrue(mp3File.hasId3v2Tag());
 		assertFalse(mp3File.hasCustomTag());
 		return mp3File;

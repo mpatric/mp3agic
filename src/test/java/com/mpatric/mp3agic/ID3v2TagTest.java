@@ -251,6 +251,21 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("\u3053\u3093\u306B\u3061\u306F", id3tag.getAlbum()); // japanese
 		assertEquals("\u0AB9\u0AC7\u0AB2\u0ACD\u0AB2\u0ACB", id3tag.getComposer()); // gujarati
 	}
+	
+	public void testShouldSetTagFieldsWithUnicodeDataAndSpecifiedEncodingCorrectly() throws Exception {
+		ID3v2 id3tag = new ID3v23Tag();
+		id3tag.setArtist("\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5");
+		id3tag.setTitle("\u4E2D\u6587");
+		id3tag.setAlbum("\u3053\u3093\u306B\u3061\u306F");
+		id3tag.setComment("\u03C3\u03BF\u03C5");
+		id3tag.setComposer("\u0AB9\u0AC7\u0AB2\u0ACD\u0AB2\u0ACB");
+		id3tag.setOriginalArtist("\u03B3\u03B5\u03B9\u03AC");
+		id3tag.setCopyright("\u03B3\u03B5");
+		id3tag.setUrl("URL");
+		id3tag.setEncoder("\u03B9\u03AC");
+		byte[] albumImage = TestHelper.loadFile("src/test/resources/image.png");
+		id3tag.setAlbumImage(albumImage, "image/png");
+	}
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
