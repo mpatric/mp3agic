@@ -1,6 +1,6 @@
 # mp3agic
 
-A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.1 through ID3v2.4).
+A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
 A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
 
@@ -8,10 +8,10 @@ A simple set of command-line tools built on top of the library are included whic
 
 * 100% Java
 * read low-level mpeg frame data
-* read, write, add and remove ID3v1 and ID3v2 tags (ID3v2.1 through ID3v2.4)
+* read, write, add and remove ID3v1 and ID3v2 tags (ID3v2.3 and ID3v2.4)
+* read obsolete 3-letter ID3v2.2 tags (but not write them)
 * correctly read VBR files by looking at the actual mpeg frames
 * read and write embedded images (such as album art)
-* read obsolete 3-letter ID3v2 tags (but not write them)
 * add or remove custom messages between the end of the mpeg frames and the ID3v1 tag
 * unicode support
 
@@ -179,7 +179,9 @@ Convenience methods are included to easily set common ID3v2 tags. Text encoding 
 
 Frame IDs are defined in the [ID3v2 specification](http://www.id3.org/Developer_Information "ID3v2 specification"). Frames can be read from an ID3v2 tag using these. 
 
-Code to read and write these frames directly is coming soon. Watch this space.
+For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project in github and submit a patch request if you add anything useful.
+
+Code to read and write these frames more easily is coming soon. Watch this space.
 
 ## Copyright
 
