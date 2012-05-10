@@ -23,27 +23,6 @@ public class Mp3FileTest extends TestCase {
 	private static final String NOT_AN_MP3 = "src/test/resources/notanmp3.mp3";
 	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "src/test/resources/incompletempegframe.mp3";
 	
-	public void testExample() throws UnsupportedTagException, InvalidDataException, IOException {
-		Mp3File mp3file = new Mp3File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
-        System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
-        System.out.println("Bitrate: " + mp3file.getLengthInSeconds() + " kbps " + (mp3file.isVbr() ? "(VBR)" : "(CBR)"));
-        System.out.println("Sample rate: " + mp3file.getSampleRate() + " Hz");
-        System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"));
-        System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
-        System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
-        if (mp3file.hasId3v1Tag()) {
-        	ID3v1 id3v1 = mp3file.getId3v1Tag();
-        	System.out.println("Track: " + id3v1.getTrack());
-        	System.out.println("Artist: " + id3v1.getArtist());
-        	System.out.println("Title: " + id3v1.getTitle());
-        	System.out.println("Album: " + id3v1.getAlbum());
-        	System.out.println("Year: " + id3v1.getYear());
-        	System.out.println("Genre: " + id3v1.getGenre() + " (" + id3v1.getGenreDescription() + ")");
-        	System.out.println("Comment: " + id3v1.getComment());
-        }
-        ID3v1 id3v1 = (mp3file.hasId3v1Tag() ? mp3file.getId3v1Tag() : new ID3v1Tag());
-	}
-	
 	public void testShouldLoadMp3WithNoTags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 41);
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 256);
