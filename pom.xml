@@ -6,7 +6,7 @@
 
     <groupId>mp3agic</groupId>
     <artifactId>mp3agic</artifactId>
-    <version>0.6</version>
+    <version>0.7</version>
 
     <scm>
         <connection>scm:git:ssh://git@github.com/mpatric/mp3agic</connection>
