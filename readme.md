@@ -21,10 +21,10 @@ You will need:
 
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
 * [ant](http://ant.apache.org/ "ant") 1.6 or higher
-* [junit](http://www.junit.org/ "junit") 3.8.1 or higher
+* [junit](http://www.junit.org/ "junit") 3.8.1 or higher OR [maven](http://maven.apache.org/ "maven")
 * A bash shell to run the command-line scripts (if you're on MacOS or a flavor of Unix, you're set, if you're on Windows, try [Cygwin](http://www.cygwin.com/ "Cygwin") or rewrite the bash scripts as bat/cmd files).
 
-Settings you might need to change in ant.properties:
+Settings you might need to change in ant.properties if you are using ant:
 
 * junit-jar should point to junit.jar on your local system
 * deploy-dir should point to the directory on your local system you wish to deploy to
@@ -39,7 +39,7 @@ Useful ant targets:
 ## How to use it
 
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
-More can be learned from looking at the code itself or at the included command-line applications in the com.mpatric.mp3agic.app package.
+More can be learned from looking at the javadocs, and at the code itself or at the included command-line applications in the com.mpatric.mp3agic.app package.
 
 ### Opening an mp3 file
 
