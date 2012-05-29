@@ -1,69 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mpatric.mp3agic</groupId>
-    <artifactId>mp3agic</artifactId>
-    <version>0.7-SNAPSHOT</version>
-    <name>mp3agic</name>
-    <description>A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).</description>
-    <url>https://github.com/mpatric/mp3agic</url>
+	<groupId>com.mpatric.mp3agic</groupId>
+	<artifactId>mp3agic</artifactId>
+	<version>0.7-SNAPSHOT</version>
+	<name>mp3agic</name>
+	<description>A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).</description>
+	<url>https://github.com/mpatric/mp3agic</url>
 
-    <scm>
-        <connection>scm:git:ssh://git@github.com/mpatric/mp3agic</connection>
-        <url>http://github.com/mpatric/mp3agic</url>
-    </scm>
- 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<scm>
+		<developerConnection>scm:git:ssh://git@github.com:mpatric/mp3agic.git</developerConnection>
+		<connection>scm:git:git://github.com/mpatric/mp3agic.git</connection>
+		<tag>HEAD</tag>
+		<url>http://github.com/mpatric/mp3agic</url>
+	</scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <debug>false</debug>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                   <show>private</show>
-                   <doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
-                   <bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2012 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>    
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- uploads releases to github -->
+		<dependency>
+			<groupId>com.github.github</groupId>
+			<artifactId>downloads-maven-plugin</artifactId>
+			<version>0.5</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<debug>false</debug>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<show>private</show>
+					<doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
+					<bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2012 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
+				</configuration>
+			</plugin>
+			<!-- attach "bundling a source jar" to the package phase -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- use this to create new downloads at github: mvn clean package ghDownloads:upload -->
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>downloads-maven-plugin</artifactId>
+				<version>0.5</version>
+				<configuration>
+					<description>${project.name} version ${project.version}</description>
+					<!-- you need a servers section with the id "github" in your settings.xml 
+						holding your userName and password, see: https://github.com/github/maven-plugins -->
+					<server>github</server>
+					<includes>
+						<lib>${name}-${version}.jar</lib>
+						<sources>${name}-${version}-sources.jar</sources>
+					</includes>
+					<override>true</override>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
