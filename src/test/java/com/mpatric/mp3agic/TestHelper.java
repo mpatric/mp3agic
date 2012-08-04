@@ -32,6 +32,7 @@ public class TestHelper extends TestCase {
 		RandomAccessFile file = new RandomAccessFile(filename, "r");
 		byte[] buffer = new byte[(int) file.length()];
 		file.read(buffer);
+		file.close();
 		return buffer;
 	}
 	
