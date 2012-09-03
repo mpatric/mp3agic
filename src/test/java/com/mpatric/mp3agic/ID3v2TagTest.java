@@ -130,7 +130,7 @@ public class ID3v2TagTest extends TestCase {
 		setTagFields(id3tag);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v23Tag(data);
-		assertEquals(2109, data.length);
+		assertEquals(2131, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -140,7 +140,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setFooter(true);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v24Tag(data);
-		assertEquals(2119, data.length);
+		assertEquals(2141, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -150,7 +150,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setPadding(true);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v24Tag(data);
-		assertEquals(2109 + AbstractID3v2Tag.PADDING_LENGTH, data.length);
+		assertEquals(2131 + AbstractID3v2Tag.PADDING_LENGTH, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -160,7 +160,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setFooter(true);
 		id3tag.setPadding(true);
 		byte[] data = id3tag.toBytes();
-		assertEquals(2119, data.length);
+		assertEquals(2141, data.length);
 	}
 	
 	public void testShouldExtractGenreNumberFromCombinedGenreStringsCorrectly() throws Exception {
