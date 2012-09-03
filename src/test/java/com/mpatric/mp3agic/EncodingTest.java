@@ -1,17 +1,15 @@
 package com.mpatric.mp3agic;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.primitives.Bytes;
 
-public class EncodedTextTest {
+public class EncodingTest {
 	private static final byte[] BOM_BE = { -2, -1 }; 
 	private static final byte[] BOM_LE = { -1, -2 }; 
 
@@ -26,40 +24,30 @@ public class EncodedTextTest {
 	}
 	
 	public static void testData(String original, byte[][] expectedByEncoding, boolean lossy) {
-		EncodedText encodedText = new EncodedText(original, true);
-		String strResult = encodedText.toString();
-		Assert.assertEquals(original, strResult);
 		
 		// Test each encoding thoroughly  
 		for (int i = 0; i < Encoding.values().length; ++i) {
 			Encoding encoding = Encoding.getEncoding(i);
 			byte[] expected = expectedByEncoding[i];
-			if (encoding == encodedText.encoding) {
-				Assert.assertArrayEquals(expected, encodedText.toBytes());
-			}
-			ByteArrayInputStream in = new ByteArrayInputStream(Bytes.concat(new byte[] { (byte) i }, expected));
-			EncodedText parsedFromBytes = new EncodedText(in);
-			Assert.assertEquals(0, in.available());
-			Assert.assertEquals(i, parsedFromBytes.encoding.ordinal());
-
-			byte[] result = encoding.encode(original);
-			Assert.assertArrayEquals(expected, result);
-			strResult = encoding.parse(new ByteArrayInputStream(expected), true);
+			byte[] result = encoding.encode(original, true);
+			
+			assertArrayEquals(expected, result);
 
 			// Convert the resulting bytes back into a string
+			String strResult = encoding.parse(new ByteArrayInputStream(expected), true);
 			if (lossy && encoding.charset == Charsets.ISO_8859_1) {
-				Assert.assertEquals(original.length(), strResult.length());
+				assertEquals(original.length(), strResult.length());
 			} else {
-				Assert.assertEquals(original, strResult);
+				assertEquals(original, strResult);
 			}
 			
 			// Now remove the terminator from the expected result and make sure it still parses properly.
 			byte[] trimmed = Arrays.copyOf(expected, expected.length - encoding.characterSize);
 			strResult = encoding.parse(new ByteArrayInputStream(trimmed), false);
 			if (lossy && encoding.charset == Charsets.ISO_8859_1) {
-				Assert.assertEquals(original.length(), strResult.length());
+				assertEquals(original.length(), strResult.length());
 			} else {
-				Assert.assertEquals(original, strResult);
+				assertEquals(original, strResult);
 			}
 		}
 	}
@@ -68,7 +56,7 @@ public class EncodedTextTest {
 	public void testEmpty() {
 		testData("", new byte[][] {
 			TERMINATOR,
-			Bytes.concat(BOM_BE, TERMINATOR2),
+			TERMINATOR2,
 			TERMINATOR2,
 			TERMINATOR,
 		});
@@ -76,7 +64,7 @@ public class EncodedTextTest {
 
 	@Test
 	public void testBasic() {
-		testData("This is a string!", new byte[][] {
+		testData(TEST_STRING, new byte[][] {
 			Bytes.concat(TEST_STRING.getBytes(Charsets.ISO_8859_1), TERMINATOR),
 			Bytes.concat(BOM_BE, TEST_STRING.getBytes(Charsets.UTF_16BE), TERMINATOR2),
 			Bytes.concat(TEST_STRING.getBytes(Charsets.UTF_16BE), TERMINATOR2),
@@ -95,18 +83,19 @@ public class EncodedTextTest {
 	}
 	
 	@Test
-	public void testUtf16Le() {
-		EncodedText et = new EncodedText(Bytes.concat(
-				new byte[] { 0x01 }, BOM_LE, TEST_I18N_STRING.getBytes(Charsets.UTF_16LE), TERMINATOR2
-		));
-		assertEquals(et.text, TEST_I18N_STRING);
+	public void testBomPresenceEmptyString() {
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(BOM_BE, TERMINATOR2), true));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(BOM_LE, TERMINATOR2), true));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(BOM_BE), false));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(BOM_LE), false));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(TERMINATOR2), true));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(TERMINATOR2), true));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(), false));
+		assertEquals("", Encoding.ENCODING_UTF_16.parse(concatToStream(), false));
 	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testShouldThrowExceptionWhenEncodingWithInvalidCharacterSet() throws Exception {
-		new EncodedText(Bytes.concat(
-				new byte[] { 0x04 }, TEST_I18N_STRING.getBytes(Charsets.UTF_8), TERMINATOR2
-		));
+	
+	public static ByteArrayInputStream concatToStream(byte []... bytes) {
+		byte[][] byteArrays = bytes;
+		return new ByteArrayInputStream(Bytes.concat(byteArrays));
 	}
-
 }

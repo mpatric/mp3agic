@@ -1,27 +1,33 @@
 package com.mpatric.mp3agic;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import com.mpatric.mp3agic.annotations.FrameMember;
 
 public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
-
 	private static final String DEFAULT_LANGUAGE = "eng";
 	
+	@FrameMember(ordinal = 0)
+	private Encoding encoding;
+	
+	@FrameMember(width = 3, ordinal = 1)
 	private String language;
-	private EncodedText description;
-	private EncodedText comment;
+
+	@FrameMember(ordinal = 2, encoded = true, terminated = true)
+	private String description;
+
+	@FrameMember(ordinal = 3, encoded = true)
+	private String comment;
 
 	public ID3v2CommentFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2CommentFrameData(boolean unsynchronisation, String language, EncodedText description, EncodedText comment) {
+	public ID3v2CommentFrameData(boolean unsynchronisation, String language, String description, String comment) {
+		this(unsynchronisation, Encoding.getDefault(), language, description, comment);
+	}
+
+	public ID3v2CommentFrameData(boolean unsynchronisation, Encoding encoding, String language, String description, String comment) {
 		super(unsynchronisation);
+		this.encoding = encoding;
 		this.language = language;
 		this.description = description;
 		this.comment = comment;
@@ -32,53 +38,6 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		language = BufferTools.byteBufferToString(bytes, 1, 3);
-
-		ByteArrayInputStream is = new ByteArrayInputStream(bytes);
-		Encoding enc = Encoding.getEncoding(is.read());
-		is.read(); is.read(); is.read();
-
-		description = new EncodedText(enc, is, true);
-		comment = new EncodedText(enc, is);
-	}
-
-	protected byte[] packFrameData() {
-		ByteArrayDataOutput output = ByteStreams.newDataOutput();
-		Encoding encoding = Encoding.getDefault();
-		if (comment != null) {
-			encoding = comment.getEncoding(); 
-		} else if (description != null) {
-			encoding = description.getEncoding();
-		}
-
-		output.write(encoding.ordinal());
-		
-		if (language == null) {
-			language = DEFAULT_LANGUAGE;
-		}
-		
-		byte[] langOutput = new byte[] { 0x0, 0x0, 0x0 };
-		byte[] langEncoded = language.getBytes(Charsets.US_ASCII);
-		
-		for (int i = 0; i < Math.min(langOutput.length, 3); ++i) {
-			langOutput[i] = langEncoded[i];
-		}
-		output.write(langOutput);
-		
-		if (description != null) {
-			output.write(description.toBytes());
-		} else {
-			output.write(encoding.terminator);
-		}
-
-		if (comment != null) {
-			output.write(comment.toBytes());
-		}
-		
-		return output.toByteArray();
-	}
-
 	public String getLanguage() {
 		return language;
 	}
@@ -87,22 +46,30 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		this.language = language;
 	}
 	
-	public EncodedText getComment() {
+	public String getComment() {
 		return comment;
 	}
 
-	public void setComment(EncodedText comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
-	public EncodedText getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(EncodedText description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+	public Encoding getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(Encoding encoding) {
+		this.encoding = encoding;
+	}
+
 	public boolean equals(Object obj) {
 		if (! (obj instanceof ID3v2CommentFrameData)) return false;
 		if (! super.equals(obj)) return false;
@@ -121,4 +88,5 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		else if (! comment.equals(other.comment)) return false;
 		return true;
 	}
+
 }

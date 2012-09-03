@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public abstract class AbstractID3v2Tag implements ID3v2 {
 
 	public static final String ID_IMAGE = "APIC";
@@ -453,7 +454,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public void setComment(String comment) {
 		if (comment != null && comment.length() > 0) {
 			invalidateDataLength();
-			ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), "eng", null, new EncodedText(comment));
+			ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), "eng", null, comment);
 			addFrame(createFrame(ID_COMMENT, frameData.toBytes()), true);
 		}
 	}
@@ -469,7 +470,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public void setItunesComment(String itunesComment) {
 		if (itunesComment != null && itunesComment.length() > 0) {
 			invalidateDataLength();
-			ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), ITUNES_COMMENT_DESCRIPTION, null, new EncodedText(itunesComment));
+			ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), ITUNES_COMMENT_DESCRIPTION, null, itunesComment);
 			addFrame(createFrame(ID_COMMENT, frameData.toBytes()), true);
 		}
 	}
@@ -542,7 +543,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public void setAlbumImage(byte[] albumImage, String mimeType) {
 		if (albumImage != null && albumImage.length > 0 && mimeType != null && mimeType.length() > 0) { 
 			invalidateDataLength();
-			ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(useFrameUnsynchronisation(),  mimeType, (byte)0, null, albumImage); 
+			ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(useFrameUnsynchronisation(), 
+					Encoding.getDefault(), mimeType, (byte)0, null, albumImage); 
 			addFrame(createFrame(ID_IMAGE, frameData.toBytes()), true);
 		}
 	}

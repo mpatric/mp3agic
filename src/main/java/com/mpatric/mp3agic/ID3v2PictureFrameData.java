@@ -1,26 +1,30 @@
 package com.mpatric.mp3agic;
 
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import com.mpatric.mp3agic.annotations.FrameMember;
 
 public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 
+	@FrameMember(ordinal = 0)
+	protected Encoding encoding;
+	@FrameMember(ordinal = 1, terminated = true)
 	protected String mimeType;
+	@FrameMember(ordinal = 2)
 	protected byte pictureType;
-	protected EncodedText description;
+	@FrameMember(ordinal = 3, encoded = true, terminated = true)
+	protected String description;
+	@FrameMember(ordinal = 4)
 	protected byte[] imageData;
 
 	public ID3v2PictureFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2PictureFrameData(boolean unsynchronisation, String mimeType, byte pictureType, EncodedText description, byte[] imageData) {
+	public ID3v2PictureFrameData(boolean unsynchronisation, Encoding encoding, String mimeType, byte pictureType, String description, byte[] imageData) {
 		super(unsynchronisation);
 		this.mimeType = mimeType;
+		this.encoding = encoding;
 		this.pictureType = pictureType;
 		this.description = description;
 		this.imageData = imageData;
@@ -29,36 +33,6 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	public ID3v2PictureFrameData(boolean unsynchronisation, byte[] bytes) throws InvalidDataException {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
-	}
-	
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
-		Encoding enc = Encoding.getEncoding(data.read());
-		mimeType = BufferTools.streamIntoTerminatedString(data);
-		pictureType = (byte) data.read();
-		description = new EncodedText(enc, data, true);
-		imageData = BufferTools.streamIntoByteBuffer(data);
-	}
-
-	protected byte[] packFrameData() {
-		ByteArrayDataOutput output = ByteStreams.newDataOutput();
-		Encoding encoding = Encoding.getDefault();
-		if (description != null) {
-			encoding = description.getEncoding();
-		}
-		output.write(encoding.ordinal());
-		output.write(mimeType.getBytes(Charsets.ISO_8859_1));
-		output.write(0);
-		output.write(pictureType);
-		if (description != null && description.toBytes().length > 0) {
-			output.write(description.toBytes());
-		} else {
-			output.write(0);
-		}
-		if (imageData != null && imageData.length > 0) {
-			output.write(imageData);
-		}
-		return output.toByteArray();
 	}
 	
 	public String getMimeType() {
@@ -77,11 +51,11 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		this.pictureType = pictureType;
 	}
 
-	public EncodedText getDescription() {
+	public String getDescription() {
 		return description;
 	}
 	
-	public void setDescription(EncodedText description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 	
@@ -111,5 +85,13 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		} else if (other.imageData == null) return false;
 		else if (! Arrays.equals(imageData, other.imageData)) return false;
 		return true;
+	}
+
+	public Encoding getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(Encoding encoding) {
+		this.encoding = encoding;
 	}
 }

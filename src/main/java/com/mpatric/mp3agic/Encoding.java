@@ -34,10 +34,6 @@ public enum Encoding {
 		this.terminator = terminator;
 	}
 	
-
-	
-	private static final byte[] BOM_STRING = "a".getBytes(Charsets.UTF_16);
-
 	public static Encoding getEncoding(int encoding) {
 		if (encoding >= Encoding.values().length) {
 			throw new IllegalArgumentException("Unexpected encoding " + encoding);
@@ -45,20 +41,22 @@ public enum Encoding {
 		return Encoding.values()[encoding];
 	}
 	
-	public byte[] encode(String text) {
+	public byte[] encode(String text, boolean terminate) {
 		ByteArrayDataOutput outputBuffer = ByteStreams.newDataOutput();
-		// Write the data.  Note, that Java won't output the BOM for an empty string
-		// so we have to special case that.
-		if (charset == Charsets.UTF_16 && text.isEmpty() ) {
-			outputBuffer.write(BOM_STRING, 0, 2);
-		} else {
+		if (null != text && !text.isEmpty()) {
 			outputBuffer.write(text.getBytes(charset));
 		}
-		// Write the terminator
-		outputBuffer.write(0);
-		if (characterSize == 2) {
+
+		// Write the data.  Note, that Java won't output the BOM for an empty string
+		// so we have to special case that.
+		if (terminate) {
+			// Write the terminator
 			outputBuffer.write(0);
+			if (characterSize == 2) {
+				outputBuffer.write(0);
+			}
 		}
+
 		return outputBuffer.toByteArray();
 	}
 	

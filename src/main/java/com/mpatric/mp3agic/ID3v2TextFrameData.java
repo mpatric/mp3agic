@@ -1,23 +1,28 @@
 package com.mpatric.mp3agic;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import com.mpatric.mp3agic.annotations.FrameMember;
+
 
 public class ID3v2TextFrameData extends AbstractID3v2FrameData {
 	
-	protected EncodedText text = null;
+	@FrameMember(ordinal = 0)
+	protected Encoding encoding;
+
+	@FrameMember(ordinal = 1, encoded = true)
+	protected String text;
 	
 	public ID3v2TextFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
 	public ID3v2TextFrameData(boolean unsynchronisation, String text) {
-		this(unsynchronisation, new EncodedText(text));
+		this(unsynchronisation, Encoding.getDefault(), text);
 	}
 	
-	public ID3v2TextFrameData(boolean unsynchronisation, EncodedText text) {
+	public ID3v2TextFrameData(boolean unsynchronisation, Encoding encoding, String text) {
 		super(unsynchronisation);
 		this.text = text;
+		this.encoding = encoding;
 	}
 	
 	public ID3v2TextFrameData(boolean unsynchronisation, byte[] bytes) throws InvalidDataException {
@@ -25,26 +30,26 @@ public class ID3v2TextFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		text = new EncodedText(bytes);
-	}
+//	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+//		text = new EncodedText(bytes);
+//	}
+//	
+//	protected byte[] packFrameData() {
+//		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+//		if (null != text) {
+//			out.write(text.getTextEncoding());
+//			out.write(text.toBytes());
+//		} else {
+//			out.write(0);
+//		}
+//		return out.toByteArray();
+//	}
 	
-	protected byte[] packFrameData() {
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		if (null != text) {
-			out.write(text.getTextEncoding());
-			out.write(text.toBytes());
-		} else {
-			out.write(0);
-		}
-		return out.toByteArray();
-	}
-	
-	public EncodedText getText() {
+	public String getText() {
 		return text;
 	}
 
-	public void setText(EncodedText text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 	

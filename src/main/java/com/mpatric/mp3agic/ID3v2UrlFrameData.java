@@ -1,24 +1,30 @@
 package com.mpatric.mp3agic;
 
-import java.io.ByteArrayInputStream;
+import com.mpatric.mp3agic.annotations.FrameMember;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 
 public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 
+	@FrameMember(ordinal = 0)
+	protected Encoding encoding;
+	@FrameMember(ordinal = 1, encoded = true, terminated = true)
+	protected String description;
+	@FrameMember(ordinal = 2)
 	protected String url;
-	protected EncodedText description;
 	
 	public ID3v2UrlFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2UrlFrameData(boolean unsynchronisation, EncodedText description, String url) {
+	public ID3v2UrlFrameData(boolean unsynchronisation, String description, String url) {
+		this(unsynchronisation, Encoding.getDefault(), description, url);
+	}
+
+	public ID3v2UrlFrameData(boolean unsynchronisation, Encoding encoding, String description, String url) {
 		super(unsynchronisation);
 		this.description = description;
 		this.url = url;
+		this.encoding = encoding;
 	}
 
 	public ID3v2UrlFrameData(boolean unsynchronisation, byte[] bytes) throws InvalidDataException {
@@ -26,39 +32,39 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 	
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
-		Encoding enc = Encoding.getEncoding(data.read());
-		description = new EncodedText(enc, data, true);
-		url = BufferTools.streamIntoString(data);
-	}
+//	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+//		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
+//		Encoding enc = Encoding.getEncoding(data.read());
+//		description = new EncodedText(enc, data, true);
+//		url = BufferTools.streamIntoString(data);
+//	}
+//	
+//	protected byte[] packFrameData() {
+//		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+//		Encoding encoding = Encoding.getDefault();
+//		if (description != null) {
+//			encoding = description.getEncoding();
+//		}
+//
+//		output.write(encoding.ordinal());
+//
+//		if (description != null) {
+//			output.write(description.toBytes());
+//		} else {
+//			output.write(0);
+//		}
+//
+//		if (url != null && url.length() > 0) {
+//			output.write(url.getBytes(Charsets.ISO_8859_1));
+//		}
+//		return output.toByteArray();
+//	}
 	
-	protected byte[] packFrameData() {
-		ByteArrayDataOutput output = ByteStreams.newDataOutput();
-		Encoding encoding = Encoding.getDefault();
-		if (description != null) {
-			encoding = description.getEncoding();
-		}
-
-		output.write(encoding.ordinal());
-
-		if (description != null) {
-			output.write(description.toBytes());
-		} else {
-			output.write(0);
-		}
-
-		if (url != null && url.length() > 0) {
-			output.write(url.getBytes(Charsets.ISO_8859_1));
-		}
-		return output.toByteArray();
-	}
-	
-	public EncodedText getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(EncodedText description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 	
