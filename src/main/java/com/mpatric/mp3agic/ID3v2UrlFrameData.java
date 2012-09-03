@@ -1,6 +1,10 @@
 package com.mpatric.mp3agic;
 
-import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 
@@ -23,53 +27,33 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 	}
 	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		int marker;
-		for (marker = 1; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, marker - 1));
-		marker += description.getTerminator().length;
-		int length = 0;
-		for (int i = marker; i < bytes.length; i++) {
-			if (bytes[i] == 0) break;
-			length++;
-		}
-		try {
-			url = BufferTools.byteBufferToString(bytes, marker, length);
-		} catch (UnsupportedEncodingException e) {
-			url = "";
-		}
+		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
+		Encoding enc = Encoding.getEncoding(data.read());
+		description = new EncodedText(enc, data, true);
+		url = BufferTools.streamIntoString(data);
 	}
 	
 	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (description != null) bytes[0] = description.getTextEncoding();
-		else bytes[0] = 0;
-		int marker = 1;
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		Encoding encoding = Encoding.getDefault();
 		if (description != null) {
-			byte[] descriptionBytes = description.toBytes(true, true);
-			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
-			marker += descriptionBytes.length;
+			encoding = description.getEncoding();
+		}
+
+		output.write(encoding.ordinal());
+
+		if (description != null) {
+			output.write(description.toBytes());
 		} else {
-			bytes[marker++] = 0;
+			output.write(0);
 		}
+
 		if (url != null && url.length() > 0) {
-			try {
-				BufferTools.stringIntoByteBuffer(url, 0, url.length(), bytes, marker);
-			} catch (UnsupportedEncodingException e) {
-			}
+			output.write(url.getBytes(Charsets.ISO_8859_1));
 		}
-		return bytes;
+		return output.toByteArray();
 	}
 	
-	protected int getLength() {
-		int length = 1;
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (url != null) length += url.length();
-		return length;
-	}
-
 	public EncodedText getDescription() {
 		return description;
 	}

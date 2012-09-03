@@ -1,7 +1,11 @@
 package com.mpatric.mp3agic;
 
-import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 
@@ -28,61 +32,33 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	}
 	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		int marker;
-		for (marker = 1; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		try {
-			mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
-		} catch (UnsupportedEncodingException e) {
-			mimeType = "image/unknown";
-		}
-		pictureType = bytes[marker + 1];
-		marker += 2;
-		int marker2;
-		for (marker2 = marker; marker2 < bytes.length; marker2++) {
-			if (bytes[marker2] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, marker2 - marker));
-		marker2 += description.getTerminator().length;
-		imageData = BufferTools.copyBuffer(bytes, marker2, bytes.length - marker2);
-	}
-	
-	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (description != null) bytes[0] = description.getTextEncoding();
-		else bytes[0] = 0;
-		int mimeTypeLength = 0;
-		if (mimeType != null && mimeType.length() > 0) {
-			mimeTypeLength = mimeType.length();
-			try {
-				BufferTools.stringIntoByteBuffer(mimeType, 0, mimeTypeLength, bytes, 1);
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		int marker = mimeTypeLength + 1;
-		bytes[marker++] = 0;
-		bytes[marker++] = pictureType; 
-		if (description != null && description.toBytes().length > 0) {
-			byte[] descriptionBytes = description.toBytes(true, true);
-			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
-			marker += descriptionBytes.length;
-		} else {
-			bytes[marker++] = 0;
-		}
-		if (imageData != null && imageData.length > 0) {
-			BufferTools.copyIntoByteBuffer(imageData, 0, imageData.length, bytes, marker);
-		}
-		return bytes;
+		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
+		Encoding enc = Encoding.getEncoding(data.read());
+		mimeType = BufferTools.streamIntoTerminatedString(data);
+		pictureType = (byte) data.read();
+		description = new EncodedText(enc, data, true);
+		imageData = BufferTools.streamIntoByteBuffer(data);
 	}
 
-	protected int getLength() {
-		int length = 3;
-		if (mimeType != null) length += mimeType.length();
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (imageData != null) length += imageData.length;
-		return length;
+	protected byte[] packFrameData() {
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		Encoding encoding = Encoding.getDefault();
+		if (description != null) {
+			encoding = description.getEncoding();
+		}
+		output.write(encoding.ordinal());
+		output.write(mimeType.getBytes(Charsets.ISO_8859_1));
+		output.write(0);
+		output.write(pictureType);
+		if (description != null && description.toBytes().length > 0) {
+			output.write(description.toBytes());
+		} else {
+			output.write(0);
+		}
+		if (imageData != null && imageData.length > 0) {
+			output.write(imageData);
+		}
+		return output.toByteArray();
 	}
 	
 	public String getMimeType() {

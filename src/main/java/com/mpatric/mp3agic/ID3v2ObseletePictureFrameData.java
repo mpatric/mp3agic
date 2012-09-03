@@ -1,6 +1,6 @@
 package com.mpatric.mp3agic;
 
-import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
 
 public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 
@@ -18,20 +18,12 @@ public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 
 	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		String filetype;
-		try {
-			filetype = BufferTools.byteBufferToString(bytes, 1, 3);
-		} catch (UnsupportedEncodingException e) {
-			filetype = "unknown";
-		} 
-		mimeType = "image/" + filetype.toLowerCase();
-		pictureType = bytes[4];
-		int marker;
-		for (marker = 5; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 5, marker - 5));
-		marker += description.getTerminator().length;
-		imageData = BufferTools.copyBuffer(bytes, marker, bytes.length - marker);
+		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
+		Encoding e = Encoding.getEncoding(data.read());
+
+		mimeType = "image/" + BufferTools.byteBufferToString(data, 3).toLowerCase();
+		pictureType = (byte) data.read();
+		description = new EncodedText(e, data);
+		imageData = BufferTools.streamIntoByteBuffer(data);
 	}
 }

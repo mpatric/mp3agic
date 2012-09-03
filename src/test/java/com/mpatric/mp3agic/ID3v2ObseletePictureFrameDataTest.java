@@ -14,8 +14,8 @@ public class ID3v2ObseletePictureFrameDataTest extends TestCase {
 	private static final byte[] DUMMY_IMAGE_DATA = {1, 2, 3, 4, 5};
 
 	public void testShouldConsiderTwoEquivalentObjectsEqual() throws Exception {
-		ID3v2ObseletePictureFrameData frameData1 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte)0, new EncodedText((byte)1, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
-		ID3v2ObseletePictureFrameData frameData2 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte)0, new EncodedText((byte)1, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
+		ID3v2ObseletePictureFrameData frameData1 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte)0, new EncodedText(Encoding.ENCODING_UTF_16, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
+		ID3v2ObseletePictureFrameData frameData2 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte)0, new EncodedText(Encoding.ENCODING_UTF_16, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertEquals(frameData1, frameData2);		
 	}
 
@@ -24,7 +24,7 @@ public class ID3v2ObseletePictureFrameDataTest extends TestCase {
 		ID3v2ObseletePictureFrameData frameData = new ID3v2ObseletePictureFrameData(false, bytes);
 		assertEquals(TEST_MIME_TYPE, frameData.getMimeType());
 		assertEquals((byte)1, frameData.getPictureType());
-		assertEquals(new EncodedText((byte)0, TEST_DESCRIPTION), frameData.getDescription());
+		assertEquals(new EncodedText(TEST_DESCRIPTION), frameData.getDescription());
 		assertTrue(Arrays.equals(DUMMY_IMAGE_DATA, frameData.getImageData()));
 	}
 	
@@ -33,7 +33,7 @@ public class ID3v2ObseletePictureFrameDataTest extends TestCase {
 		ID3v2ObseletePictureFrameData frameData = new ID3v2ObseletePictureFrameData(false, bytes);
 		assertEquals(TEST_MIME_TYPE, frameData.getMimeType());
 		assertEquals((byte)1, frameData.getPictureType());
-		assertEquals(new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_DESCRIPTION_UNICODE), frameData.getDescription());
+		assertEquals(new EncodedText(Encoding.ENCODING_UTF_16, TEST_DESCRIPTION_UNICODE), frameData.getDescription());
 		assertTrue(Arrays.equals(DUMMY_IMAGE_DATA, frameData.getImageData()));
 	}
 }

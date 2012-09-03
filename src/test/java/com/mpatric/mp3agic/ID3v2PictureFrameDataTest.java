@@ -18,13 +18,13 @@ public class ID3v2PictureFrameDataTest extends TestCase {
 	private static final byte[] DUMMY_IMAGE_DATA = {1, 2, 3, 4, 5};
 
 	public void testShouldConsiderTwoEquivalentObjectsEqual() throws Exception {
-		ID3v2PictureFrameData frameData1 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText((byte)0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
-		ID3v2PictureFrameData frameData2 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText((byte)0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
+		ID3v2PictureFrameData frameData1 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText(TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
+		ID3v2PictureFrameData frameData2 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText(TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertEquals(frameData1, frameData2);		
 	}
 
 	public void testShouldConvertFrameDataToBytesAndBackToEquivalentObject() throws Exception {
-		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText((byte)0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
+		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText(TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		byte[] bytes = frameData.toBytes();
 		byte[] expectedBytes = {0x00, 'm', 'i', 'm', 'e', '/', 't', 'y', 'p', 'e', 0, 0x03, 'D', 'E', 'S', 'C', 'R', 'I', 'P', 'T', 'I', 'O', 'N', 0, 1, 2, 3, 4, 5};
 		assertTrue(Arrays.equals(expectedBytes, bytes));
@@ -33,7 +33,7 @@ public class ID3v2PictureFrameDataTest extends TestCase {
 	}
 	
 	public void testShouldConvertFrameDataWithUnicodeDescriptionToBytesAndBackToEquivalentObject() throws Exception {
-		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_DESCRIPTION_UNICODE), DUMMY_IMAGE_DATA);
+		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte)3, new EncodedText(Encoding.ENCODING_UTF_16, TEST_DESCRIPTION_UNICODE), DUMMY_IMAGE_DATA);
 		byte[] bytes = frameData.toBytes();
 		byte[] expectedBytes = {0x01, 'm', 'i', 'm', 'e', '/', 't', 'y', 'p', 'e', 0, 0x03, (byte)0xff, (byte)0xfe, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac, 0x03, 0, 0, 1, 2, 3, 4, 5};
 		assertTrue(Arrays.equals(expectedBytes, bytes));

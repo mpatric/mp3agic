@@ -232,8 +232,8 @@ public class Mp3Retag extends BaseApp {
 		byte[] newCustomTag = null;
 		if (keepCustomTag && existingCustomTag != null && existingCustomTag.length > 0) {
 			if (customTag != null && customTag.length() > 0) {
-				EncodedText customTagEncodedText = new EncodedText(customTag);
-				byte bytes[] = customTagEncodedText.toBytes(true);
+				EncodedText customTagEncodedText = new EncodedText(customTag, true);
+				byte bytes[] = customTagEncodedText.toBytes();
 				int newLength = existingCustomTag.length + bytes.length;
 				newCustomTag = new byte[newLength];
 				BufferTools.copyIntoByteBuffer(existingCustomTag, 0, existingCustomTag.length, newCustomTag, 0);
@@ -242,8 +242,8 @@ public class Mp3Retag extends BaseApp {
 				newCustomTag = mp3file.getCustomTag();
 			}
 		} else if (customTag != null && customTag.length() > 0) {
-			EncodedText customTagEncodedText = new EncodedText(customTag);
-			newCustomTag = customTagEncodedText.toBytes(true);
+			EncodedText customTagEncodedText = new EncodedText(customTag, true);
+			newCustomTag = customTagEncodedText.toBytes();
 		}
 		mp3file.setCustomTag(newCustomTag);
 	}

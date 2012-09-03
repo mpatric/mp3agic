@@ -28,7 +28,12 @@
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- uploads releases to github -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>13.0</version>
+		</dependency>
+		<!-- uploads releases to github --> 
 		<dependency>
 			<groupId>com.github.github</groupId>
 			<artifactId>downloads-maven-plugin</artifactId>

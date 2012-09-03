@@ -1,6 +1,12 @@
 package com.mpatric.mp3agic;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 
@@ -25,66 +31,54 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
+
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		try {
-			language = BufferTools.byteBufferToString(bytes, 1, 3);
-		} catch (UnsupportedEncodingException e) {
-			language = "";
-		}
-		int marker;
-		for (marker = 4; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
-		marker += description.getTerminator().length;
-		int length = 0;
-		for (int i = marker; i < bytes.length; i++) {
-			if (bytes[i] == 0) break;
-			length++;
-		}
-		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, length));
+		language = BufferTools.byteBufferToString(bytes, 1, 3);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+		Encoding enc = Encoding.getEncoding(is.read());
+		is.read(); is.read(); is.read();
+
+		description = new EncodedText(enc, is, true);
+		comment = new EncodedText(enc, is);
 	}
 
 	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (comment != null) bytes[0] = comment.getTextEncoding();
-		else bytes[0] = 0;
-		String langPadded;
-		if (language == null) {
-			langPadded = DEFAULT_LANGUAGE;
-		} else if (language.length() > 3) {
-			langPadded = language.substring(0, 3);
-		} else {
-			langPadded = BufferTools.padStringRight(language, 3, '\00');
-		}
-		try {
-			BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
-		} catch (UnsupportedEncodingException e) {
-		}
-		int marker = 4;
-		if (description != null) {
-			byte[] descriptionBytes = description.toBytes(true, true);
-			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
-			marker += descriptionBytes.length;
-		} else {
-			bytes[marker++] = 0;
-		}
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		Encoding encoding = Encoding.getDefault();
 		if (comment != null) {
-			byte[] commentBytes = comment.toBytes(true, false);
-			BufferTools.copyIntoByteBuffer(commentBytes, 0, commentBytes.length, bytes, marker);
+			encoding = comment.getEncoding(); 
+		} else if (description != null) {
+			encoding = description.getEncoding();
 		}
-		return bytes;
+
+		output.write(encoding.ordinal());
+		
+		if (language == null) {
+			language = DEFAULT_LANGUAGE;
+		}
+		
+		byte[] langOutput = new byte[] { 0x0, 0x0, 0x0 };
+		byte[] langEncoded = language.getBytes(Charsets.US_ASCII);
+		
+		for (int i = 0; i < Math.min(langOutput.length, 3); ++i) {
+			langOutput[i] = langEncoded[i];
+		}
+		output.write(langOutput);
+		
+		if (description != null) {
+			output.write(description.toBytes());
+		} else {
+			output.write(encoding.terminator);
+		}
+
+		if (comment != null) {
+			output.write(comment.toBytes());
+		}
+		
+		return output.toByteArray();
 	}
 
-	protected int getLength() {
-		int length = 4;
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (comment != null) length += comment.toBytes(true, false).length;
-		return length;
-	}
-	
 	public String getLanguage() {
 		return language;
 	}
