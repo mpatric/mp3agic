@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import com.mpatric.mp3agic.AbstractID3v2Tag;
 import com.mpatric.mp3agic.BufferTools;
@@ -163,23 +164,37 @@ public class ID3v2TagTest extends TestCase {
 	}
 	
 	public void testShouldExtractGenreNumberFromCombinedGenreStringsCorrectly() throws Exception {
-		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
-		try {
-			id3tag.extractGenreNumber("");
-			fail("NumberFormatException expected but not thrown");
-		} catch (NumberFormatException e) {
-			// expected
-		}
-		assertEquals(13, id3tag.extractGenreNumber("13"));
-		assertEquals(13, id3tag.extractGenreNumber("(13)"));
-		assertEquals(13, id3tag.extractGenreNumber("(13)Pop"));
+		Matcher m = AbstractID3v2Tag.GENRE_REGEX.matcher("");
+		assertFalse(m.matches());
+
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("13");
+		assertTrue(m.matches());
+		assertEquals(13, Integer.parseInt(m.group(1)));
+		
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("(13)");
+		assertTrue(m.matches());
+		assertEquals(13, Integer.parseInt(m.group(1)));
+
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("(13)Pop");
+		assertTrue(m.matches());
+		assertEquals(13, Integer.parseInt(m.group(1)));
 	}
 	
 	public void testShouldExtractGenreDescriptionFromCombinedGenreStringsCorrectly() throws Exception {
-		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
-		assertNull(id3tag.extractGenreDescription(""));
-		assertEquals("", id3tag.extractGenreDescription("(13)"));
-		assertEquals("Pop", id3tag.extractGenreDescription("(13)Pop"));
+		Matcher m = AbstractID3v2Tag.GENRE_REGEX.matcher("");
+		assertFalse(m.matches());
+
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("13");
+		assertTrue(m.matches());
+		assertEquals("", m.group(2));
+		
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("(13)");
+		assertTrue(m.matches());
+		assertEquals("", m.group(2));
+
+		m = AbstractID3v2Tag.GENRE_REGEX.matcher("(13)Pop");
+		assertTrue(m.matches());
+		assertEquals("Pop", m.group(2));
 	}
 	
 	public void testShouldSetCombinedGenreOnTag() throws Exception {

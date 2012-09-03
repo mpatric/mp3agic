@@ -85,12 +85,8 @@ public class Mp3Catalog extends BaseApp {
 			catalogLastField(cat, "");
 		} else {
 			int length = Math.min(bytes.length, MAX_CUSTOM_TAG_BYTES_TO_SHOW);
-			try {
-				String s = BufferTools.byteBufferToString(bytes, 0, length);
-				catalogLastField(cat, BufferTools.asciiOnly(s));
-			} catch (UnsupportedEncodingException e) {
-				catalogLastField(cat, "");
-			}
+			String s = BufferTools.byteBufferToString(bytes, 0, length);
+			catalogLastField(cat, BufferTools.asciiOnly(s));
 		}
 	}
 

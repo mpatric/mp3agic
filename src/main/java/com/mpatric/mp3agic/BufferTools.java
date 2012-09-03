@@ -1,38 +1,69 @@
 package com.mpatric.mp3agic;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 public class BufferTools {
-	
-	protected static final String defaultCharsetName = "ISO-8859-1";
+	private static final Charset DEFAULT_CHARSET = Charsets.ISO_8859_1;
 	
 	public static String byteBufferToStringIgnoringEncodingIssues(byte[] bytes, int offset, int length) {
-		try {
-			return byteBufferToString(bytes, offset, length, defaultCharsetName);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+		return byteBufferToString(bytes, offset, length, DEFAULT_CHARSET);
 	}
 	
-	public static String byteBufferToString(byte[] bytes, int offset, int length) throws UnsupportedEncodingException {
-		return byteBufferToString(bytes, offset, length, defaultCharsetName);
+	public static String byteBufferToString(byte[] bytes, int offset, int length) {
+		return byteBufferToString(bytes, offset, length, DEFAULT_CHARSET);
 	}
-	
+
+	public static String byteBufferToString(ByteArrayInputStream bytes, int length) {
+		return byteBufferToString(bytes, length, DEFAULT_CHARSET);
+	}
+
 	public static String byteBufferToString(byte[] bytes, int offset, int length, String charsetName) throws UnsupportedEncodingException {
 		if (length < 1) return "";
 		return new String(bytes, offset, length, charsetName);
 	}
-	
-	public static byte[] stringToByteBufferIgnoringEncodingIssues(String s, int offset, int length) {
-		try {
-			return stringToByteBuffer(s, offset, length);
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
+
+	public static String byteBufferToString(byte[] bytes, int offset, int length, Charset charset) {
+		if (length < 1) return "";
+		return new String(bytes, offset, length, charset);
 	}
-	
-	public static byte[] stringToByteBuffer(String s, int offset, int length) throws UnsupportedEncodingException {
-		return stringToByteBuffer(s, offset, length, defaultCharsetName);
+
+	public static String byteBufferToString(ByteArrayInputStream bytes, int length, Charset charset) {
+		if (length < 1) return "";
+		byte[] buffer = new byte[length];
+		bytes.read(buffer, 0, length);
+		return new String(buffer, charset);
+	}
+
+	public static byte[] streamIntoByteBuffer(ByteArrayInputStream data) {
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		int read;
+		while (-1 != (read = data.read())) {
+			output.write(read);
+		}
+		return output.toByteArray();
+	}
+
+	public static String streamIntoTerminatedString(ByteArrayInputStream data) {
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		int read;
+		while (0 < (read = data.read())) {
+			output.write(read);
+		}
+		return new String(output.toByteArray(), DEFAULT_CHARSET);
+	}
+
+	public static String streamIntoString(ByteArrayInputStream data) {
+		return new String(streamIntoByteBuffer(data), DEFAULT_CHARSET);
+	}
+
+	public static byte[] stringToByteBuffer(String s, int offset, int length) {
+		return stringToByteBuffer(s, offset, length, DEFAULT_CHARSET);
 	}
 	
 	public static byte[] stringToByteBuffer(String s, int offset, int length, String charsetName) throws UnsupportedEncodingException {
@@ -40,14 +71,28 @@ public class BufferTools {
 		byte[] bytes = stringToCopy.getBytes(charsetName);
 		return bytes;
 	}
-	
-	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset) throws UnsupportedEncodingException {
-		stringIntoByteBuffer(s, offset, length, bytes, destOffset, defaultCharsetName);
+
+	public static byte[] stringToByteBuffer(String s, int offset, int length, Charset charset) {
+		String stringToCopy = s.substring(offset, offset + length);
+		byte[] bytes = stringToCopy.getBytes(charset);
+		return bytes;
+	}
+
+	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset) {
+		stringIntoByteBuffer(s, offset, length, bytes, destOffset, DEFAULT_CHARSET);
 	}
 	
 	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset, String charsetName) throws UnsupportedEncodingException {
 		String stringToCopy = s.substring(offset, offset + length);
 		byte[] srcBytes = stringToCopy.getBytes(charsetName);
+		if (srcBytes.length > 0) {
+			System.arraycopy(srcBytes, 0, bytes, destOffset, srcBytes.length);
+		}
+	}
+
+	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset, Charset charset) {
+		String stringToCopy = s.substring(offset, offset + length);
+		byte[] srcBytes = stringToCopy.getBytes(charset);
 		if (srcBytes.length > 0) {
 			System.arraycopy(srcBytes, 0, bytes, destOffset, srcBytes.length);
 		}
