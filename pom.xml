@@ -33,12 +33,6 @@
 			<artifactId>guava</artifactId>
 			<version>13.0</version>
 		</dependency>
-		<!-- uploads releases to github --> 
-		<dependency>
-			<groupId>com.github.github</groupId>
-			<artifactId>downloads-maven-plugin</artifactId>
-			<version>0.5</version>
-		</dependency>
 	</dependencies>
 
 	<build>
