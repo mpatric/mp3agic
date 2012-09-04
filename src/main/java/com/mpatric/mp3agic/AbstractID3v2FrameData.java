@@ -38,7 +38,7 @@ public abstract class AbstractID3v2FrameData {
 		return bytes;
 	}
 	
-	public byte[] toBytes() {
+	protected byte[] toBytes() {
 		return packAndUnsynchroniseFrameData();
 	}
 	
@@ -47,10 +47,6 @@ public abstract class AbstractID3v2FrameData {
 		AbstractID3v2FrameData other = (AbstractID3v2FrameData) obj;
 		if (unsynchronisation != other.unsynchronisation) return false;
 		return true;
-	}
-
-	protected int getLength() {
-		return packFrameData().length;
 	}
 	
 	private static class FrameFieldData implements Comparable<FrameFieldData>{

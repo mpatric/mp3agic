@@ -20,10 +20,10 @@ public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		ByteArrayInputStream data = new ByteArrayInputStream(bytes);
-		encoding = Encoding.getEncoding(data.read());
+		setEncoding(Encoding.getEncoding(data.read()));
 		mimeType = "image/" + BufferTools.byteBufferToString(data, 3).toLowerCase();
 		pictureType = (byte) data.read();
-		description = encoding.parse(data, true);
+		description = getEncoding().parse(data, true);
 		imageData = BufferTools.streamIntoByteBuffer(data);
 	}
 }

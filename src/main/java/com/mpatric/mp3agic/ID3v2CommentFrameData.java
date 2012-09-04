@@ -2,14 +2,11 @@ package com.mpatric.mp3agic;
 
 import com.mpatric.mp3agic.annotations.FrameMember;
 
-public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
+public class ID3v2CommentFrameData extends AbstractID3v2EncodedFrameData {
 	private static final String DEFAULT_LANGUAGE = "eng";
 	
-	@FrameMember(ordinal = 0)
-	private Encoding encoding;
-	
 	@FrameMember(width = 3, ordinal = 1)
-	private String language;
+	private String language = DEFAULT_LANGUAGE;
 
 	@FrameMember(ordinal = 2, encoded = true, terminated = true)
 	private String description;
@@ -26,8 +23,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	}
 
 	public ID3v2CommentFrameData(boolean unsynchronisation, Encoding encoding, String language, String description, String comment) {
-		super(unsynchronisation);
-		this.encoding = encoding;
+		super(unsynchronisation, encoding);
 		this.language = language;
 		this.description = description;
 		this.comment = comment;
@@ -60,14 +56,6 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public void setEncoding(Encoding encoding) {
-		this.encoding = encoding;
 	}
 
 	public boolean equals(Object obj) {

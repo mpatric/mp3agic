@@ -4,10 +4,8 @@ import java.util.Arrays;
 
 import com.mpatric.mp3agic.annotations.FrameMember;
 
-public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
+public class ID3v2PictureFrameData extends AbstractID3v2EncodedFrameData {
 
-	@FrameMember(ordinal = 0)
-	protected Encoding encoding;
 	@FrameMember(ordinal = 1, terminated = true)
 	protected String mimeType;
 	@FrameMember(ordinal = 2)
@@ -22,9 +20,8 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	}
 	
 	public ID3v2PictureFrameData(boolean unsynchronisation, Encoding encoding, String mimeType, byte pictureType, String description, byte[] imageData) {
-		super(unsynchronisation);
+		super(unsynchronisation, encoding);
 		this.mimeType = mimeType;
-		this.encoding = encoding;
 		this.pictureType = pictureType;
 		this.description = description;
 		this.imageData = imageData;
@@ -85,13 +82,5 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		} else if (other.imageData == null) return false;
 		else if (! Arrays.equals(imageData, other.imageData)) return false;
 		return true;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public void setEncoding(Encoding encoding) {
-		this.encoding = encoding;
 	}
 }
