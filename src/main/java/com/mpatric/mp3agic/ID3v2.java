@@ -34,6 +34,8 @@ public interface ID3v2 extends ID3v1 {
 	
 	ArrayList<ID3v2ChapterFrameData> getChapters();
 	
+	ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC();
+	
 	String getEncoder();
 	void setEncoder(String encoder);
 	
