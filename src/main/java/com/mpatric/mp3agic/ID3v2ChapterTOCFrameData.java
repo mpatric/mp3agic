@@ -55,7 +55,7 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         }
         
         for (int offset = bb.position(); offset < bytes.length;) {
-            ID3v2Frame frame = new ID3v2Frame(bytes, bb.position());
+            ID3v2Frame frame = new ID3v2Frame(bytes, offset);
             offset += frame.getLength();
             subframes.add(frame);
         }
