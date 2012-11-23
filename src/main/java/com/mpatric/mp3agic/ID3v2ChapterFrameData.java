@@ -35,12 +35,9 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 
     protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
         ByteBuffer bb = ByteBuffer.wrap(bytes);
-        String fromBytes = new String(bytes);
-        int i = fromBytes.indexOf(0);
-        if (i > 0) {
-            id = fromBytes.substring(0, i);
-        }
-
+        
+        id = ByteBufferUtils.extractNullTerminatedString(bb);
+        
         bb.position(id.length() + 1);
         startTime = bb.getInt();
         endTime = bb.getInt();
