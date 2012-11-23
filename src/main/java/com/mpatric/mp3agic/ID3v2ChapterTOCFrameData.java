@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
     protected boolean isRoot;
-    protected boolean isOrdered; 
+    protected boolean isOrdered;
     protected String id;
     protected String[] childs;
     protected ArrayList<ID3v2Frame> subframes = new ArrayList<ID3v2Frame>();
@@ -18,13 +18,12 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     }
 
     public ID3v2ChapterTOCFrameData(boolean unsynchronisation, boolean isRoot, boolean isOrdered,
-            String id, String[] childs, ArrayList<ID3v2Frame> subframes) {
+            String id, String[] childs) {
         super(unsynchronisation);
         this.isRoot = isRoot;
         this.isOrdered = isOrdered;
         this.id = id;
         this.childs = childs;
-        this.subframes = subframes;
     }
 
     public ID3v2ChapterTOCFrameData(boolean unsynchronisation, byte[] bytes)
@@ -35,25 +34,25 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
     protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
         ByteBuffer bb = ByteBuffer.wrap(bytes);
-        
+
         id = ByteBufferUtils.extractNullTerminatedString(bb);
-        
+
         byte flags = bb.get();
-        if((flags & 0x01) == 0x01) {
+        if ((flags & 0x01) == 0x01) {
             isRoot = true;
         }
-        if((flags & 0x02) == 0x02) {
+        if ((flags & 0x02) == 0x02) {
             isOrdered = true;
         }
-        
-        int childCount = bb.get(); //TODO: 0xFF -> int = 255; byte = -128;
+
+        int childCount = bb.get(); // TODO: 0xFF -> int = 255; byte = -128;
 
         childs = new String[childCount];
-        
+
         for (int i = 0; i < childCount; i++) {
             childs[i] = ByteBufferUtils.extractNullTerminatedString(bb);
         }
-        
+
         for (int offset = bb.position(); offset < bytes.length;) {
             ID3v2Frame frame = new ID3v2Frame(bytes, offset);
             offset += frame.getLength();
@@ -61,23 +60,45 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         }
 
     }
+    
+    public void addSubframe(String id, AbstractID3v2FrameData frame) {
+        subframes.add(new ID3v2Frame(id, frame.toBytes()));
+    }
 
     protected byte[] packFrameData() {
-        // byte[] bytes = new byte[getLength()];
-        // if (text != null)
-        // bytes[0] = text.getTextEncoding();
-        // else
-        // bytes[0] = 0;
-        // byte[] textBytes = text.toBytes(true, false);
-        // if (textBytes.length > 0) {
-        // BufferTools.copyIntoByteBuffer(textBytes, 0, textBytes.length, bytes,
-        // 1);
-        // }
-        // return bytes;
-        return null;
+        ByteBuffer bb = ByteBuffer.allocate(getLength());
+        bb.put(id.getBytes());
+        bb.put((byte) 0);
+        bb.put(getFlags());
+        bb.put((byte)childs.length);
+        
+        for(String child: childs) {
+            bb.put(child.getBytes());
+            bb.put((byte) 0);
+        }
+
+        for (ID3v2Frame frame : subframes) {
+            try {
+                bb.put(frame.toBytes());
+            } catch (NotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+        return bb.array();
     }
-    
-    
+
+    private byte getFlags() {
+        byte b = 0;
+        
+        if(isRoot) {
+            b |= 0x01;
+        }
+        
+        if(isOrdered) {
+            b |= 0x02;
+        }
+        return b;
+    }
 
     public boolean isRoot() {
         return isRoot;
@@ -121,7 +142,20 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
     @Override
     protected int getLength() {
-        return 0;
+        int length = 3;
+        if (id != null) length += id.length();
+        if (childs != null) {
+            length += childs.length;
+            for (String child : childs) {
+                length += child.length();
+            }
+        }
+        if (subframes != null) {
+            for (ID3v2Frame frame : subframes) {
+                length += frame.getLength();
+            }
+        }
+        return length;
     }
 
     // public boolean equals(Object obj) {
@@ -134,7 +168,7 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     // else if (! text.equals(other.text)) return false;
     // return true;
     // }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

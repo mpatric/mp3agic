@@ -18,14 +18,13 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
     }
 
     public ID3v2ChapterFrameData(boolean unsynchronisation, String id, int startTime,
-            int endTime, int startOffset, int endOffset, ArrayList<ID3v2Frame> subframes) {
+            int endTime, int startOffset, int endOffset) {
         super(unsynchronisation);
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.startOffset = startOffset;
         this.endOffset = endOffset;
-        this.subframes = subframes;
     }
 
     public ID3v2ChapterFrameData(boolean unsynchronisation, byte[] bytes)
@@ -56,19 +55,28 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 
     }
 
+    public void addSubframe(String id, AbstractID3v2FrameData frame) {
+        subframes.add(new ID3v2Frame(id, frame.toBytes()));
+    }
+
     protected byte[] packFrameData() {
-        // byte[] bytes = new byte[getLength()];
-        // if (text != null)
-        // bytes[0] = text.getTextEncoding();
-        // else
-        // bytes[0] = 0;
-        // byte[] textBytes = text.toBytes(true, false);
-        // if (textBytes.length > 0) {
-        // BufferTools.copyIntoByteBuffer(textBytes, 0, textBytes.length, bytes,
-        // 1);
-        // }
-        // return bytes;
-        return null;
+        ByteBuffer bb = ByteBuffer.allocate(getLength());
+        bb.put(id.getBytes());
+        bb.put((byte) 0);
+
+        bb.putInt(startTime);
+        bb.putInt(endTime);
+        bb.putInt(startOffset);
+        bb.putInt(endOffset);
+
+        for (ID3v2Frame frame : subframes) {
+            try {
+                bb.put(frame.toBytes());
+            } catch (NotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+        return bb.array();
     }
 
     public String getId() {
@@ -121,7 +129,16 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 
     @Override
     protected int getLength() {
-        return 0;
+        int length = 1;
+        length += 16;
+        if (id != null)
+            length += id.length();
+        if (subframes != null) {
+            for (ID3v2Frame frame : subframes) {
+                length += frame.getLength();
+            }
+        }
+        return length;
     }
 
     @Override

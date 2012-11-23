@@ -724,6 +724,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 
         return extractChapterFrameData(ID_CHAPTER);
     }
+    
+    @Override
+    public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
+        if(chapters != null) {
+            invalidateDataLength();
+            boolean first = true;
+            for(ID3v2ChapterFrameData chapter: chapters) {
+                if(first) {
+                    first = false;                    
+                    addFrame(createFrame(ID_CHAPTER, chapter.toBytes()), true);
+                } else {
+                    addFrame(createFrame(ID_CHAPTER, chapter.toBytes()), false);
+                }
+            }
+        }
+    }
 
     public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
         if (obseleteFormat) {
@@ -731,6 +747,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         }
 
         return extractChapterTOCFrameData(ID_CHAPTER_TOC);
+    }
+    
+    @Override
+    public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> toc) {
+        if(toc != null) {
+            invalidateDataLength();
+            boolean first = true;
+            for(ID3v2ChapterTOCFrameData ct: toc) {
+                if(first) {
+                    first = false;
+                    addFrame(createFrame(ID_CHAPTER_TOC, ct.toBytes()), true);
+                } else {
+                    addFrame(createFrame(ID_CHAPTER_TOC, ct.toBytes()), false);
+                }
+            }
+        }
     }
 
     public String getEncoder() {
