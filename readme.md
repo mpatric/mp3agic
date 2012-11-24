@@ -183,6 +183,20 @@ For now, the best approach to access frames not yet supported by convenience met
 
 Code to read and write these frames more easily is coming soon. Watch this space.
 
+## Submitting pull requests
+
+If you have added a feature or fixed a bug in mp3agic and want to share it, please submit a pull request as follows:
+
+* Fork the project
+* Write the code for your feature or bug fix
+* Please don't auto-format the code or make wholesale whitespace changes as it makes seeing what has changed more difficult
+* Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
+* Make sure the existing tests all pass
+* Commit and do not mess with version, or history
+* Send me a pull request
+
+Thanks for sharing!
+
 ## Copyright
 
 Copyright (c) 2006-2012 Michael Patricios. See mit-license.txt for details.
