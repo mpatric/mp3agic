@@ -1,21 +1,26 @@
 package com.mpatric.mp3agic;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
+import com.mpatric.mp3agic.annotations.FrameMember;
 
+public class ID3v2PictureFrameData extends AbstractID3v2EncodedFrameData {
+
+	@FrameMember(ordinal = 1, terminated = true)
 	protected String mimeType;
+	@FrameMember(ordinal = 2)
 	protected byte pictureType;
-	protected EncodedText description;
+	@FrameMember(ordinal = 3, encoded = true, terminated = true)
+	protected String description;
+	@FrameMember(ordinal = 4)
 	protected byte[] imageData;
 
 	public ID3v2PictureFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2PictureFrameData(boolean unsynchronisation, String mimeType, byte pictureType, EncodedText description, byte[] imageData) {
-		super(unsynchronisation);
+	public ID3v2PictureFrameData(boolean unsynchronisation, Encoding encoding, String mimeType, byte pictureType, String description, byte[] imageData) {
+		super(unsynchronisation, encoding);
 		this.mimeType = mimeType;
 		this.pictureType = pictureType;
 		this.description = description;
@@ -25,64 +30,6 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	public ID3v2PictureFrameData(boolean unsynchronisation, byte[] bytes) throws InvalidDataException {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
-	}
-	
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		int marker;
-		for (marker = 1; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		try {
-			mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
-		} catch (UnsupportedEncodingException e) {
-			mimeType = "image/unknown";
-		}
-		pictureType = bytes[marker + 1];
-		marker += 2;
-		int marker2;
-		for (marker2 = marker; marker2 < bytes.length; marker2++) {
-			if (bytes[marker2] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, marker2 - marker));
-		marker2 += description.getTerminator().length;
-		imageData = BufferTools.copyBuffer(bytes, marker2, bytes.length - marker2);
-	}
-	
-	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (description != null) bytes[0] = description.getTextEncoding();
-		else bytes[0] = 0;
-		int mimeTypeLength = 0;
-		if (mimeType != null && mimeType.length() > 0) {
-			mimeTypeLength = mimeType.length();
-			try {
-				BufferTools.stringIntoByteBuffer(mimeType, 0, mimeTypeLength, bytes, 1);
-			} catch (UnsupportedEncodingException e) {
-			}
-		}
-		int marker = mimeTypeLength + 1;
-		bytes[marker++] = 0;
-		bytes[marker++] = pictureType; 
-		if (description != null && description.toBytes().length > 0) {
-			byte[] descriptionBytes = description.toBytes(true, true);
-			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
-			marker += descriptionBytes.length;
-		} else {
-			bytes[marker++] = 0;
-		}
-		if (imageData != null && imageData.length > 0) {
-			BufferTools.copyIntoByteBuffer(imageData, 0, imageData.length, bytes, marker);
-		}
-		return bytes;
-	}
-
-	protected int getLength() {
-		int length = 3;
-		if (mimeType != null) length += mimeType.length();
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (imageData != null) length += imageData.length;
-		return length;
 	}
 	
 	public String getMimeType() {
@@ -101,11 +48,11 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		this.pictureType = pictureType;
 	}
 
-	public EncodedText getDescription() {
+	public String getDescription() {
 		return description;
 	}
 	
-	public void setDescription(EncodedText description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 	

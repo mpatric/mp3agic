@@ -1,15 +1,22 @@
 package com.mpatric.mp3agic;
 
-public class ID3v2TextFrameData extends AbstractID3v2FrameData {
-	
-	protected EncodedText text;
+import com.mpatric.mp3agic.annotations.FrameMember;
+
+
+public class ID3v2TextFrameData extends AbstractID3v2EncodedFrameData {
+	@FrameMember(ordinal = 1, encoded = true)
+	protected String text;
 	
 	public ID3v2TextFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2TextFrameData(boolean unsynchronisation, EncodedText text) {
-		super(unsynchronisation);
+	public ID3v2TextFrameData(boolean unsynchronisation, String text) {
+		this(unsynchronisation, Encoding.getDefault(), text);
+	}
+	
+	public ID3v2TextFrameData(boolean unsynchronisation, Encoding encoding, String text) {
+		super(unsynchronisation, encoding);
 		this.text = text;
 	}
 	
@@ -18,32 +25,11 @@ public class ID3v2TextFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		text = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, bytes.length - 1));
-	}
-	
-	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (text != null) bytes[0] = text.getTextEncoding();
-		else bytes[0] = 0;
-		byte[] textBytes = text.toBytes(true, false);
-		if (textBytes.length > 0) {
-			BufferTools.copyIntoByteBuffer(textBytes, 0, textBytes.length, bytes, 1);
-		}
-		return bytes;
-	}
-	
-	protected int getLength() {
-		int length = 1;
-		if (text != null) length += text.toBytes(true, false).length;
-		return length;
-	}
-
-	public EncodedText getText() {
+	public String getText() {
 		return text;
 	}
 
-	public void setText(EncodedText text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 	

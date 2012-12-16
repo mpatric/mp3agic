@@ -1,21 +1,29 @@
 package com.mpatric.mp3agic;
 
-import java.io.UnsupportedEncodingException;
+import com.mpatric.mp3agic.annotations.FrameMember;
 
-public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
-
+public class ID3v2CommentFrameData extends AbstractID3v2EncodedFrameData {
 	private static final String DEFAULT_LANGUAGE = "eng";
 	
-	private String language;
-	private EncodedText description;
-	private EncodedText comment;
+	@FrameMember(width = 3, ordinal = 1)
+	private String language = DEFAULT_LANGUAGE;
+
+	@FrameMember(ordinal = 2, encoded = true, terminated = true)
+	private String description;
+
+	@FrameMember(ordinal = 3, encoded = true)
+	private String comment;
 
 	public ID3v2CommentFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
 	
-	public ID3v2CommentFrameData(boolean unsynchronisation, String language, EncodedText description, EncodedText comment) {
-		super(unsynchronisation);
+	public ID3v2CommentFrameData(boolean unsynchronisation, String language, String description, String comment) {
+		this(unsynchronisation, Encoding.getDefault(), language, description, comment);
+	}
+
+	public ID3v2CommentFrameData(boolean unsynchronisation, Encoding encoding, String language, String description, String comment) {
+		super(unsynchronisation, encoding);
 		this.language = language;
 		this.description = description;
 		this.comment = comment;
@@ -25,66 +33,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		try {
-			language = BufferTools.byteBufferToString(bytes, 1, 3);
-		} catch (UnsupportedEncodingException e) {
-			language = "";
-		}
-		int marker;
-		for (marker = 4; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
-		marker += description.getTerminator().length;
-		int length = 0;
-		for (int i = marker; i < bytes.length; i++) {
-			if (bytes[i] == 0) break;
-			length++;
-		}
-		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, length));
-	}
 
-	protected byte[] packFrameData() {
-		byte[] bytes = new byte[getLength()];
-		if (comment != null) bytes[0] = comment.getTextEncoding();
-		else bytes[0] = 0;
-		String langPadded;
-		if (language == null) {
-			langPadded = DEFAULT_LANGUAGE;
-		} else if (language.length() > 3) {
-			langPadded = language.substring(0, 3);
-		} else {
-			langPadded = BufferTools.padStringRight(language, 3, '\00');
-		}
-		try {
-			BufferTools.stringIntoByteBuffer(langPadded, 0, 3, bytes, 1);
-		} catch (UnsupportedEncodingException e) {
-		}
-		int marker = 4;
-		if (description != null) {
-			byte[] descriptionBytes = description.toBytes(true, true);
-			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
-			marker += descriptionBytes.length;
-		} else {
-			bytes[marker++] = 0;
-		}
-		if (comment != null) {
-			byte[] commentBytes = comment.toBytes(true, false);
-			BufferTools.copyIntoByteBuffer(commentBytes, 0, commentBytes.length, bytes, marker);
-		}
-		return bytes;
-	}
-
-	protected int getLength() {
-		int length = 4;
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (comment != null) length += comment.toBytes(true, false).length;
-		return length;
-	}
-	
 	public String getLanguage() {
 		return language;
 	}
@@ -93,22 +42,22 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		this.language = language;
 	}
 	
-	public EncodedText getComment() {
+	public String getComment() {
 		return comment;
 	}
 
-	public void setComment(EncodedText comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
-	public EncodedText getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(EncodedText description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (! (obj instanceof ID3v2CommentFrameData)) return false;
 		if (! super.equals(obj)) return false;
@@ -127,4 +76,5 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		else if (! comment.equals(other.comment)) return false;
 		return true;
 	}
+
 }
