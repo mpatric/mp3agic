@@ -644,7 +644,6 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterFrameData(ID_CHAPTER);
     }
     
-    @Override
     public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
         if(chapters != null) {
             invalidateDataLength();
@@ -668,7 +667,6 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterTOCFrameData(ID_CHAPTER_TOC);
     }
     
-    @Override
     public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> toc) {
         if(toc != null) {
             invalidateDataLength();
