@@ -1,7 +1,9 @@
 package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -22,6 +24,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_ARTIST = "TPE1";
 	public static final String ID_ALBUM_ARTIST = "TPE2";
 	public static final String ID_TRACK = "TRCK";
+	public static final String ID_CHAPTER_TOC = "CTOC";
+    public static final String ID_CHAPTER = "CHAP";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
 	public static final String ID_ENCODER_OBSELETE = "TEN";
 	public static final String ID_URL_OBSELETE = "WXX";
@@ -631,6 +635,54 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			addFrame(createFrame(ID_URL, frameData.toBytes()), true);
 		}
 	}
+	
+    public ArrayList<ID3v2ChapterFrameData> getChapters() {
+        if (obseleteFormat) {
+            return null;
+        }
+
+        return extractChapterFrameData(ID_CHAPTER);
+    }
+    
+    @Override
+    public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
+        if(chapters != null) {
+            invalidateDataLength();
+            boolean first = true;
+            for(ID3v2ChapterFrameData chapter: chapters) {
+                if(first) {
+                    first = false;
+                    addFrame(createFrame(ID_CHAPTER, chapter.toBytes()), true);
+                } else {
+                    addFrame(createFrame(ID_CHAPTER, chapter.toBytes()), false);
+                }
+            }
+        }
+    }
+
+    public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
+        if (obseleteFormat) {
+            return null;
+        }
+
+        return extractChapterTOCFrameData(ID_CHAPTER_TOC);
+    }
+    
+    @Override
+    public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> toc) {
+        if(toc != null) {
+            invalidateDataLength();
+            boolean first = true;
+            for(ID3v2ChapterTOCFrameData ct: toc) {
+                if(first) {
+                    first = false;
+                    addFrame(createFrame(ID_CHAPTER_TOC, ct.toBytes()), true);
+                } else {
+                    addFrame(createFrame(ID_CHAPTER_TOC, ct.toBytes()), false);
+                }
+            }
+        }
+    }
 
 	public String getEncoder() {
 		ID3v2TextFrameData frameData;
@@ -678,6 +730,46 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
+    private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
+        ID3v2FrameSet frameSet = frameSets.get(id);
+        if (frameSet != null) {
+            ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<ID3v2ChapterFrameData>();
+            List<ID3v2Frame> frames = frameSet.getFrames();
+            for (ID3v2Frame frame : frames) {
+                ID3v2ChapterFrameData frameData;
+                try {
+                    frameData = new ID3v2ChapterFrameData(useFrameUnsynchronisation(),
+                            frame.getData());
+                    chapterData.add(frameData);
+                } catch (InvalidDataException e) {
+                    // do nothing
+                }
+            }
+            return chapterData;
+        }
+        return null;
+    }
+
+    private ArrayList<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
+        ID3v2FrameSet frameSet = frameSets.get(id);
+        if (frameSet != null) {
+            ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<ID3v2ChapterTOCFrameData>();
+            List<ID3v2Frame> frames = frameSet.getFrames();
+            for (ID3v2Frame frame : frames) {
+                ID3v2ChapterTOCFrameData frameData;
+                try {
+                    frameData = new ID3v2ChapterTOCFrameData(useFrameUnsynchronisation(),
+                            frame.getData());
+                    chapterData.add(frameData);
+                } catch (InvalidDataException e) {
+                    // do nothing
+                }
+            }
+            return chapterData;
+        }
+        return null;
+    }
+	
 	private ID3v2TextFrameData extractTextFrameData(String id) {
 		ID3v2FrameSet frameSet = frameSets.get(id);
 		if (frameSet != null) {
