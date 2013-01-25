@@ -1,6 +1,8 @@
 package com.mpatric.mp3agic;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -265,6 +267,72 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setEncoder("\u03B9\u03AC");
 		byte[] albumImage = TestHelper.loadFile("src/test/resources/image.png");
 		id3tag.setAlbumImage(albumImage, "image/png");
+	}
+	
+	public void testShouldExtractChapterTOCFramesFromMp3() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		
+		ArrayList<ID3v2ChapterTOCFrameData> chapterTOCs = id3tag.getChapterTOC();
+		assertEquals(1, chapterTOCs.size());
+		
+		ID3v2ChapterTOCFrameData tocFrameData = chapterTOCs.get(0);
+		assertEquals("toc1", tocFrameData.getId());
+		String expectedChildren[] = {"ch1", "ch2", "ch3"};
+		assertTrue(Arrays.equals(expectedChildren, tocFrameData.getChilds()));
+		
+		ArrayList<ID3v2Frame> subFrames = tocFrameData.getSubframes();
+		assertEquals(0, subFrames.size());
+	}
+	
+	public void testShouldExtractChapterTOCAndChapterFramesFromMp3() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		
+		ArrayList<ID3v2ChapterFrameData> chapters = id3tag.getChapters();
+		assertEquals(3, chapters.size());
+		
+		ID3v2ChapterFrameData chapter1 = chapters.get(0);
+		assertEquals("ch1", chapter1.getId());
+		assertEquals(0, chapter1.getStartTime());
+		assertEquals(5000, chapter1.getEndTime());
+		assertEquals(-1, chapter1.getStartOffset());
+		assertEquals(-1, chapter1.getEndOffset());
+		
+		ArrayList<ID3v2Frame> subFrames1 = chapter1.getSubframes();
+		assertEquals(1, subFrames1.size());
+		ID3v2Frame subFrame1 = subFrames1.get(0);
+		assertEquals("TIT2", subFrame1.getId());
+		ID3v2TextFrameData frameData1 = new ID3v2TextFrameData(false, subFrame1.getData());
+		assertEquals("start", frameData1.getText().toString());
+		
+		ID3v2ChapterFrameData chapter2 = chapters.get(1);
+		assertEquals("ch2", chapter2.getId());
+		assertEquals(5000, chapter2.getStartTime());
+		assertEquals(10000, chapter2.getEndTime());
+		assertEquals(-1, chapter2.getStartOffset());
+		assertEquals(-1, chapter2.getEndOffset());
+		
+		ArrayList<ID3v2Frame> subFrames2 = chapter2.getSubframes();
+		assertEquals(1, subFrames2.size());
+		ID3v2Frame subFrame2 = subFrames2.get(0);
+		assertEquals("TIT2", subFrame2.getId());
+		ID3v2TextFrameData frameData2 = new ID3v2TextFrameData(false, subFrame2.getData());
+		assertEquals("5 seconds", frameData2.getText().toString());
+		
+		ID3v2ChapterFrameData chapter3 = chapters.get(2);
+		assertEquals("ch3", chapter3.getId());
+		assertEquals(10000, chapter3.getStartTime());
+		assertEquals(15000, chapter3.getEndTime());
+		assertEquals(-1, chapter3.getStartOffset());
+		assertEquals(-1, chapter3.getEndOffset());
+		
+		ArrayList<ID3v2Frame> subFrames3 = chapter3.getSubframes();
+		assertEquals(1, subFrames3.size());
+		ID3v2Frame subFrame3 = subFrames3.get(0);
+		assertEquals("TIT2", subFrame3.getId());
+		ID3v2TextFrameData frameData3 = new ID3v2TextFrameData(false, subFrame3.getData());
+		assertEquals("10 seconds", frameData3.getText().toString());
 	}
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
