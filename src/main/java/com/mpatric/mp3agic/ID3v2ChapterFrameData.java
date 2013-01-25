@@ -1,4 +1,3 @@
-
 package com.mpatric.mp3agic;
 
 import java.nio.ByteBuffer;
@@ -157,14 +156,22 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
         return builder.toString();
     }
 
-    // public boolean equals(Object obj) {
-    // if (! (obj instanceof ID3v2ChapterFrameData)) return false;
-    // if (! super.equals(obj)) return false;
-    // ID3v2ChapterFrameData other = (ID3v2ChapterFrameData) obj;
-    // if (text == null) {
-    // if (other.text != null) return false;
-    // } else if (other.text == null) return false;
-    // else if (! text.equals(other.text)) return false;
-    // return true;
-    // }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		ID3v2ChapterFrameData other = (ID3v2ChapterFrameData) obj;
+		if (endOffset != other.endOffset) return false;
+		if (endTime != other.endTime) return false;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		if (startOffset != other.startOffset) return false;
+		if (startTime != other.startTime) return false;
+		if (subframes == null) {
+			if (other.subframes != null) return false;
+		} else if (!subframes.equals(other.subframes)) return false;
+		return true;
+	}
 }

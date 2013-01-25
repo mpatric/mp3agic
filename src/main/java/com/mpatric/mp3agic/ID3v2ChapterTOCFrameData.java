@@ -185,4 +185,22 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         builder.append("]");
         return builder.toString();
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		ID3v2ChapterTOCFrameData other = (ID3v2ChapterTOCFrameData) obj;
+		if (!Arrays.equals(childs, other.childs)) return false;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		if (isOrdered != other.isOrdered) return false;
+		if (isRoot != other.isRoot) return false;
+		if (subframes == null) {
+			if (other.subframes != null) return false;
+		} else if (!subframes.equals(other.subframes)) return false;
+		return true;
+	}
 }
