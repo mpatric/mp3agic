@@ -199,4 +199,4 @@ Thanks for sharing!
 
 ## Copyright
 
-Copyright (c) 2006-2012 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2013 Michael Patricios. See mit-license.txt for details.
