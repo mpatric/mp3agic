@@ -274,7 +274,7 @@ public class EncodedTextTest extends TestCase {
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
 		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {0});
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {0, 0});
 		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
 		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
@@ -284,7 +284,7 @@ public class EncodedTextTest extends TestCase {
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
 		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)));
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe, 0});
+		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe, 0, 0});
 		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)));
 		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)));
 		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)));

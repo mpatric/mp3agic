@@ -334,6 +334,26 @@ public class ID3v2TagTest extends TestCase {
 		ID3v2TextFrameData frameData3 = new ID3v2TextFrameData(false, subFrame3.getData());
 		assertEquals("10 seconds", frameData3.getText().toString());
 	}
+	
+	public void testShouldReadTagFieldsFromMp3With32tagResavedByMp3tagWithUTF16Encoding() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v1andv23tagswithalbumimage-utf16le.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals("1", id3tag.getTrack());
+		assertEquals("ARTIST123456789012345678901234", id3tag.getArtist());
+		assertEquals("TITLE1234567890123456789012345", id3tag.getTitle());
+		assertEquals("ALBUM1234567890123456789012345", id3tag.getAlbum());
+		assertEquals("2001", id3tag.getYear());
+		assertEquals(0x01, id3tag.getGenre());
+		assertEquals("Classic Rock", id3tag.getGenreDescription());
+		//assertEquals("COMMENT123456789012345678901", id3tag.getComment());
+		assertEquals("COMPOSER23456789012345678901234", id3tag.getComposer());
+		assertEquals("ORIGARTIST234567890123456789012", id3tag.getOriginalArtist());
+		assertEquals("COPYRIGHT2345678901234567890123", id3tag.getCopyright());
+		assertEquals("URL2345678901234567890123456789", id3tag.getUrl());
+		assertEquals("ENCODER234567890123456789012345", id3tag.getEncoder());
+		assertEquals(1885, id3tag.getAlbumImage().length);
+		assertEquals("image/png", id3tag.getAlbumImageMimeType());
+	}
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");

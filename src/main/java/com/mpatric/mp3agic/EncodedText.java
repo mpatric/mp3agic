@@ -107,13 +107,17 @@ public class EncodedText {
 			leadingCharsToRemove = 3;
 		}
 		int trailingCharsToRemove = 0;
-		for (int i = 1; i <= 2; i++) {
-			if ((value.length - leadingCharsToRemove - trailingCharsToRemove) >= i && value[value.length - i] == 0) {
-				trailingCharsToRemove++;
-			} else {
-				break;
+		byte[] terminator = terminators[textEncoding];
+		if (value.length - leadingCharsToRemove >= terminator.length) {
+			boolean haveTerminator = true;
+			for (int i = 0; i < terminator.length; i++) {
+				if (value[value.length - terminator.length + i] != terminator[i]) {
+					haveTerminator = false;
+					break;
+				}
 			}
-		}
+			if (haveTerminator) trailingCharsToRemove = terminator.length;
+		}		
 		if (leadingCharsToRemove + trailingCharsToRemove > 0) {
 			int newLength = value.length - leadingCharsToRemove - trailingCharsToRemove;
 			byte[] newValue = new byte[newLength];
