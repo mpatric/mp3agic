@@ -28,23 +28,26 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	}
 	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		int marker;
-		for (marker = 1; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		try {
-			mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
-		} catch (UnsupportedEncodingException e) {
+		int marker = BufferTools.indexOfTerminator(bytes, 1, 1);
+		if (marker >= 0) {
+			try {
+				mimeType = BufferTools.byteBufferToString(bytes, 1, marker - 1);
+			} catch (UnsupportedEncodingException e) {
+				mimeType = "image/unknown";
+			}
+		} else {
 			mimeType = "image/unknown";
 		}
 		pictureType = bytes[marker + 1];
 		marker += 2;
-		int marker2;
-		for (marker2 = marker; marker2 < bytes.length; marker2++) {
-			if (bytes[marker2] == 0) break;
+		int marker2 = BufferTools.indexOfTerminatorForEncoding(bytes, marker, bytes[0]);
+		if (marker2 >= 0) {
+			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker , marker2 - marker));
+			marker2 += description.getTerminator().length;
+		} else {
+			description = new EncodedText(bytes[0], "");
+			marker2 = marker;
 		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, marker2 - marker));
-		marker2 += description.getTerminator().length;
 		imageData = BufferTools.copyBuffer(bytes, marker2, bytes.length - marker2);
 	}
 	

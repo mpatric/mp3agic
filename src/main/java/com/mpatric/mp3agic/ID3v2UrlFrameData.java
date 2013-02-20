@@ -23,19 +23,16 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 	}
 	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-		int marker;
-		for (marker = 1; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
-		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, marker - 1));
-		marker += description.getTerminator().length;
-		int length = 0;
-		for (int i = marker; i < bytes.length; i++) {
-			if (bytes[i] == 0) break;
-			length++;
+		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 1, bytes[0]);
+		if (marker >= 0) {
+			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, marker - 1));
+			marker += description.getTerminator().length;
+		} else {
+			description = new EncodedText(bytes[0], "");
+			marker = 1;
 		}
 		try {
-			url = BufferTools.byteBufferToString(bytes, marker, length);
+			url = BufferTools.byteBufferToString(bytes, marker, bytes.length - marker);
 		} catch (UnsupportedEncodingException e) {
 			url = "";
 		}

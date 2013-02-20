@@ -26,12 +26,14 @@ public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 		} 
 		mimeType = "image/" + filetype.toLowerCase();
 		pictureType = bytes[4];
-		int marker;
-		for (marker = 5; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
+		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 5, bytes[0]);
+		if (marker >= 0) {
+			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 5, marker - 5));
+			marker += description.getTerminator().length;
+		} else {
+			description = new EncodedText(bytes[0], "");
+			marker += 1;
 		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 5, marker - 5));
-		marker += description.getTerminator().length;
 		imageData = BufferTools.copyBuffer(bytes, marker, bytes.length - marker);
 	}
 }
