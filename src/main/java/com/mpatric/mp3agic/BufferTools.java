@@ -250,4 +250,29 @@ public class BufferTools {
 		}
 		return newString.toString();
 	}
+	
+	public static int indexOfTerminator(byte[] bytes) {
+		return indexOfTerminator(bytes, 0);
+	}
+	
+	public static int indexOfTerminator(byte[] bytes, int fromIndex) {
+		return indexOfTerminator(bytes, 0, 1);
+	}
+	
+	public static int indexOfTerminator(byte[] bytes, int fromIndex, int terminatorLength) {
+		int marker = -1;
+		for (int i = fromIndex; i <= bytes.length - terminatorLength; i++) {
+			if ((i - fromIndex) % terminatorLength == 0) {
+				int matched;
+				for (matched = 0; matched < terminatorLength; matched++) {
+					if (bytes[i + matched] != 0) break;
+				}
+				if (matched == terminatorLength) {
+					marker = i;
+					break;
+				}
+			}
+		}
+		return marker;
+	}
 }

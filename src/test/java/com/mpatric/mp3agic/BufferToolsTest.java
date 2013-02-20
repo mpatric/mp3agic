@@ -476,4 +476,76 @@ public class BufferToolsTest extends TestCase {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G};
 		assertEquals("T" + (char)(223) + "G", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
+	
+	// finding terminators
+	
+	public void testShouldFindSingleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
+	}
+	
+	public void testShouldFindFirstSingleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A, 0, BYTE_G, BYTE_A};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
+	}
+	
+	public void testShouldFindFirstSingleTerminatorAfterFromIndex() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A, 0, BYTE_G, BYTE_A};
+		assertEquals(7, BufferTools.indexOfTerminator(buffer, 5, 1));
+	}
+	
+	public void testShouldFindSingleTerminatorWhenFirstElement() throws Exception {
+		byte[] buffer = {0, BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
+		assertEquals(0, BufferTools.indexOfTerminator(buffer, 0, 1));
+	}
+	
+	public void testShouldFindSingleTerminatorWhenLastElement() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
+	}
+	
+	public void testShouldReturnMinusOneWhenNoSingleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
+		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 1));
+	}
+	
+	public void testShouldFindDoubleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, 0, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldFindNotFindDoubleTerminatorIfNotOnEvenByte() throws Exception {
+		byte[] buffer = {BYTE_T, 0, BYTE_G, BYTE_T, BYTE_T, 0, 0, BYTE_G, BYTE_A};
+		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldFindFirstDoubleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldFindFirstDoubleTerminatorOnAnEvenByte() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, 0, 0, BYTE_T, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
+		assertEquals(8, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldFindFirstDoubleTerminatorAfterFromIndex() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
+		assertEquals(8, BufferTools.indexOfTerminator(buffer, 6, 2));
+	}
+	
+	public void testShouldFindDoubleTerminatorWhenFirstElement() throws Exception {
+		byte[] buffer = {0, 0, BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
+		assertEquals(0, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldFindDoubleTerminatorWhenLastElement() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0};
+		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
+	
+	public void testShouldReturnMinusOneWhenNoDoubleTerminator() throws Exception {
+		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
+		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 2));
+	}
 }

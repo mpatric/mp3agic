@@ -26,34 +26,14 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 	
-	private static final byte[] std_terminator = {0};
-	private static final byte[] utf16_terminator = {0, 0};
-	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
 		} catch (UnsupportedEncodingException e) {
 			language = "";
 		}
-		byte[] expectedTerminator;
-		if (bytes[0] == EncodedText.TEXT_ENCODING_UTF_16 || bytes[0] == EncodedText.TEXT_ENCODING_UTF_16BE) {
-			expectedTerminator = utf16_terminator;
-		} else {
-			expectedTerminator = std_terminator;
-		}
-		int marker = -1;
-		for (int i = 4; i <= bytes.length - expectedTerminator.length; i++) {
-			if (i % expectedTerminator.length == 0) {
-				int matched;
-				for (matched = 0; matched < expectedTerminator.length; matched++) {
-					if (expectedTerminator[matched] != bytes[i + matched]) break;
-				}
-				if (matched == expectedTerminator.length) {
-					marker = i;
-					break;
-				}
-			}
-		}
+		int terminatorLength = (bytes[0] == EncodedText.TEXT_ENCODING_UTF_16 || bytes[0] == EncodedText.TEXT_ENCODING_UTF_16BE) ? 2 : 1;
+		int marker = BufferTools.indexOfTerminator(bytes, 4, terminatorLength);
 		if (marker >= 4) {
 			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
 			marker += description.getTerminator().length;
