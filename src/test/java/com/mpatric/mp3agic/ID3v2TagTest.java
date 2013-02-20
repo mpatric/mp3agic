@@ -345,7 +345,7 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("2001", id3tag.getYear());
 		assertEquals(0x01, id3tag.getGenre());
 		assertEquals("Classic Rock", id3tag.getGenreDescription());
-		//assertEquals("COMMENT123456789012345678901", id3tag.getComment());
+		assertEquals("COMMENT123456789012345678901", id3tag.getComment());
 		assertEquals("COMPOSER23456789012345678901234", id3tag.getComposer());
 		assertEquals("ORIGARTIST234567890123456789012", id3tag.getOriginalArtist());
 		assertEquals("COPYRIGHT2345678901234567890123", id3tag.getCopyright());

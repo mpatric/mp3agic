@@ -26,24 +26,42 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 	
+	private static final byte[] std_terminator = {0};
+	private static final byte[] utf16_terminator = {0, 0};
+	
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
 		} catch (UnsupportedEncodingException e) {
 			language = "";
 		}
-		int marker;
-		for (marker = 4; marker < bytes.length; marker++) {
-			if (bytes[marker] == 0) break;
+		byte[] expectedTerminator;
+		if (bytes[0] == EncodedText.TEXT_ENCODING_UTF_16 || bytes[0] == EncodedText.TEXT_ENCODING_UTF_16BE) {
+			expectedTerminator = utf16_terminator;
+		} else {
+			expectedTerminator = std_terminator;
 		}
-		description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
-		marker += description.getTerminator().length;
-		int length = 0;
-		for (int i = marker; i < bytes.length; i++) {
-			if (bytes[i] == 0) break;
-			length++;
+		int marker = -1;
+		for (int i = 4; i <= bytes.length - expectedTerminator.length; i++) {
+			if (i % expectedTerminator.length == 0) {
+				int matched;
+				for (matched = 0; matched < expectedTerminator.length; matched++) {
+					if (expectedTerminator[matched] != bytes[i + matched]) break;
+				}
+				if (matched == expectedTerminator.length) {
+					marker = i;
+					break;
+				}
+			}
 		}
-		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, length));
+		if (marker >= 4) {
+			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
+			marker += description.getTerminator().length;
+		} else {
+			description = new EncodedText(bytes[0], "");
+			marker = 4;
+		}
+		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, bytes.length - marker));
 	}
 
 	protected byte[] packFrameData() {
