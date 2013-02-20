@@ -32,8 +32,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		} catch (UnsupportedEncodingException e) {
 			language = "";
 		}
-		int terminatorLength = (bytes[0] == EncodedText.TEXT_ENCODING_UTF_16 || bytes[0] == EncodedText.TEXT_ENCODING_UTF_16BE) ? 2 : 1;
-		int marker = BufferTools.indexOfTerminator(bytes, 4, terminatorLength);
+		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 4, bytes[0]);
 		if (marker >= 4) {
 			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 4, marker - 4));
 			marker += description.getTerminator().length;
