@@ -32,7 +32,7 @@ public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 			marker += description.getTerminator().length;
 		} else {
 			description = new EncodedText(bytes[0], "");
-			marker += 1;
+			marker = 1;
 		}
 		imageData = BufferTools.copyBuffer(bytes, marker, bytes.length - marker);
 	}
