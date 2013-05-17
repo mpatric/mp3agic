@@ -48,12 +48,6 @@
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- uploads releases to github -->
-		<dependency>
-			<groupId>com.github.github</groupId>
-			<artifactId>downloads-maven-plugin</artifactId>
-			<version>0.5</version>
-		</dependency>
 	</dependencies>
 
 	<build>
