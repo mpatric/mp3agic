@@ -378,6 +378,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 	
 	public boolean isCompilation() {
+		// unofficial frame used by iTunes
 		ID3v2TextFrameData frameData;
 		if (obseleteFormat) frameData = extractTextFrameData(ID_COMPILATION_OBSELETE);
 		else frameData = extractTextFrameData(ID_COMPILATION);
