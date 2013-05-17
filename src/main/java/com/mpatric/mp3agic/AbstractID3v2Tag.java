@@ -24,6 +24,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_ARTIST = "TPE1";
 	public static final String ID_ALBUM_ARTIST = "TPE2";
 	public static final String ID_TRACK = "TRCK";
+	public static final String ID_PART_OF_SET = "TPOS";
+	public static final String ID_COMPILATION = "TCMP";
 	public static final String ID_CHAPTER_TOC = "CTOC";
     public static final String ID_CHAPTER = "CHAP";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
@@ -41,6 +43,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_ARTIST_OBSELETE = "TP1";
 	public static final String ID_ALBUM_ARTIST_OBSELETE = "TP2";
 	public static final String ID_TRACK_OBSELETE = "TRK";
+	public static final String ID_PART_OF_SET_OBSELETE = "TPA";
+	public static final String ID_COMPILATION_OBSELETE = "TCP";
 	
 	protected static final String TAG = "ID3";
 	protected static final String FOOTER_TAG = "3DI";
@@ -355,6 +359,36 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(track));
 			addFrame(createFrame(ID_TRACK, frameData.toBytes()), true);
 		}
+	}
+
+	public String getPartOfSet() {
+		ID3v2TextFrameData frameData;
+		if (obseleteFormat) frameData = extractTextFrameData(ID_PART_OF_SET_OBSELETE);
+		else frameData = extractTextFrameData(ID_PART_OF_SET);
+		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
+		return null;
+	}
+
+	public void setPartOfSet(String partOfSet) {
+		if (partOfSet != null && partOfSet.length() > 0) {
+			invalidateDataLength();
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(partOfSet));
+			addFrame(createFrame(ID_PART_OF_SET, frameData.toBytes()), true);
+		}
+	}
+	
+	public boolean isCompilation() {
+		ID3v2TextFrameData frameData;
+		if (obseleteFormat) frameData = extractTextFrameData(ID_COMPILATION_OBSELETE);
+		else frameData = extractTextFrameData(ID_COMPILATION);
+		if (frameData != null && frameData.getText() != null) return "1".equals(frameData.getText().toString());
+		return false;
+	}
+	
+	public void setCompilation(boolean compilation) {
+		invalidateDataLength();
+		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(compilation ? "1" : "0"));
+		addFrame(createFrame(ID_COMPILATION, frameData.toBytes()), true);
 	}
 
 	public String getArtist() {
