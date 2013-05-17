@@ -31,6 +31,12 @@ public interface ID3v2 extends ID3v1 {
 	
 	String getUrl();
 	void setUrl(String url);
+
+	String getPartOfSet();
+	void setPartOfSet(String partOfSet);
+
+	boolean isCompilation();
+	void setCompilation(boolean compilation);
 	
 	ArrayList<ID3v2ChapterFrameData> getChapters();
 	void setChapters(ArrayList<ID3v2ChapterFrameData> chapters);
