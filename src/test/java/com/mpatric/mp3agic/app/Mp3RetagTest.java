@@ -30,12 +30,27 @@ public class Mp3RetagTest extends TestCase {
 		Mp3Retag.customTag = null;
 	}
 
-	public void testShouldReturnFalseForInvalidOptions() throws Exception {
-//		assertFalse(Mp3Retag.parseArgs(new String[] {}));
+	public void testShouldReturnFalseForEmptyOptionsArray() throws Exception {
+		assertFalse(Mp3Retag.parseArgs(new String[] {}));
+	}
+	
+	public void testShouldReturnFalseForOptionsMissingParameterWhenOneIsExpected() throws Exception {
 		assertFalse(Mp3Retag.parseArgs(new String[] {"-i"}));
+	}
+	
+	public void testShouldReturnFalseForOptionsWithUnsupportedSwitch() throws Exception {
 		assertFalse(Mp3Retag.parseArgs(new String[] {"-p"}));
+	}
+	
+	public void testShouldReturnFalseForOptionsWithUnsupportedSwitchAndParameter() throws Exception {
 		assertFalse(Mp3Retag.parseArgs(new String[] {"-p", "filename"}));
+	}
+	
+	public void testShouldReturnFalseForOptionsWithParameterWhenNoneIsExpected() throws Exception {
 		assertFalse(Mp3Retag.parseArgs(new String[] {"-z", "filename"}));
+	}
+	
+	public void testShouldReturnFalseForOptionsWithNoSwitchJustParameters() throws Exception {
 		assertFalse(Mp3Retag.parseArgs(new String[] {"filename", "filename"}));
 	}
 	
