@@ -36,7 +36,7 @@ public class ID3v1TagTest extends TestCase {
 	
 	public void testShouldExtractMaximumLengthFieldsFromValid10Tag() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG, 0, VALID_TAG.length());
-		buffer[buffer.length - 1] = -0x73; // 0x8D as a signed byte
+		buffer[buffer.length - 1] = -0x6D; // 0x93 as a signed byte
 		ID3v1Tag id3v1tag = new ID3v1Tag(buffer);
 		assertEquals("TITLE1234567890123456789012345", id3v1tag.getTitle());
 		assertEquals("ARTIST123456789012345678901234", id3v1tag.getArtist());
@@ -44,7 +44,7 @@ public class ID3v1TagTest extends TestCase {
 		assertEquals("2001", id3v1tag.getYear());
 		assertEquals("COMMENT12345678901234567890123", id3v1tag.getComment());
 		assertEquals(null, id3v1tag.getTrack());
-		assertEquals(0x8D, id3v1tag.getGenre());
+		assertEquals(0x93, id3v1tag.getGenre());
 		assertEquals("Synthpop", id3v1tag.getGenreDescription());
 	}
 	
