@@ -25,7 +25,7 @@
 	</licenses>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com:mpatric/mp3agic.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/mpatric/mp3agic.git</developerConnection>
 		<connection>scm:git:git://github.com/mpatric/mp3agic.git</connection>
 		<tag>HEAD</tag>
 		<url>http://github.com/mpatric/mp3agic</url>
