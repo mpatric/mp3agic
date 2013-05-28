@@ -213,7 +213,7 @@ public class ID3v2TagTest extends TestCase {
 	}
 	
 	public void testShouldReadFramesFromMp3WithObselete32Tag() throws Exception {
-		byte[] buffer = TestHelper.loadFile("src/test/resources/obselete.mp3");
+		byte[] buffer = TestHelper.loadFile("src/test/resources/obsolete.mp3");
 		ID3v2 id3v2tag = ID3v2TagFactory.createTag(buffer);
 		assertEquals("2.0", id3v2tag.getVersion());
 		assertEquals(0x3c5a2, id3v2tag.getLength());
@@ -231,7 +231,7 @@ public class ID3v2TagTest extends TestCase {
 	}
 	
 	public void testShouldReadTagFieldsFromMp3WithObselete32tag() throws Exception {
-		byte[] buffer = TestHelper.loadFile("src/test/resources/obselete.mp3");
+		byte[] buffer = TestHelper.loadFile("src/test/resources/obsolete.mp3");
 		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
 		assertEquals("2009", id3tag.getYear());
 		assertEquals("4/15", id3tag.getTrack());
