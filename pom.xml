@@ -124,6 +124,10 @@
 					<override>true</override>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.14.1</version>
+			</plugin>
 		</plugins>
 	</build>
 </project>
