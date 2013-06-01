@@ -523,7 +523,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			String text = frameData.getText().toString();
 			if (text != null && text.length() > 0) {
 				String description = extractGenreDescription(text);
-				if (description != null & description.length() > 0) {
+				if (description != null) {
 					return description;
 				}
 			}
