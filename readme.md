@@ -20,27 +20,14 @@ A simple set of command-line tools built on top of the library are included whic
 You will need:
 
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
-* [ant](http://ant.apache.org/ "ant") 1.6 or higher OR [maven](http://maven.apache.org/ "maven")
-* [junit](http://www.junit.org/ "junit") 3.8.1 or higher
+* [maven](http://maven.apache.org/ "maven")
 * A bash shell to run the command-line scripts (if you're on MacOS or a flavor of Unix, you're set, if you're on Windows, try [Cygwin](http://www.cygwin.com/ "Cygwin") or rewrite the bash scripts as bat/cmd files).
-
-Settings you might need to change in ant.properties if you are using ant:
-
-* junit-jar should point to junit.jar on your local system
-* deploy-dir should point to the directory on your local system you wish to deploy to
-
-Useful ant targets:
-
-* clean - remove binaries, docs and temporary build files
-* build - compiles the library and applications, runs all unit tests
-* deploy - copies the jar and scripts to the deploy directory defined in ant.properties
-* doc - generate the javadocs
 
 Useful maven goals:
 
 * clean - remove binaries, docs and temporary build files
-* compile - compiles the library and applications
-* test - runs all unit tests
+* compile - compile the library and applications
+* test - run all unit tests
 * package - package compiled code into a jar
 
 ## How to use it
