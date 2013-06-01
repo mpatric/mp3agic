@@ -107,23 +107,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- use this to create new downloads at github: mvn clean package ghDownloads:upload -->
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>downloads-maven-plugin</artifactId>
-				<version>0.5</version>
-				<configuration>
-					<description>${project.name} version ${project.version}</description>
-					<!-- you need a servers section with the id "github" in your settings.xml 
-						holding your userName and password, see: https://github.com/github/maven-plugins -->
-					<server>github</server>
-					<includes>
-						<lib>${project.name}-${project.version}.jar</lib>
-						<sources>${project.name}-${project.version}-sources.jar</sources>
-					</includes>
-					<override>true</override>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.14.1</version>
