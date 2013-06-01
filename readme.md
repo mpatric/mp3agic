@@ -2,7 +2,7 @@
 
 A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
-A simple set of command-line tools built on top of the library are included which perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
+See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
 
 ## Some features
 
@@ -21,7 +21,6 @@ You will need:
 
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
 * [maven](http://maven.apache.org/ "maven")
-* A bash shell to run the command-line scripts (if you're on MacOS or a flavor of Unix, you're set, if you're on Windows, try [Cygwin](http://www.cygwin.com/ "Cygwin") or rewrite the bash scripts as bat/cmd files).
 
 Useful maven goals:
 
@@ -33,7 +32,7 @@ Useful maven goals:
 ## How to use it
 
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
-More can be learned from looking at the javadocs, and at the code itself or at the included command-line applications in the com.mpatric.mp3agic.app package.
+More can be learned from looking at the javadocs and at the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples").
 
 ### Opening an mp3 file
 
@@ -175,9 +174,9 @@ Frame IDs are defined in the [ID3v2 specification](http://www.id3.org/Developer_
 
 For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project in github and submit a patch request if you add anything useful.
 
-Code to read and write these frames more easily is coming soon. Watch this space.
+Code to read and write these frames more easily is planned. Watch this space.
 
-## Submitting pull requests
+## Contributing
 
 If you have added a feature or fixed a bug in mp3agic and want to share it, please submit a pull request as follows:
 
@@ -187,7 +186,7 @@ If you have added a feature or fixed a bug in mp3agic and want to share it, plea
 * Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
 * Make sure the existing tests all pass
 * Commit and do not mess with version, or history
-* Send me a pull request
+* Submit a pull request
 
 Thanks for sharing!
 
