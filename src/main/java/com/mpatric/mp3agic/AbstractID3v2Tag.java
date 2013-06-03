@@ -471,64 +471,65 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			addFrame(createFrame(ID_YEAR, frameData.toBytes()), true);
 		}
 	}
-
-	public int getGenre() {
-		ID3v2TextFrameData frameData;
-		if (obseleteFormat) frameData = extractTextFrameData(ID_GENRE_OBSELETE);
-		else frameData = extractTextFrameData(ID_GENRE);
-		if (frameData == null || frameData.getText() == null) return -1;
-		String text = frameData.getText().toString();
-		if (text == null || text.length() == 0) return -1;
-		try {
-			return extractGenreNumber(text);
-		} catch (NumberFormatException e) {
-			String description = extractGenreDescription(text);
-			if (description != null && description.length() > 0) {
-				for (int i = 0; i < ID3v1Genres.GENRES.length; i++) {
-					if (ID3v1Genres.GENRES[i].compareToIgnoreCase(description) == 0) return i;
-				}
+	
+	private int getGenre(String text) {
+		if (text != null && text.length() > 0) {
+			try {
+				return extractGenreNumber(text);
+			} catch (NumberFormatException e) { // match genre description
+				String description = extractGenreDescription(text);
+				return ID3v1Genres.matchGenreDescription(description);
 			}
 		}
 		return -1;
 	}
 
+	public int getGenre() {
+		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_GENRE_OBSELETE : ID_GENRE);
+		if (frameData == null || frameData.getText() == null) {
+			return -1;
+		}
+		return getGenre(frameData.getText().toString());
+	}
+
 	public void setGenre(int genre) {
 		if (genre >= 0) {
 			invalidateDataLength();
-			String genreDescription;
-			try {
-				genreDescription = ID3v1Genres.GENRES[genre];
-			} catch (ArrayIndexOutOfBoundsException e) {
-				genreDescription = "";
-			}
+			String genreDescription = genre < ID3v1Genres.GENRES.length ? ID3v1Genres.GENRES[genre] : "";
 			String combinedGenre = "(" + Integer.toString(genre) + ")" + genreDescription;
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(combinedGenre));
 			addFrame(createFrame(ID_GENRE, frameData.toBytes()), true);
+		} else {
+			// TODO remove frame?
 		}
 	}
 	
 	public String getGenreDescription() {
-		int genreNum = getGenre();
-		if (genreNum >= 0) {
-			try {
-				return ID3v1Genres.GENRES[genreNum];
-			} catch (ArrayIndexOutOfBoundsException e) {
-				return null;
-			}
+		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_GENRE_OBSELETE : ID_GENRE);
+		if (frameData == null || frameData.getText() == null) {
+			return null;
 		}
-		ID3v2TextFrameData frameData;
-		if (obseleteFormat) frameData = extractTextFrameData(ID_GENRE_OBSELETE);
-		else frameData = extractTextFrameData(ID_GENRE);
-		if (frameData != null && frameData.getText() != null) {
-			String text = frameData.getText().toString();
-			if (text != null && text.length() > 0) {
+		String text = frameData.getText().toString();
+		if (text != null) {
+			int genreNum = getGenre(text);
+			if (genreNum >= 0 && genreNum < ID3v1Genres.GENRES.length) {
+				return ID3v1Genres.GENRES[genreNum];
+			} else {
 				String description = extractGenreDescription(text);
-				if (description != null) {
+				if (description != null && description.length() > 0) {
 					return description;
 				}
 			}
 		}
 		return null;
+	}
+	
+	public void setGenreDescription(String text) throws IllegalArgumentException {
+		int genreNum = ID3v1Genres.matchGenreDescription(text);
+		if (genreNum < 0) {
+			throw new IllegalArgumentException("Unknown genre: " + text);
+		}
+		setGenre(genreNum);
 	}
 	
 	protected int extractGenreNumber(String genreValue) throws NumberFormatException {
