@@ -3,6 +3,7 @@ bin
 test-bin
 build
 *.iml
+.idea
 *.project
 *.classpath
 target
