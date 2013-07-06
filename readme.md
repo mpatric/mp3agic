@@ -33,7 +33,7 @@ You will need:
 Useful maven goals:
 
 * clean - remove binaries, docs and temporary build files
-* compile - compile the library and applications
+* compile - compile the library
 * test - run all unit tests
 * package - package compiled code into a jar
 
