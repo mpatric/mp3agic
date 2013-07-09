@@ -217,10 +217,10 @@ public class ID3v2TagTest extends TestCase {
 		setTagFields(id3tag);
 		try {
 			id3tag.setGenreDescription("Bebop");
+			fail("expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			return; // fine
+			// fine
 		}
-		fail("expected IllegalArgumentException");
 	}
 	
 	public void testSetGenreDescriptionOn24Tag() throws Exception {
