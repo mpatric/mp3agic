@@ -38,4 +38,15 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 	protected ID3v2Frame createFrame(String id, byte[] data) {
 		return new ID3v24Frame(id, data);
 	}
+	
+	@Override
+	public void setGenreDescription(String text) {
+		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(text));
+		ID3v2FrameSet frameSet = getFrameSets().get(ID_GENRE);
+		if (frameSet == null) {
+			getFrameSets().put(ID_GENRE, frameSet = new ID3v2FrameSet(ID_GENRE));
+		}
+		frameSet.clear();
+		frameSet.addFrame(createFrame(ID_GENRE, frameData.toBytes()));
+	}
 }
