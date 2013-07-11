@@ -4,6 +4,14 @@ A java library for reading mp3 files and reading / manipulating the ID3 tags (ID
 
 See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
 
+Releases are available via Maven central. To add a dependency to mp3agic, use:
+
+    <dependency>
+      <groupId>com.mpatric</groupId>
+      <artifactId>mp3agic</artifactId>
+      <version>0.8.1</version>
+    </dependency>
+
 ## Some features
 
 * 100% Java
@@ -19,13 +27,13 @@ See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-exam
 
 You will need:
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 6 or higher
 * [maven](http://maven.apache.org/ "maven")
 
 Useful maven goals:
 
 * clean - remove binaries, docs and temporary build files
-* compile - compile the library and applications
+* compile - compile the library
 * test - run all unit tests
 * package - package compiled code into a jar
 
