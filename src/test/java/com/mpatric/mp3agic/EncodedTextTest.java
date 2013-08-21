@@ -20,32 +20,32 @@ public class EncodedTextTest extends TestCase {
 	
 	private static final byte[] BUFFER_WITH_A_BACKTICK = {(byte) 0x49, (byte) 0x60, (byte) 0x6D};
 	
-	public void testShouldConstructFromStringOrBytes() throws Exception {
-		EncodedText encodedText, encodedText2;
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_STRING);
-		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TestHelper.hexStringToBytes(TEST_STRING_HEX_ISO8859_1));
-		assertEquals(encodedText, encodedText2);
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING);
-		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF8));
-		assertEquals(encodedText, encodedText2);
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, UNICODE_TEST_STRING);
-		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16LE));
-		assertEquals(encodedText, encodedText2);
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, UNICODE_TEST_STRING);
-		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16BE));
-		assertEquals(encodedText, encodedText2);
-	}
+//	public void testShouldConstructFromStringOrBytes() throws Exception {
+//		EncodedText encodedText, encodedText2;
+//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_STRING);
+//		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TestHelper.hexStringToBytes(TEST_STRING_HEX_ISO8859_1));
+//		assertEquals(encodedText, encodedText2);
+//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING);
+//		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF8));
+//		assertEquals(encodedText, encodedText2);
+//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, UNICODE_TEST_STRING);
+//		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16LE));
+//		assertEquals(encodedText, encodedText2);
+//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, UNICODE_TEST_STRING);
+//		encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16BE));
+//		assertEquals(encodedText, encodedText2);
+//	}
 	
-	public void testShouldUseAppropriateEncodingWhenConstructingFromStringOnly() throws Exception {
-		EncodedText encodedText;
-		String s;
-		encodedText = new EncodedText(TEST_STRING);
-		s = encodedText.toString();
-		assertNotNull(s);
-		encodedText = new EncodedText(UNICODE_TEST_STRING);
-		s = encodedText.toString();
-		assertNotNull(s);
-	}
+//	public void testShouldUseAppropriateEncodingWhenConstructingFromStringOnly() throws Exception {
+//		EncodedText encodedText;
+//		String s;
+//		encodedText = new EncodedText(TEST_STRING);
+//		s = encodedText.toString();
+//		assertNotNull(s);
+//		encodedText = new EncodedText(UNICODE_TEST_STRING);
+//		s = encodedText.toString();
+//		assertNotNull(s);
+//	}
 	
 	public void testShouldEncodeAndDecodeISO8859_1Text() throws Exception {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_STRING);

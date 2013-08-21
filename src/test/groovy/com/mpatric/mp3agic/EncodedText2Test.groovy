@@ -1,10 +1,8 @@
 package com.mpatric.mp3agic
 
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.mpatric.mp3agic.EncodedText.CHARSET_ISO_8859_1
 import static com.mpatric.mp3agic.EncodedText.CHARSET_UTF_8
 import static com.mpatric.mp3agic.EncodedText.CHARSET_UTF_16
 import static com.mpatric.mp3agic.EncodedText.CHARSET_UTF_16BE
@@ -19,9 +17,11 @@ import java.nio.charset.CharacterCodingException
 public class EncodedText2Test extends Specification {
 
     private static final TEST_STRING = 'This is a string!'
-    private static final TEST_STRING_HEX_ISO8859_1 = '54 68 69 73 20 69 73 20 61 20 73 74 72 69 6e 67 21'
-
+    // γειά σου
     private static final UNICODE_TEST_STRING = '\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5'
+    // "This is a String!"
+    private static final TEST_STRING_HEX_ISO8859_1 = '54 68 69 73 20 69 73 20 61 20 73 74 72 69 6e 67 21'
+    // "γειά σου" (This can't be encoded with ISO-8859-1)
     private static final UNICODE_TEST_STRING_HEX_UTF8 = 'ce b3 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85'
     private static final UNICODE_TEST_STRING_HEX_UTF16LE = 'b3 03 b5 03 b9 03 ac 03 20 00 c3 03 bf 03 c5 03'
     private static final UNICODE_TEST_STRING_HEX_UTF16BE = '03 b3 03 b5 03 b9 03 ac 00 20 03 c3 03 bf 03 c5'
@@ -47,7 +47,7 @@ public class EncodedText2Test extends Specification {
         and:
         def string = encodedText.toString()
         then:
-        string != null
+        string == inputString
         where:
         inputString         | encoding
         TEST_STRING         | TEXT_ENCODING_ISO_8859_1
@@ -58,6 +58,20 @@ public class EncodedText2Test extends Specification {
         UNICODE_TEST_STRING | TEXT_ENCODING_UTF_8
         UNICODE_TEST_STRING | TEXT_ENCODING_UTF_16
         UNICODE_TEST_STRING | TEXT_ENCODING_UTF_16BE
+    }
+
+    @Unroll
+    def "constructor works with byteArray input: '#inputArray and encoding '#encoding'"() {
+        when:
+        def encodedText = new EncodedText(encoding, inputArray)
+        then:
+        encodedText.toString() == expectedString
+        where:
+        encoding                 | inputArray                                                   | expectedString
+        TEXT_ENCODING_ISO_8859_1 | TestHelper.hexStringToBytes(TEST_STRING_HEX_ISO8859_1)       | 'This is a string!'
+        TEXT_ENCODING_UTF_8      | TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF8)    | 'γειά σου'
+        TEXT_ENCODING_UTF_16     | TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16LE) | 'γειά σου'
+        TEXT_ENCODING_UTF_16BE   | TestHelper.hexStringToBytes(UNICODE_TEST_STRING_HEX_UTF16BE) | 'γειά σου'
     }
 
     @Unroll
