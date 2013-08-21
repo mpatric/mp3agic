@@ -196,6 +196,65 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("(13)Pop", genre);
 	}
 	
+	public void testSetGenreDescriptionOn23Tag() throws Exception {
+		ID3v2 id3tag = new ID3v23Tag();
+		setTagFields(id3tag);
+		id3tag.setGenreDescription("Jazz");
+		assertEquals("Jazz", id3tag.getGenreDescription());
+		assertEquals(8, id3tag.getGenre());
+
+		Map<String, ID3v2FrameSet> frameSets = id3tag.getFrameSets();
+		ID3v2FrameSet frameSet = (ID3v2FrameSet) frameSets.get("TCON");
+		List<ID3v2Frame> frames = frameSet.getFrames();
+		ID3v2Frame frame = (ID3v2Frame) frames.get(0);
+		byte[] bytes = frame.getData();
+		String genre = BufferTools.byteBufferToString(bytes, 1, bytes.length - 1);
+		assertEquals("(8)Jazz", genre);
+	}
+	
+	public void testSetGenreDescriptionOn23TagWithUnknownGenre() throws Exception {
+		ID3v2 id3tag = new ID3v23Tag();
+		setTagFields(id3tag);
+		try {
+			id3tag.setGenreDescription("Bebop");
+			fail("expected IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			// fine
+		}
+	}
+	
+	public void testSetGenreDescriptionOn24Tag() throws Exception {
+		ID3v2 id3tag = new ID3v24Tag();
+		setTagFields(id3tag);
+		id3tag.setGenreDescription("Jazz");
+		assertEquals("Jazz", id3tag.getGenreDescription());
+		assertEquals(8, id3tag.getGenre());
+
+		Map<String, ID3v2FrameSet> frameSets = id3tag.getFrameSets();
+		ID3v2FrameSet frameSet = (ID3v2FrameSet) frameSets.get("TCON");
+		List<ID3v2Frame> frames = frameSet.getFrames();
+		ID3v2Frame frame = (ID3v2Frame) frames.get(0);
+		byte[] bytes = frame.getData();
+		String genre = BufferTools.byteBufferToString(bytes, 1, bytes.length - 1);
+		assertEquals("Jazz", genre);
+	}
+
+	public void testSetGenreDescriptionOn24TagWithUnknownGenre() throws Exception {
+		ID3v2 id3tag = new ID3v24Tag();
+		setTagFields(id3tag);
+		id3tag.setGenreDescription("Bebop");
+		assertEquals("Bebop", id3tag.getGenreDescription());
+		assertEquals(-1, id3tag.getGenre());
+
+		Map<String, ID3v2FrameSet> frameSets = id3tag.getFrameSets();
+		ID3v2FrameSet frameSet = (ID3v2FrameSet) frameSets.get("TCON");
+		List<ID3v2Frame> frames = frameSet.getFrames();
+		ID3v2Frame frame = (ID3v2Frame) frames.get(0);
+		byte[] bytes = frame.getData();
+		String genre = BufferTools.byteBufferToString(bytes, 1, bytes.length - 1);
+		assertEquals("Bebop", genre);
+	}
+
 	public void testShouldReadCombinedGenreInTag() throws Exception {
 		ID3v2 id3tag = new ID3v23Tag();
 		setTagFields(id3tag);

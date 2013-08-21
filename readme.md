@@ -27,13 +27,13 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 
 You will need:
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 5 or higher
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 6 or higher
 * [maven](http://maven.apache.org/ "maven")
 
 Useful maven goals:
 
 * clean - remove binaries, docs and temporary build files
-* compile - compile the library and applications
+* compile - compile the library
 * test - run all unit tests
 * package - package compiled code into a jar
 
