@@ -208,13 +208,12 @@ public class EncodedText2Test extends Specification {
         assertEquals(encodedText, encodedText2)
     }
 
-    def "testShouldThrowExceptionWhenEncodingWithInvalidCharacterSet"() {
-        try {
-            new EncodedText((byte) 4, TEST_STRING)
-            fail("IllegalArgumentException expected but not thrown")
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invalid text encoding 4", e.getMessage())
-        }
+    def "Constructor throws Exception when invalid encoding character set is given"() {
+        when:
+        new EncodedText(4 as byte, TEST_STRING)
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.getMessage() == 'Invalid text encoding 4'
     }
 
     def "testShouldInferISO8859_1EncodingFromBytesWithNoBOM"() {

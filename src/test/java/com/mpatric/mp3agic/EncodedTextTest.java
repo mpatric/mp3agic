@@ -160,14 +160,14 @@ public class EncodedTextTest extends TestCase {
 		assertEquals(encodedText, encodedText2);
 	}
 	
-	public void testShouldThrowExceptionWhenEncodingWithInvalidCharacterSet() throws Exception {
-		try {
-			new EncodedText((byte)4, TEST_STRING);
-			fail("IllegalArgumentException expected but not thrown");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid text encoding 4", e.getMessage());
-		}
-	}
+//	public void testShouldThrowExceptionWhenEncodingWithInvalidCharacterSet() throws Exception {
+//		try {
+//			new EncodedText((byte)4, TEST_STRING);
+//			fail("IllegalArgumentException expected but not thrown");
+//		} catch (IllegalArgumentException e) {
+//			assertEquals("Invalid text encoding 4", e.getMessage());
+//		}
+//	}
 	
 	public void testShouldInferISO8859_1EncodingFromBytesWithNoBOM() throws Exception {
 		EncodedText encodedText = new EncodedText(TestHelper.hexStringToBytes(TEST_STRING_HEX_ISO8859_1));
