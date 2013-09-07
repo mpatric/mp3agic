@@ -198,12 +198,28 @@ public class EncodedText {
 		return characterSetForTextEncoding(textEncoding);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + textEncoding;
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (! (obj instanceof EncodedText)) return false;
-		if (super.equals(obj)) return true;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		EncodedText other = (EncodedText) obj;
-		if (textEncoding != other.textEncoding) return false;
-		if (! Arrays.equals(value, other.value)) return false;
+		if (textEncoding != other.textEncoding)
+			return false;
+		if (!Arrays.equals(value, other.value))
+			return false;
 		return true;
 	}
 	

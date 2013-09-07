@@ -10,7 +10,7 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     protected boolean isRoot;
     protected boolean isOrdered;
     protected String id;
-    protected String[] childs;
+    protected String[] children;
     protected ArrayList<ID3v2Frame> subframes = new ArrayList<ID3v2Frame>();
 
     public ID3v2ChapterTOCFrameData(boolean unsynchronisation) {
@@ -18,12 +18,12 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     }
 
     public ID3v2ChapterTOCFrameData(boolean unsynchronisation, boolean isRoot, boolean isOrdered,
-            String id, String[] childs) {
+            String id, String[] children) {
         super(unsynchronisation);
         this.isRoot = isRoot;
         this.isOrdered = isOrdered;
         this.id = id;
-        this.childs = childs;
+        this.children = children;
     }
 
     public ID3v2ChapterTOCFrameData(boolean unsynchronisation, byte[] bytes)
@@ -47,10 +47,10 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
         int childCount = bb.get(); // TODO: 0xFF -> int = 255; byte = -128;
 
-        childs = new String[childCount];
+        children = new String[childCount];
 
         for (int i = 0; i < childCount; i++) {
-            childs[i] = ByteBufferUtils.extractNullTerminatedString(bb);
+            children[i] = ByteBufferUtils.extractNullTerminatedString(bb);
         }
 
         for (int offset = bb.position(); offset < bytes.length;) {
@@ -70,9 +70,9 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         bb.put(id.getBytes());
         bb.put((byte) 0);
         bb.put(getFlags());
-        bb.put((byte)childs.length);
+        bb.put((byte)children.length);
         
-        for(String child: childs) {
+        for(String child: children) {
             bb.put(child.getBytes());
             bb.put((byte) 0);
         }
@@ -124,12 +124,22 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         this.id = id;
     }
 
-    public String[] getChilds() {
-        return childs;
+    public String[] getChildren() {
+        return children;
     }
 
+    public void setChildren(String[] children) {
+        this.children = children;
+    }
+    
+    @Deprecated
+    public String[] getChilds() {
+        return children;
+    }
+
+    @Deprecated
     public void setChilds(String[] childs) {
-        this.childs = childs;
+        this.children = childs;
     }
 
     public ArrayList<ID3v2Frame> getSubframes() {
@@ -144,9 +154,9 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     protected int getLength() {
         int length = 3;
         if (id != null) length += id.length();
-        if (childs != null) {
-            length += childs.length;
-            for (String child : childs) {
+        if (children != null) {
+            length += children.length;
+            for (String child : children) {
                 length += child.length();
             }
         }
@@ -158,17 +168,6 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         return length;
     }
 
-    // public boolean equals(Object obj) {
-    // if (! (obj instanceof ID3v2ChapterFrameData)) return false;
-    // if (! super.equals(obj)) return false;
-    // ID3v2ChapterFrameData other = (ID3v2ChapterFrameData) obj;
-    // if (text == null) {
-    // if (other.text != null) return false;
-    // } else if (other.text == null) return false;
-    // else if (! text.equals(other.text)) return false;
-    // return true;
-    // }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -178,8 +177,8 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
         builder.append(isOrdered);
         builder.append(", id=");
         builder.append(id);
-        builder.append(", childs=");
-        builder.append(Arrays.toString(childs));
+        builder.append(", children=");
+        builder.append(Arrays.toString(children));
         builder.append(", subframes=");
         builder.append(subframes);
         builder.append("]");
@@ -187,20 +186,43 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
     }
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(children);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (isOrdered ? 1231 : 1237);
+		result = prime * result + (isRoot ? 1231 : 1237);
+		result = prime * result
+				+ ((subframes == null) ? 0 : subframes.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		ID3v2ChapterTOCFrameData other = (ID3v2ChapterTOCFrameData) obj;
-		if (!Arrays.equals(childs, other.childs)) return false;
+		if (!Arrays.equals(children, other.children))
+			return false;
 		if (id == null) {
-			if (other.id != null) return false;
-		} else if (!id.equals(other.id)) return false;
-		if (isOrdered != other.isOrdered) return false;
-		if (isRoot != other.isRoot) return false;
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isOrdered != other.isOrdered)
+			return false;
+		if (isRoot != other.isRoot)
+			return false;
 		if (subframes == null) {
-			if (other.subframes != null) return false;
-		} else if (!subframes.equals(other.subframes)) return false;
+			if (other.subframes != null)
+				return false;
+		} else if (!subframes.equals(other.subframes))
+			return false;
 		return true;
 	}
 }
