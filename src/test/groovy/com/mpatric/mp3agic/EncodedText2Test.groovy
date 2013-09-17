@@ -216,125 +216,135 @@ public class EncodedText2Test extends Specification {
         e.getMessage() == 'Invalid text encoding 4'
     }
 
-    def "testShouldInferISO8859_1EncodingFromBytesWithNoBOM"() {
+    def "bytes with no BOM get encoded as ISO 8859-1"() {
+        when:
         EncodedText encodedText = new EncodedText(TestHelper.hexStringToBytes(TEST_STRING_HEX_ISO8859_1))
-        assertEquals(TEXT_ENCODING_ISO_8859_1, encodedText.getTextEncoding())
+        then:
+        encodedText.getTextEncoding() == TEXT_ENCODING_ISO_8859_1
     }
 
-    def "testShouldDetectUTF8EncodingFromBytesWithBOM"() {
+    def "bytes with optional UTF-8 BOM get detected properly"() {
+        when:
         EncodedText encodedText = new EncodedText(TestHelper.hexStringToBytes("ef bb bf " + UNICODE_TEST_STRING_HEX_UTF8))
-        assertEquals(TEXT_ENCODING_UTF_8, encodedText.getTextEncoding())
+        then:
+        encodedText.getTextEncoding() == TEXT_ENCODING_UTF_8
     }
 
-    def "testShouldDetectUTF16EncodingFromBytesWithBOM"() {
+    def "bytes with UTF-16 BOM get detected properly"() {
+        when:
         EncodedText encodedText = new EncodedText(TestHelper.hexStringToBytes("ff fe " + UNICODE_TEST_STRING_HEX_UTF16LE))
-        assertEquals(TEXT_ENCODING_UTF_16, encodedText.getTextEncoding())
+        then:
+        encodedText.getTextEncoding() == TEXT_ENCODING_UTF_16
     }
 
-    def "testShouldDetectUTF16BEEncodingFromBytesWithBOM"() {
+    def "bytes with UTF-16BE BOM get detected properly"() {
+        when:
         EncodedText encodedText = new EncodedText(TestHelper.hexStringToBytes("fe ff " + UNICODE_TEST_STRING_HEX_UTF16BE))
-        assertEquals(TEXT_ENCODING_UTF_16BE, encodedText.getTextEncoding())
+        then:
+        encodedText.getTextEncoding() == TEXT_ENCODING_UTF_16BE
     }
 
-    def "testShouldTranscodeFromOneEncodingToAnother"() {
+    @Unroll
+    def "changing the encoding on the object from UTF-8 to other encodings works properly"() {
+        given:
         EncodedText encodedText
-        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"))
+        String input = '43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f'
+        when:
+        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes(input))
+        encodedText.setTextEncoding(newEncoding, true)
+        then:
+        TestHelper.bytesToHexString(encodedText.toBytes()) == expectedOutput
+
+        where:
+        newEncoding              | expectedOutput
+        TEXT_ENCODING_ISO_8859_1 | '43 61 66 e9 20 50 61 72 61 64 69 73 6f'
+        TEXT_ENCODING_UTF_8      | '43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f'
+        TEXT_ENCODING_UTF_16     | '43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f 00'
+        TEXT_ENCODING_UTF_16BE   | '00 43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f'
+    }
+
+    def "When changing the encoding while unmappable characters are hold a CharacterCodingException gets thrown"() {
+        given:
+        EncodedText encodedText = new EncodedText(TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING)
+        when:
         encodedText.setTextEncoding(TEXT_ENCODING_ISO_8859_1, true)
-        assertEquals("43 61 66 e9 20 50 61 72 61 64 69 73 6f", TestHelper.bytesToHexString(encodedText.toBytes()))
-        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"))
-        encodedText.setTextEncoding(TEXT_ENCODING_UTF_8, true)
-        assertEquals("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f", TestHelper.bytesToHexString(encodedText.toBytes()))
-        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"))
-        encodedText.setTextEncoding(TEXT_ENCODING_UTF_16, true)
-        assertEquals("43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f 00", TestHelper.bytesToHexString(encodedText.toBytes()))
-        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"))
-        encodedText.setTextEncoding(TEXT_ENCODING_UTF_16BE, true)
-        assertEquals("00 43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f", TestHelper.bytesToHexString(encodedText.toBytes()))
+        then:
+        thrown(CharacterCodingException)
     }
 
-    def "testShouldThrowAnExceptionWhenAttemptingToTranscodeToACharacterSetWithUnmappableCharacters"() {
-        EncodedText encodedText
-        encodedText = new EncodedText(TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING)
-        try {
-            encodedText.setTextEncoding(TEXT_ENCODING_ISO_8859_1, true)
-            fail("CharacterCodingException expected but not thrown")
-        } catch (CharacterCodingException e) {
-        }
-    }
-
-    def "testShouldThrowExceptionWhenTranscodingWithInvalidCharacterSet"() {
-        EncodedText encodedText = new EncodedText(TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"))
-        try {
+    def "When a non-existent character set is chosen an IllegalArgumentException gets thrown"() {
+        given:
+        EncodedText encodedText = new EncodedText(TEXT_ENCODING_UTF_8, "")
+        when:
             encodedText.setTextEncoding((byte) 4, true)
-            fail("IllegalArgumentException expected but not thrown")
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invalid text encoding 4", e.getMessage())
-        }
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.getMessage() == "Invalid text encoding 4"
     }
 
-    def "testShouldReturnNullWhenDecodingInvalidString"() {
+    def "When holding an invalid string toString returns null"() {
+        given:
         String s = "Not unicode"
         byte[] notUnicode = BufferTools.stringToByteBuffer(s, 0, s.length())
         EncodedText encodedText = new EncodedText(TEXT_ENCODING_UTF_16, notUnicode)
-        assertNull(encodedText.toString())
+        expect:
+        encodedText.toString() == null
     }
 
-    def "testShouldHandleBacktickCharacterInString"() {
+    def "Constructor handles backtick correctly"() {
+        given:
         EncodedText encodedText = new EncodedText((byte) 0, BUFFER_WITH_A_BACKTICK)
-        assertEquals("I" + (char) (96) + "m", encodedText.toString())
+        expect:
+        encodedText.toString() == "I" + (char) 96 + "m"
     }
 
-//	def "testShouldStillReturnBytesWhenStringIsEmpty"() {
-//		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, "")
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)))
-//	}
-//
-//	def "testShouldStillReturnBytesWhenUnicodeStringIsEmpty"() {
-//		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, "")
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)))
-//	}
-//
-//	def "testShouldStillReturnBytesWhenDataIsEmpty"() {
-//		EncodedText encodedText
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, new byte[] {})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)))
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, new byte[] {0})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {0}, encodedText.toBytes(true, true)))
-//	}
-//
-//	def "testShouldStillReturnBytesWhenUnicodeDataIsEmpty"() {
-//		EncodedText encodedText
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)))
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {0, 0})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)))
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)))
-//		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, new byte[] {(byte)0xff, (byte)0xfe, 0, 0})
-//		assertTrue(Arrays.equals(new byte[] {}, encodedText.toBytes(false, false)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe}, encodedText.toBytes(true, false)))
-//		assertTrue(Arrays.equals(new byte[] {0, 0}, encodedText.toBytes(false, true)))
-//		assertTrue(Arrays.equals(new byte[] {(byte)0xff, (byte)0xfe, 0, 0}, encodedText.toBytes(true, true)))
-//	}
+	def "When an empty ISO 8859-1 string is given, toBytes still returns correct byte arrays"() {
+		given:
+        EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, "")
+        expect:
+        encodedText.toBytes(false, false) == [] as byte[]
+        encodedText.toBytes(true, false) == [] as byte[]
+        encodedText.toBytes(false, true) == [0] as byte[]
+        encodedText.toBytes(true, true) == [0] as byte[]
+	}
+
+	def "When an empty UTF-16 string is given, toBytes still returns correct byte arrays"() {
+        given:
+		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, "")
+        expect:
+		encodedText.toBytes(false, false) == [] as byte[]
+		encodedText.toBytes(true, false) == [0xff, 0xfe] as byte[]
+        encodedText.toBytes(false, true) == [0, 0] as byte[]
+        encodedText.toBytes(true, true) == [0xff, 0xfe, 0, 0] as byte[]
+	}
+
+    @Unroll
+    def "When empty byte array and an ISO 8859-1 encoding are given toBytes() still returns correct values"() {
+        expect:
+        encodedText.toBytes(false, false) == [] as byte[]
+        encodedText.toBytes(true, false) == [] as byte[]
+        encodedText.toBytes(false, true) == [0] as byte[]
+        encodedText.toBytes(true, true) == [0] as byte[]
+        where:
+        encodedText << [
+                new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, [] as byte[]),
+                new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, [0] as byte[])
+        ]
+    }
+
+    @Unroll
+    def "When empty byte array and an UTF-16 encoding are given toBytes() still returns correct values"() {
+        expect:
+        encodedText.toBytes(false, false) == [] as byte[]
+        encodedText.toBytes(false, true) == [0, 0] as byte[]
+        encodedText.toBytes(true, false) == [0xff, 0xfe] as byte[]
+        encodedText.toBytes(true, true) == [0xff, 0xfe, 0, 0] as byte[]
+        where:
+        encodedText << [
+                new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, [] as byte[]),
+                new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, [0, 0] as byte[]),
+                new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, [0xff, 0xfe] as byte[]),
+                new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, [0xff, 0xfe, 0, 0] as byte[])
+        ]
+    }
 }
