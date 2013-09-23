@@ -42,7 +42,7 @@ Useful maven goals:
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
 More can be learned from looking at the javadocs and at the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples").
 
-### Opening an mp3 file
+### Opening a mp3 file
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
@@ -52,11 +52,11 @@ More can be learned from looking at the javadocs and at the code itself, or at t
         System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
         System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
 
-### Saving an mp3 file
+### Saving a mp3 file
 
         mp3file.save("MyMp3File.mp3");
 
-### Removing ID3 and custom tags from an mp3 file
+### Removing ID3 and custom tags from a mp3 file
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         if (mp3file.hasId3v1Tag()) {
@@ -149,7 +149,7 @@ Convenience methods are included to easily get common ID3v2 frames. If you wish 
 
 ### Setting ID3v2 field values
 
-Convenience methods are included to easily set common ID3v2 tags. Text encoding is chosen appropriately for strings (generally ISO8859-1 or UTF-16). If you wish to set frame data that does not have convenience methods, or if you wish to specify text encoding, or set meta-data on frames, direct writing of frames is possible (see further down on this page).
+Convenience methods are included to easily set common ID3v2 tags. Text encoding is chosen appropriately for strings (generally ISO8859-1 or UTF-16). If you wish to set frame data that does not have convenience methods, or if you wish to specify text encoding, or set meta-data on frames, direct writing of frames is possible (see below).
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         ID3v2 id3v2Tag;
@@ -180,20 +180,20 @@ Convenience methods are included to easily set common ID3v2 tags. Text encoding 
 
 Frame IDs are defined in the [ID3v2 specification](http://www.id3.org/Developer_Information "ID3v2 specification"). Frames can be read from an ID3v2 tag using these. 
 
-For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project in github and submit a patch request if you add anything useful.
+For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project on github and submit a pull request if you add anything useful.
 
 Code to read and write these frames more easily is planned. Watch this space.
 
 ## Contributing
 
-If you have added a feature or fixed a bug in mp3agic and want to share it, please submit a pull request as follows:
+If you have added a feature or fixed a bug in mp3agic please submit a pull request as follows:
 
 * Fork the project
 * Write the code for your feature or bug fix
 * Please don't auto-format the code or make wholesale whitespace changes as it makes seeing what has changed more difficult
 * Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
 * Make sure the existing tests all pass
-* Commit and do not mess with version, or history
+* Commit and do not mess with version or history
 * Submit a pull request
 
 Thanks for sharing!
