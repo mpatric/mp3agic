@@ -26,16 +26,22 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 
 ## Development
 
-### Foo
+mp3agic uses various tools to ease the development process.
+* [Maven](http://maven.apache.org/) is used to resolve dependencies and to build mp3agic.
+* [Travis CI](https://travis-ci.org/mpatric/mp3agic) is used as a continuous integration server.
+* [Sonar](http://nemo.sonarqube.org/dashboard/index/com.mpatric:mp3agic) is used for static code analysis (updated every saturday).
 
 
-You will need:
+### Building
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 6 or higher
-* [maven](http://maven.apache.org/)
-* Static code analysis is done every saturday via [sonar](http://nemo.sonarqube.org/dashboard/index/com.mpatric:mp3agic)
+To build mp3agic, you will need:
 
-Useful maven goals:
+* [JDK 6+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) - Oracle or OpenJDK
+* [maven](http://maven.apache.org/) - Version 3 recommended
+
+After installing these tools simply run 'mvn clean package' and find the jar in the target folder.
+
+Other Useful maven lifecycles:
 
 * clean - remove binaries, docs and temporary build files
 * compile - compile the library
@@ -45,7 +51,7 @@ Useful maven goals:
 ## How to use it
 
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
-More can be learned from looking at the javadocs and at the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples").
+More can be learned from looking at the javadocs and the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples).
 
 ### Opening a mp3 file
 
@@ -197,7 +203,7 @@ If you have added a feature or fixed a bug in mp3agic please submit a pull reque
 * Write the code for your feature or bug fix
 * Please don't auto-format the code or make wholesale whitespace changes as it makes seeing what has changed more difficult
 * Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
-* Make sure the existing tests all pass
+* Make sure the existing tests pass
 * Commit and do not mess with version or history
 * Submit a pull request
 
