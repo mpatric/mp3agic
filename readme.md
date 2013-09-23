@@ -24,7 +24,10 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 * add or remove custom messages between the end of the mpeg frames and the ID3v1 tag
 * unicode support
 
-## Building
+## Development
+
+### Foo
+
 
 You will need:
 
