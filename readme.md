@@ -1,8 +1,9 @@
-# mp3agic [![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
+# mp3agic
+[![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
 
 A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
-See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
+See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks like printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to and extracting images from mp3 files.
 
 Releases are available via Maven central. To add a dependency to mp3agic, use:
 
@@ -27,8 +28,9 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 
 You will need:
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 6 or higher
-* [maven](http://maven.apache.org/ "maven")
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 6 or higher
+* [maven](http://maven.apache.org/)
+* Static code analysis is done every saturday via [sonar](http://nemo.sonarqube.org/dashboard/index/com.mpatric:mp3agic)
 
 Useful maven goals:
 
