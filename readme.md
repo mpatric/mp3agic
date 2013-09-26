@@ -53,7 +53,7 @@ Other Useful maven lifecycles:
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
 More can be learned from looking at the javadocs and the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples).
 
-### Opening a mp3 file
+### Opening an mp3 file
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
@@ -63,11 +63,11 @@ More can be learned from looking at the javadocs and the code itself, or at the 
         System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
         System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
 
-### Saving a mp3 file
+### Saving an mp3 file
 
         mp3file.save("MyMp3File.mp3");
 
-### Removing ID3 and custom tags from a mp3 file
+### Removing ID3 and custom tags from an mp3 file
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         if (mp3file.hasId3v1Tag()) {
