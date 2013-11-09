@@ -207,36 +207,62 @@ public class ID3v1Tag implements ID3v1 {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((album == null) ? 0 : album.hashCode());
+		result = prime * result + ((artist == null) ? 0 : artist.hashCode());
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+		result = prime * result + genre;
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((track == null) ? 0 : track.hashCode());
+		result = prime * result + ((year == null) ? 0 : year.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (! (obj instanceof ID3v1Tag)) return false;
-		if (super.equals(obj)) return true;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		ID3v1Tag other = (ID3v1Tag) obj;
-		if (genre != other.genre) return false;
-		if (track == null) {
-			if (other.track != null) return false;
-		} else if (other.track == null) return false;
-		else if (! track.equals(other.track)) return false;
-		if (artist == null) {
-			if (other.artist != null) return false;
-		} else if (other.artist == null) return false;
-		else if (! artist.equals(other.artist)) return false;
-		if (title == null) {
-			if (other.title != null) return false;
-		} else if (other.title == null) return false;
-		else if (! title.equals(other.title)) return false;
 		if (album == null) {
-			if (other.album != null) return false;
-		} else if (other.album == null) return false;
-		else if (! album.equals(other.album)) return false;
-		if (year == null) {
-			if (other.year != null) return false;
-		} else if (other.year == null) return false;
-		else if (! year.equals(other.year)) return false;
+			if (other.album != null)
+				return false;
+		} else if (!album.equals(other.album))
+			return false;
+		if (artist == null) {
+			if (other.artist != null)
+				return false;
+		} else if (!artist.equals(other.artist))
+			return false;
 		if (comment == null) {
-			if (other.comment != null) return false;
-		} else if (other.comment == null) return false;
-		else if (! comment.equals(other.comment)) return false;
+			if (other.comment != null)
+				return false;
+		} else if (!comment.equals(other.comment))
+			return false;
+		if (genre != other.genre)
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (track == null) {
+			if (other.track != null)
+				return false;
+		} else if (!track.equals(other.track))
+			return false;
+		if (year == null) {
+			if (other.year != null)
+				return false;
+		} else if (!year.equals(other.year))
+			return false;
 		return true;
 	}
 }
