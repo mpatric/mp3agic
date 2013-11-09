@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 public class TestHelper extends TestCase {
 	public static String bytesToHexString(byte[] bytes) {     
-		StringBuilder hexString = new StringBuilder();
+		StringBuffer hexString = new StringBuffer();
 		for (int i = 0; i < bytes.length; i++) {
 			if (i > 0) hexString.append(' ');
 			String hex = Integer.toHexString(0xff & bytes[i]);
