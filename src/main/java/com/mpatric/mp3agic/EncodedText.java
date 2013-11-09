@@ -223,7 +223,7 @@ public class EncodedText {
 		return true;
 	}
 	
-	public static String bytesToString(byte[] bytes, String characterSet) throws CharacterCodingException {
+	private static String bytesToString(byte[] bytes, String characterSet) throws CharacterCodingException {
 		CharBuffer cbuf = bytesToCharBuffer(bytes, characterSet);
 		String s = cbuf.toString();
 		int length = s.indexOf(0);
@@ -237,7 +237,7 @@ public class EncodedText {
 		return decoder.decode(ByteBuffer.wrap(bytes));
 	}
 	
-	public static byte[] stringToBytes(String s, String characterSet) {
+	private static byte[] stringToBytes(String s, String characterSet) {
 		try {
 			return charBufferToBytes(CharBuffer.wrap(s), characterSet);
 		} catch (CharacterCodingException e) {
