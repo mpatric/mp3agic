@@ -172,28 +172,59 @@ public class ID3v2Frame {
 	public boolean hasUnsynchronisation() {
 		return unsynchronisation;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (compression ? 1231 : 1237);
+		result = prime * result + Arrays.hashCode(data);
+		result = prime * result + dataLength;
+		result = prime * result + (dataLengthIndicator ? 1231 : 1237);
+		result = prime * result + (encryption ? 1231 : 1237);
+		result = prime * result + (group ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (preserveFile ? 1231 : 1237);
+		result = prime * result + (preserveTag ? 1231 : 1237);
+		result = prime * result + (readOnly ? 1231 : 1237);
+		result = prime * result + (unsynchronisation ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (! (obj instanceof ID3v2Frame)) return false;
-		if (super.equals(obj)) return true;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		ID3v2Frame other = (ID3v2Frame) obj;
-		if (dataLength != other.dataLength) return false;
-		if (preserveTag != other.preserveTag) return false;
-		if (preserveFile != other.preserveFile) return false;
-		if (readOnly != other.readOnly) return false;
-		if (group != other.group) return false;
-		if (compression != other.compression) return false;
-		if (encryption != other.encryption) return false;
-		if (unsynchronisation != other.encryption) return false;
-		if (dataLengthIndicator != other.dataLengthIndicator) return false;
+		if (compression != other.compression)
+			return false;
+		if (!Arrays.equals(data, other.data))
+			return false;
+		if (dataLength != other.dataLength)
+			return false;
+		if (dataLengthIndicator != other.dataLengthIndicator)
+			return false;
+		if (encryption != other.encryption)
+			return false;
+		if (group != other.group)
+			return false;
 		if (id == null) {
-			if (other.id != null) return false;
-		} else if (other.id == null) return false;
-		else if (! id.equals(other.id)) return false;
-		if (data == null) {
-			if (other.data != null) return false;
-		} else if (other.data == null) return false;
-		else if (! Arrays.equals(data, other.data)) return false; 
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (preserveFile != other.preserveFile)
+			return false;
+		if (preserveTag != other.preserveTag)
+			return false;
+		if (readOnly != other.readOnly)
+			return false;
+		if (unsynchronisation != other.unsynchronisation)
+			return false;
 		return true;
 	}
 }

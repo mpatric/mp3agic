@@ -29,10 +29,25 @@ public abstract class AbstractID3v2FrameData {
 		return packAndUnsynchroniseFrameData();
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (unsynchronisation ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (! (obj instanceof AbstractID3v2FrameData)) return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		AbstractID3v2FrameData other = (AbstractID3v2FrameData) obj;
-		if (unsynchronisation != other.unsynchronisation) return false;
+		if (unsynchronisation != other.unsynchronisation)
+			return false;
 		return true;
 	}
 
