@@ -1,8 +1,9 @@
-# mp3agic [![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
+# mp3agic
+[![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
 
 A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
-See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks such including printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to mp3 files and extracting images from mp3 files.
+See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks like printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to and extracting images from mp3 files.
 
 Releases are available via Maven central. To add a dependency to mp3agic, use:
 
@@ -23,14 +24,24 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 * add or remove custom messages between the end of the mpeg frames and the ID3v1 tag
 * unicode support
 
-## Building
+## Development
 
-You will need:
+mp3agic uses various tools to ease the development process.
+* [Maven](http://maven.apache.org/) is used to resolve dependencies and to build mp3agic.
+* [Travis CI](https://travis-ci.org/mpatric/mp3agic) is used as a continuous integration server.
+* [Sonar](http://nemo.sonarqube.org/dashboard/index/com.mpatric:mp3agic) is used for static code analysis (updated every saturday).
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html "JDK") 6 or higher
-* [maven](http://maven.apache.org/ "maven")
 
-Useful maven goals:
+### Building
+
+To build mp3agic, you will need:
+
+* [JDK 6+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) - Oracle or OpenJDK
+* [maven](http://maven.apache.org/) - Version 3 recommended
+
+After installing these tools simply run 'mvn clean package' and find the jar in the target folder.
+
+Other Useful maven lifecycles:
 
 * clean - remove binaries, docs and temporary build files
 * compile - compile the library
@@ -40,7 +51,7 @@ Useful maven goals:
 ## How to use it
 
 Some sample code follows for performing common operations; it is not an exhaustive list of all the functionality.
-More can be learned from looking at the javadocs and at the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples").
+More can be learned from looking at the javadocs and the code itself, or at the examples in [mp3agic-examples](https://github.com/mpatric/mp3agic-examples).
 
 ### Opening an mp3 file
 
@@ -149,7 +160,7 @@ Convenience methods are included to easily get common ID3v2 frames. If you wish 
 
 ### Setting ID3v2 field values
 
-Convenience methods are included to easily set common ID3v2 tags. Text encoding is chosen appropriately for strings (generally ISO8859-1 or UTF-16). If you wish to set frame data that does not have convenience methods, or if you wish to specify text encoding, or set meta-data on frames, direct writing of frames is possible (see further down on this page).
+Convenience methods are included to easily set common ID3v2 tags. Text encoding is chosen appropriately for strings (generally ISO8859-1 or UTF-16). If you wish to set frame data that does not have convenience methods, or if you wish to specify text encoding, or set meta-data on frames, direct writing of frames is possible (see below).
 
         Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
         ID3v2 id3v2Tag;
@@ -180,20 +191,20 @@ Convenience methods are included to easily set common ID3v2 tags. Text encoding 
 
 Frame IDs are defined in the [ID3v2 specification](http://www.id3.org/Developer_Information "ID3v2 specification"). Frames can be read from an ID3v2 tag using these. 
 
-For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project in github and submit a patch request if you add anything useful.
+For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project on github and submit a pull request if you add anything useful.
 
 Code to read and write these frames more easily is planned. Watch this space.
 
 ## Contributing
 
-If you have added a feature or fixed a bug in mp3agic and want to share it, please submit a pull request as follows:
+If you have added a feature or fixed a bug in mp3agic please submit a pull request as follows:
 
 * Fork the project
 * Write the code for your feature or bug fix
 * Please don't auto-format the code or make wholesale whitespace changes as it makes seeing what has changed more difficult
 * Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
-* Make sure the existing tests all pass
-* Commit and do not mess with version, or history
+* Make sure the existing tests pass
+* Commit and do not mess with version or history
 * Submit a pull request
 
 Thanks for sharing!
