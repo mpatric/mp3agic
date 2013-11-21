@@ -10,7 +10,7 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
     <dependency>
       <groupId>com.mpatric</groupId>
       <artifactId>mp3agic</artifactId>
-      <version>0.8.1</version>
+      <version>0.8.2</version>
     </dependency>
 
 ## Some features
