@@ -37,7 +37,10 @@ public interface ID3v2 extends ID3v1 {
 
 	boolean isCompilation();
 	void setCompilation(boolean compilation);
-	
+
+	String getGrouping();
+	void setGrouping(String grouping);
+
 	ArrayList<ID3v2ChapterFrameData> getChapters();
 	void setChapters(ArrayList<ID3v2ChapterFrameData> chapters);
 	

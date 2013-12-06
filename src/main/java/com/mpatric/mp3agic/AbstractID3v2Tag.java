@@ -28,6 +28,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_COMPILATION = "TCMP";
 	public static final String ID_CHAPTER_TOC = "CTOC";
     public static final String ID_CHAPTER = "CHAP";
+	public static final String ID_GROUPING = "TIT1";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
 	public static final String ID_ENCODER_OBSELETE = "TEN";
 	public static final String ID_URL_OBSELETE = "WXX";
@@ -45,6 +46,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_TRACK_OBSELETE = "TRK";
 	public static final String ID_PART_OF_SET_OBSELETE = "TPA";
 	public static final String ID_COMPILATION_OBSELETE = "TCP";
+	public static final String ID_GROUPING_OBSELETE = "TT1";
 	
 	protected static final String TAG = "ID3";
 	protected static final String FOOTER_TAG = "3DI";
@@ -385,6 +387,20 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(compilation ? "1" : "0"));
 		addFrame(createFrame(ID_COMPILATION, frameData.toBytes()), true);
 	}
+
+	public String getGrouping() {
+		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_GROUPING_OBSELETE : ID_GROUPING);
+		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
+		return null;
+	}
+
+	public void setGrouping(String grouping) {
+		if (grouping != null && grouping.length() > 0) {
+			invalidateDataLength();
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(grouping));
+			addFrame(createFrame(ID_GROUPING, frameData.toBytes()), true);
+		}
+	}	
 
 	public String getArtist() {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_ARTIST_OBSELETE : ID_ARTIST);
