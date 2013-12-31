@@ -1,6 +1,8 @@
 package com.mpatric.mp3agic;
 
-public class ID3v24Tag extends AbstractID3v2Tag {
+import java.util.ArrayList;
+
+public class ID3v24Tag extends AbstractID3v2Tag implements ID3v24 {
 
 	public static final String VERSION = "4.0";
 
@@ -13,6 +15,134 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		super(buffer);
 	}
 	
+	public String[] getTitles() {
+		return getTextFrameValues(ID_TITLE);
+	}
+
+	public void setTitles(String[] titles) {
+		setTextFrameValues(ID_TITLE, titles);
+	}
+
+	public String[] getArtists() {
+		return getTextFrameValues(ID_ARTIST);
+	}
+
+	public void setArtists(String[] artists) {
+		setTextFrameValues(ID_ARTIST, artists);
+	}
+
+	public String[] getAlbums() {
+		return getTextFrameValues(ID_ALBUM);
+	}
+
+	public void setAlbums(String[] albums) {
+		setTextFrameValues(ID_ALBUM, albums);
+	}
+
+	public String[] getTracks() {
+		return getTextFrameValues(ID_TRACK);
+	}
+
+	public void setTracks(String[] tracks) {
+		setTextFrameValues(ID_TRACK, tracks);
+	}
+
+	public String[] getYears() {
+		return getTextFrameValues(ID_YEAR);
+	}
+
+	public void setYears(String[] years) {
+		setTextFrameValues(ID_YEAR, years);
+	}
+
+	public String[] getGenreDescriptions() {
+		return getTextFrameValues(ID_GENRE);
+	}
+
+	public void setGenreDescriptions(String[] genres) {
+		setTextFrameValues(ID_GENRE, genres);
+	}
+
+	public String[] getComments() {
+		return getTextFrameValues(ID_COMMENT);
+	}
+
+	public void setComments(String[] comments) {
+		setTextFrameValues(ID_COMMENT, comments);
+	}
+
+	public String[] getComposers() {
+		return getTextFrameValues(ID_COMPOSER);
+	}
+
+	public void setComposers(String[] composers) {
+		setTextFrameValues(ID_COMPOSER, composers);
+	}
+
+	public String[] getPublishers() {
+		return getTextFrameValues(ID_PUBLISHER);
+	}
+
+	public void setPublishers(String[] publishers) {
+		setTextFrameValues(ID_PUBLISHER, publishers);
+	}
+
+	public String[] getOriginalArtists() {
+		return getTextFrameValues(ID_ORIGINAL_ARTIST);
+	}
+
+	public void setOriginalArtists(String[] originalArtists) {
+		setTextFrameValues(ID_ORIGINAL_ARTIST, originalArtists);
+	}
+
+	public String[] getAlbumArtists() {
+		return getTextFrameValues(ID_ALBUM_ARTIST);
+	}
+
+	public void setAlbumArtists(String[] albumArtists) {
+		setTextFrameValues(ID_ALBUM_ARTIST, albumArtists);
+	}
+
+	public String[] getCopyrights() {
+		return getTextFrameValues(ID_COPYRIGHT);
+	}
+
+	public void setCopyrights(String[] copyrights) {
+		setTextFrameValues(ID_COPYRIGHT, copyrights);
+	}
+
+	public String[] getUrls() {
+		return getTextFrameValues(ID_URL);
+	}
+
+	public void setUrls(String[] urls) {
+		setTextFrameValues(ID_URL, urls);
+	}
+
+	public String[] getPartOfSets() {
+		return getTextFrameValues(ID_PART_OF_SET);
+	}
+
+	public void setPartOfSets(String[] partOfSets) {
+		setTextFrameValues(ID_PART_OF_SET, partOfSets);
+	}
+
+	public String[] getGroupings() {
+		return getTextFrameValues(ID_GROUPING);
+	}
+
+	public void setGroupings(String[] groupings) {
+		setTextFrameValues(ID_GROUPING, groupings);
+	}
+
+	public String[] getEncoders() {
+		return getTextFrameValues(ID_ENCODER);
+	}
+
+	public void setEncoders(String[] encoders) {
+		setTextFrameValues(ID_ENCODER, encoders);
+	}
+
 	protected void unpackFlags(byte[] buffer) {
 		unsynchronisation = BufferTools.checkBit(buffer[FLAGS_OFFSET], UNSYNCHRONISATION_BIT);
 		extendedHeader = BufferTools.checkBit(buffer[FLAGS_OFFSET], EXTENDED_HEADER_BIT);
@@ -37,6 +167,20 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 	
 	protected ID3v2Frame createFrame(String id, byte[] data) {
 		return new ID3v24Frame(id, data);
+	}
+	
+	private String[] getTextFrameValues(String id) {
+		ID3v2TextFrameData frameData = extractTextFrameData(id);
+		return (frameData == null || frameData.getText() == null) ? null :
+		frameData.getText().toStrings();
+	}
+	
+	private void setTextFrameValues(String id, String[] values) {
+		if (values != null && values.length > 0) {
+			invalidateDataLength();
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(values));
+			addFrame(createFrame(id, frameData.toBytes()), true);
+		}
 	}
 	
 	@Override

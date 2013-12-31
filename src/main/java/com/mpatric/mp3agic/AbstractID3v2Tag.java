@@ -147,7 +147,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return currentOffset;
 	}
 
-	private void addFrame(ID3v2Frame frame, boolean replace) {
+	protected void addFrame(ID3v2Frame frame, boolean replace) {
 		ID3v2FrameSet frameSet = frameSets.get(frame.getId());
 		if (frameSet == null) {
 			frameSet = new ID3v2FrameSet(frame.getId());
@@ -291,7 +291,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return version;
 	}
 		
-	private void invalidateDataLength() {
+	protected void invalidateDataLength() {
 		dataLength = 0;
 	}
 
@@ -784,7 +784,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return null;
     }
 	
-	private ID3v2TextFrameData extractTextFrameData(String id) {
+	protected ID3v2TextFrameData extractTextFrameData(String id) {
 		ID3v2FrameSet frameSet = frameSets.get(id);
 		if (frameSet != null) {
 			ID3v2Frame frame = (ID3v2Frame) frameSet.getFrames().get(0);
