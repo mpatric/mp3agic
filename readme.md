@@ -7,11 +7,13 @@ See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-exam
 
 Releases are available via Maven central. To add a dependency to mp3agic, use:
 
-    <dependency>
-      <groupId>com.mpatric</groupId>
-      <artifactId>mp3agic</artifactId>
-      <version>0.8.2</version>
-    </dependency>
+```xml
+<dependency>
+  <groupId>com.mpatric</groupId>
+  <artifactId>mp3agic</artifactId>
+  <version>0.8.2</version>
+</dependency>
+```
 
 ## Some features
 
@@ -55,137 +57,152 @@ More can be learned from looking at the javadocs and the code itself, or at the 
 
 ### Opening an mp3 file
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
-        System.out.println("Bitrate: " + mp3file.getLengthInSeconds() + " kbps " + (mp3file.isVbr() ? "(VBR)" : "(CBR)"));
-        System.out.println("Sample rate: " + mp3file.getSampleRate() + " Hz");
-        System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"));
-        System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
-        System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+System.out.println("Length of this mp3 is: " + mp3file.getLengthInSeconds() + " seconds");
+System.out.println("Bitrate: " + mp3file.getLengthInSeconds() + " kbps " + (mp3file.isVbr() ? "(VBR)" : "(CBR)"));
+System.out.println("Sample rate: " + mp3file.getSampleRate() + " Hz");
+System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"));
+System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
+System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
+```
 
 ### Saving an mp3 file
 
-        mp3file.save("MyMp3File.mp3");
+```java
+mp3file.save("MyMp3File.mp3");
+```
 
 ### Removing ID3 and custom tags from an mp3 file
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        if (mp3file.hasId3v1Tag()) {
-          mp3file.removeId3v1Tag();
-        }
-        if (mp3file.hasId3v2Tag()) {
-          mp3file.removeId3v2Tag();
-        }
-        if (mp3file.hasCustomTag()) {
-          mp3file.removeCustomTag();
-        }
-        mp3file.save("Mp3FileWithoutTags.mp3");
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+if (mp3file.hasId3v1Tag()) {
+  mp3file.removeId3v1Tag();
+}
+if (mp3file.hasId3v2Tag()) {
+  mp3file.removeId3v2Tag();
+}
+if (mp3file.hasCustomTag()) {
+  mp3file.removeCustomTag();
+}
+mp3file.save("Mp3FileWithoutTags.mp3");
+```
 
 ### Getting ID3v1 values
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        if (mp3file.hasId3v1Tag()) {
-          ID3v1 id3v1Tag = mp3file.getId3v1Tag();
-          System.out.println("Track: " + id3v1Tag.getTrack());
-          System.out.println("Artist: " + id3v1Tag.getArtist());
-          System.out.println("Title: " + id3v1Tag.getTitle());
-          System.out.println("Album: " + id3v1Tag.getAlbum());
-          System.out.println("Year: " + id3v1Tag.getYear());
-          System.out.println("Genre: " + id3v1Tag.getGenre() + " (" + id3v1Tag.getGenreDescription() + ")");
-          System.out.println("Comment: " + id3v1Tag.getComment());
-        }
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+if (mp3file.hasId3v1Tag()) {
+  ID3v1 id3v1Tag = mp3file.getId3v1Tag();
+  System.out.println("Track: " + id3v1Tag.getTrack());
+  System.out.println("Artist: " + id3v1Tag.getArtist());
+  System.out.println("Title: " + id3v1Tag.getTitle());
+  System.out.println("Album: " + id3v1Tag.getAlbum());
+  System.out.println("Year: " + id3v1Tag.getYear());
+  System.out.println("Genre: " + id3v1Tag.getGenre() + " (" + id3v1Tag.getGenreDescription() + ")");
+  System.out.println("Comment: " + id3v1Tag.getComment());
+}
+```
 
 ### Setting ID3v1 values
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        ID3v1 id3v1Tag;
-        if (mp3file.hasId3v1Tag()) {
-          id3v1Tag =  mp3file.getId3v1Tag();
-        } else {
-          // mp3 does not have an ID3v1 tag, let's create one..
-          id3v1Tag = new ID3v1Tag();
-          mp3file.setId3v1Tag(id3v1Tag);
-        }
-        id3v1Tag.setTrack("5");
-        id3v1Tag.setArtist("An Artist");
-        id3v1Tag.setTitle("The Title");
-        id3v1Tag.setAlbum("The Album");
-        id3v1Tag.setYear("2001");
-        id3v1Tag.setGenre(12);
-        id3v1Tag.setComment("Some comment");
-        mp3file.save("MyMp3File.mp3");
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+ID3v1 id3v1Tag;
+if (mp3file.hasId3v1Tag()) {
+  id3v1Tag =  mp3file.getId3v1Tag();
+} else {
+  // mp3 does not have an ID3v1 tag, let's create one..
+  id3v1Tag = new ID3v1Tag();
+  mp3file.setId3v1Tag(id3v1Tag);
+}
+id3v1Tag.setTrack("5");
+id3v1Tag.setArtist("An Artist");
+id3v1Tag.setTitle("The Title");
+id3v1Tag.setAlbum("The Album");
+id3v1Tag.setYear("2001");
+id3v1Tag.setGenre(12);
+id3v1Tag.setComment("Some comment");
+    mp3file.save("MyMp3File.mp3");
+```
 
 ### Getting ID3v2 frame values
 
 Convenience methods are included to easily get common ID3v2 frames. If you wish to get frame data that does not have convenience methods, or if you wish to access meta-data on frames, direct reading of frames is possible (see further down on this page).
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        if (mp3file.hasId3v2Tag()) {
-          ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-          System.out.println("Track: " + id3v2Tag.getTrack());
-          System.out.println("Artist: " + id3v2Tag.getArtist());
-          System.out.println("Title: " + id3v2Tag.getTitle());
-          System.out.println("Album: " + id3v2Tag.getAlbum());
-          System.out.println("Year: " + id3v2Tag.getYear());
-          System.out.println("Genre: " + id3v2Tag.getGenre() + " (" + id3v2Tag.getGenreDescription() + ")");
-          System.out.println("Comment: " + id3v2Tag.getComment());
-          System.out.println("Composer: " + id3v2Tag.getComposer());
-          System.out.println("Publisher: " + id3v2Tag.getPublisher());
-          System.out.println("Original artist: " + id3v2Tag.getOriginalArtist());
-          System.out.println("Album artist: " + id3v2Tag.getAlbumArtist());
-          System.out.println("Copyright: " + id3v2Tag.getCopyright());
-          System.out.println("URL: " + id3v2Tag.getUrl());
-          System.out.println("Encoder: " + id3v2Tag.getEncoder());
-          byte[] albumImageData = id3v2Tag.getAlbumImage();
-          if (albumImageData != null) {
-            System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
-            System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
-          }
-        }
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+if (mp3file.hasId3v2Tag()) {
+  ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+  System.out.println("Track: " + id3v2Tag.getTrack());
+  System.out.println("Artist: " + id3v2Tag.getArtist());
+  System.out.println("Title: " + id3v2Tag.getTitle());
+  System.out.println("Album: " + id3v2Tag.getAlbum());
+  System.out.println("Year: " + id3v2Tag.getYear());
+  System.out.println("Genre: " + id3v2Tag.getGenre() + " (" + id3v2Tag.getGenreDescription() + ")");
+  System.out.println("Comment: " + id3v2Tag.getComment());
+  System.out.println("Composer: " + id3v2Tag.getComposer());
+  System.out.println("Publisher: " + id3v2Tag.getPublisher());
+  System.out.println("Original artist: " + id3v2Tag.getOriginalArtist());
+  System.out.println("Album artist: " + id3v2Tag.getAlbumArtist());
+  System.out.println("Copyright: " + id3v2Tag.getCopyright());
+  System.out.println("URL: " + id3v2Tag.getUrl());
+  System.out.println("Encoder: " + id3v2Tag.getEncoder());
+  byte[] albumImageData = id3v2Tag.getAlbumImage();
+  if (albumImageData != null) {
+    System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
+    System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
+  }
+}
+```
 
 ### Getting ID3v2 album artwork
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        if (mp3file.hasId3v2Tag()) {
-          ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-          byte[] imageData = id3v2Tag.getAlbumImage();
-          if (imageData != null) {
-            String mimeType = id3v2Tag.getAlbumImageMimeType();
-            // Write image to file - can determine appropriate file extension from the mime type
-            RandomAccessFile file = new RandomAccessFile("album-artwork", "rw");
-            file.write(data);
-            file.close();
-          }
-        }
-
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+if (mp3file.hasId3v2Tag()) {
+  ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+  byte[] imageData = id3v2Tag.getAlbumImage();
+  if (imageData != null) {
+    String mimeType = id3v2Tag.getAlbumImageMimeType();
+    // Write image to file - can determine appropriate file extension from the mime type
+    RandomAccessFile file = new RandomAccessFile("album-artwork", "rw");
+    file.write(data);
+    file.close();
+  }
+}
+```
 ### Setting ID3v2 field values
 
 Convenience methods are included to easily set common ID3v2 tags. Text encoding is chosen appropriately for strings (generally ISO8859-1 or UTF-16). If you wish to set frame data that does not have convenience methods, or if you wish to specify text encoding, or set meta-data on frames, direct writing of frames is possible (see below).
 
-        Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
-        ID3v2 id3v2Tag;
-        if (mp3file.hasId3v2Tag()) {
-          id3v2Tag = mp3file.getId3v2Tag();
-        } else {
-          // mp3 does not have an ID3v2 tag, let's create one..
-          id3v2Tag = new ID3v24Tag();
-          mp3file.setId3v2Tag(id3v2Tag);
-        }
-        id3v2Tag.setTrack("5");
-        id3v2Tag.setArtist("An Artist");
-        id3v2Tag.setTitle("The Title");
-        id3v2Tag.setAlbum("The Album");
-        id3v2Tag.setYear("2001");
-        id3v2Tag.setGenre(12);
-        id3v2Tag.setComment("Some comment");
-        id3v2Tag.setComposer("The Composer");
-        id3v2Tag.setPublisher("A Publisher");
-        id3v2Tag.setOriginalArtist("Another Artist");
-        id3v2Tag.setAlbumArtist("An Artist");
-        id3v2Tag.setCopyright("Copyright");
-        id3v2Tag.setUrl("http://foobar");
-        id3v2Tag.setEncoder("The Encoder");
-        mp3file.save("MyMp3File.mp3");
+```java
+Mp3File mp3file = new Mp3File("SomeMp3File.mp3");
+ID3v2 id3v2Tag;
+if (mp3file.hasId3v2Tag()) {
+  id3v2Tag = mp3file.getId3v2Tag();
+} else {
+  // mp3 does not have an ID3v2 tag, let's create one..
+  id3v2Tag = new ID3v24Tag();
+  mp3file.setId3v2Tag(id3v2Tag);
+}
+id3v2Tag.setTrack("5");
+id3v2Tag.setArtist("An Artist");
+id3v2Tag.setTitle("The Title");
+id3v2Tag.setAlbum("The Album");
+id3v2Tag.setYear("2001");
+id3v2Tag.setGenre(12);
+id3v2Tag.setComment("Some comment");
+id3v2Tag.setComposer("The Composer");
+id3v2Tag.setPublisher("A Publisher");
+id3v2Tag.setOriginalArtist("Another Artist");
+id3v2Tag.setAlbumArtist("An Artist");
+id3v2Tag.setCopyright("Copyright");
+id3v2Tag.setUrl("http://foobar");
+id3v2Tag.setEncoder("The Encoder");
+mp3file.save("MyMp3File.mp3");
+```
 
 ### Reading and writing ID3v2 frames directly
 
@@ -211,4 +228,4 @@ Thanks for sharing!
 
 ## Copyright
 
-Copyright (c) 2006-2013 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2014 Michael Patricios. See mit-license.txt for details.
