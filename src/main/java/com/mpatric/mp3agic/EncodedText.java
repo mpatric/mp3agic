@@ -64,27 +64,15 @@ public class EncodedText {
 		throw new IllegalArgumentException("Invalid string, could not find appropriate encoding");
 	}
 	
-	public EncodedText(String[] strings) throws IllegalArgumentException {
-		this(joinStrings(strings));
-	}
-	
 	public EncodedText(String string, byte transcodeToTextEncoding) throws IllegalArgumentException, CharacterCodingException {
 		this(string);
 		setTextEncoding(transcodeToTextEncoding, true);
-	}
-	
-	public EncodedText(String[] strings, byte transcodeToTextEncoding) throws IllegalArgumentException, CharacterCodingException {
-		this(joinStrings(strings), transcodeToTextEncoding);
 	}
 	
 	public EncodedText(byte textEncoding, String string) {
 		this.textEncoding = textEncoding;
 		value = stringToBytes(string, characterSetForTextEncoding(textEncoding));
 		this.stripBomAndTerminator();
-	}
-	
-	public EncodedText(byte textEncoding, String[] strings) {
-		this(textEncoding, joinStrings(strings));
 	}
 	
 	public EncodedText(byte[] value) {
@@ -206,14 +194,6 @@ public class EncodedText {
 		}
 	}
 
-	public String[] toStrings() {
-		try {
-			return bytesToStrings(value, characterSetForTextEncoding(textEncoding));
-		} catch (CharacterCodingException e) {
-			return null;
-		}
-	}
-
 	public String getCharacterSet() {
 		return characterSetForTextEncoding(textEncoding);
 	}
@@ -244,17 +224,7 @@ public class EncodedText {
 	}
 	
 	private static String bytesToString(byte[] bytes, String characterSet) throws CharacterCodingException {
-		CharBuffer cbuf = bytesToCharBuffer(bytes, characterSet);
-		String s = cbuf.toString();
-		int length = s.indexOf(0);
-		if (length == -1) return s;
-		return s.substring(0, length);
-	}
-
-	private static String[] bytesToStrings(byte[] bytes, String characterSet) throws CharacterCodingException {
-		CharBuffer cbuf = bytesToCharBuffer(bytes, characterSet);
-		String s = cbuf.toString();
-		return s.split("\0");
+		return bytesToCharBuffer(bytes, characterSet).toString();
 	}
 	
 	protected static CharBuffer bytesToCharBuffer(byte[] bytes, String characterSet) throws CharacterCodingException {
@@ -271,28 +241,10 @@ public class EncodedText {
 		}
 	}
 	
-	private static byte[] stringsToBytes(String[] strings, String characterSet) {
-		try {
-			return charBufferToBytes(CharBuffer.wrap(joinStrings(strings)), characterSet);
-		} catch (CharacterCodingException e) {
-			return null;
-		}
-	}
-	
 	protected static byte[] charBufferToBytes(CharBuffer charBuffer, String characterSet) throws CharacterCodingException {
 		Charset charset = Charset.forName(characterSet);
 		CharsetEncoder encoder = charset.newEncoder();
 		ByteBuffer byteBuffer = encoder.encode(charBuffer);
 		return BufferTools.copyBuffer(byteBuffer.array(), 0, byteBuffer.limit());
-	}
-	
-	private static String joinStrings(String[] strings) {
-		StringBuilder builder = new StringBuilder();
-		for (String s : strings) {
-			if (builder.length() > 0)
-				builder.append("\0");
-			builder.append(s);
-		}
-		return builder.toString();
 	}
 }

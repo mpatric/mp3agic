@@ -1,6 +1,8 @@
 package com.mpatric.mp3agic;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ID3v24Tag extends AbstractID3v2Tag implements ID3v24 {
 
@@ -15,132 +17,73 @@ public class ID3v24Tag extends AbstractID3v2Tag implements ID3v24 {
 		super(buffer);
 	}
 	
-	public String[] getTitles() {
-		return getTextFrameValues(ID_TITLE);
+	@Override
+	public List<String> splitTextFrameValues(String s) {
+		return (s == null) ? new ArrayList<String>() : nsplit(s);
 	}
 
-	public void setTitles(String[] titles) {
-		setTextFrameValues(ID_TITLE, titles);
+	public void setTitles(Iterable<String> titles) {
+		setTitle(njoin(titles));
 	}
 
-	public String[] getArtists() {
-		return getTextFrameValues(ID_ARTIST);
+	public void setArtists(Iterable<String> artists) {
+		setArtist(njoin(artists));
 	}
 
-	public void setArtists(String[] artists) {
-		setTextFrameValues(ID_ARTIST, artists);
+	public void setAlbums(Iterable<String> albums) {
+		setAlbum(njoin(albums));
 	}
 
-	public String[] getAlbums() {
-		return getTextFrameValues(ID_ALBUM);
+	public void setTracks(Iterable<String> tracks) {
+		setTrack(njoin(tracks));
 	}
 
-	public void setAlbums(String[] albums) {
-		setTextFrameValues(ID_ALBUM, albums);
+	public void setYears(Iterable<String> years) {
+		setYear(njoin(years));
 	}
 
-	public String[] getTracks() {
-		return getTextFrameValues(ID_TRACK);
+	public void setGenreDescriptions(Iterable<String> genres) {
+		setGenreDescription(njoin(genres));
 	}
 
-	public void setTracks(String[] tracks) {
-		setTextFrameValues(ID_TRACK, tracks);
+	public void setComments(Iterable<String> comments) {
+		setComment(njoin(comments));
 	}
 
-	public String[] getYears() {
-		return getTextFrameValues(ID_YEAR);
+	public void setComposers(Iterable<String> composers) {
+		setComposer(njoin(composers));
 	}
 
-	public void setYears(String[] years) {
-		setTextFrameValues(ID_YEAR, years);
+	public void setPublishers(Iterable<String> publishers) {
+		setPublisher(njoin(publishers));
 	}
 
-	public String[] getGenreDescriptions() {
-		return getTextFrameValues(ID_GENRE);
+	public void setOriginalArtists(Iterable<String> originalArtists) {
+		setOriginalArtist(njoin(originalArtists));
 	}
 
-	public void setGenreDescriptions(String[] genres) {
-		setTextFrameValues(ID_GENRE, genres);
+	public void setAlbumArtists(Iterable<String> albumArtists) {
+		setAlbumArtist(njoin(albumArtists));
 	}
 
-	public String[] getComments() {
-		return getTextFrameValues(ID_COMMENT);
+	public void setCopyrights(Iterable<String> copyrights) {
+		setCopyright(njoin(copyrights));
 	}
 
-	public void setComments(String[] comments) {
-		setTextFrameValues(ID_COMMENT, comments);
+	public void setUrls(Iterable<String> urls) {
+		setUrl(njoin(urls));
 	}
 
-	public String[] getComposers() {
-		return getTextFrameValues(ID_COMPOSER);
+	public void setPartOfSets(Iterable<String> partOfSets) {
+		setPartOfSet(njoin(partOfSets));
 	}
 
-	public void setComposers(String[] composers) {
-		setTextFrameValues(ID_COMPOSER, composers);
+	public void setGroupings(Iterable<String> groupings) {
+		setGrouping(njoin(groupings));
 	}
 
-	public String[] getPublishers() {
-		return getTextFrameValues(ID_PUBLISHER);
-	}
-
-	public void setPublishers(String[] publishers) {
-		setTextFrameValues(ID_PUBLISHER, publishers);
-	}
-
-	public String[] getOriginalArtists() {
-		return getTextFrameValues(ID_ORIGINAL_ARTIST);
-	}
-
-	public void setOriginalArtists(String[] originalArtists) {
-		setTextFrameValues(ID_ORIGINAL_ARTIST, originalArtists);
-	}
-
-	public String[] getAlbumArtists() {
-		return getTextFrameValues(ID_ALBUM_ARTIST);
-	}
-
-	public void setAlbumArtists(String[] albumArtists) {
-		setTextFrameValues(ID_ALBUM_ARTIST, albumArtists);
-	}
-
-	public String[] getCopyrights() {
-		return getTextFrameValues(ID_COPYRIGHT);
-	}
-
-	public void setCopyrights(String[] copyrights) {
-		setTextFrameValues(ID_COPYRIGHT, copyrights);
-	}
-
-	public String[] getUrls() {
-		return getTextFrameValues(ID_URL);
-	}
-
-	public void setUrls(String[] urls) {
-		setTextFrameValues(ID_URL, urls);
-	}
-
-	public String[] getPartOfSets() {
-		return getTextFrameValues(ID_PART_OF_SET);
-	}
-
-	public void setPartOfSets(String[] partOfSets) {
-		setTextFrameValues(ID_PART_OF_SET, partOfSets);
-	}
-
-	public String[] getGroupings() {
-		return getTextFrameValues(ID_GROUPING);
-	}
-
-	public void setGroupings(String[] groupings) {
-		setTextFrameValues(ID_GROUPING, groupings);
-	}
-
-	public String[] getEncoders() {
-		return getTextFrameValues(ID_ENCODER);
-	}
-
-	public void setEncoders(String[] encoders) {
-		setTextFrameValues(ID_ENCODER, encoders);
+	public void setEncoders(Iterable<String> encoders) {
+		setEncoder(njoin(encoders));
 	}
 
 	protected void unpackFlags(byte[] buffer) {
@@ -169,20 +112,6 @@ public class ID3v24Tag extends AbstractID3v2Tag implements ID3v24 {
 		return new ID3v24Frame(id, data);
 	}
 	
-	private String[] getTextFrameValues(String id) {
-		ID3v2TextFrameData frameData = extractTextFrameData(id);
-		return (frameData == null || frameData.getText() == null) ? null :
-		frameData.getText().toStrings();
-	}
-	
-	private void setTextFrameValues(String id, String[] values) {
-		if (values != null && values.length > 0) {
-			invalidateDataLength();
-			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(values));
-			addFrame(createFrame(id, frameData.toBytes()), true);
-		}
-	}
-	
 	@Override
 	public void setGenreDescription(String text) {
 		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(text));
@@ -192,5 +121,22 @@ public class ID3v24Tag extends AbstractID3v2Tag implements ID3v24 {
 		}
 		frameSet.clear();
 		frameSet.addFrame(createFrame(ID_GENRE, frameData.toBytes()));
+	}
+
+	private List<String> nsplit(String s) {
+		return (s == null) ? null : Arrays.asList(s.split("\0"));
+	}
+
+	private String njoin(Iterable<String> vals) {
+		if (vals == null)
+			return null;
+
+		StringBuilder b = new StringBuilder("\0");
+		for (String s : vals) {
+			b.append(s);
+			b.append("\0");
+		}
+
+		return b.substring(1);
 	}
 }
