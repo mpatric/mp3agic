@@ -413,6 +413,20 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("image/png", id3tag.getAlbumImageMimeType());
 	}
 
+	public void testSetMultiValue24Tag() throws Exception {
+		List<String> artists = Arrays.asList("A", "B", "C");
+		byte[] bytes = {0, 0x41, 0, 0x42, 0, 0x43};
+
+		ID3v24 id3tag = new ID3v24Tag();
+		id3tag.setArtists(artists);
+
+		ID3v2FrameSet frameSet = id3tag.getFrameSets().get("TPE1");
+		ID3v2Frame frame = frameSet.getFrames().get(0);
+
+		assertTrue(artists.equals(id3tag.getArtists()));
+		assertTrue(Arrays.equals(frame.getData(), bytes));
+	}
+
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
 		id3tag.setArtist("ARTIST");
