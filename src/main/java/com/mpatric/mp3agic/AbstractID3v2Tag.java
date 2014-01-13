@@ -723,7 +723,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 	
-    public ArrayList<ID3v2ChapterFrameData> getChapters() {
+    public List<ID3v2ChapterFrameData> getChapters() {
         if (obseleteFormat) {
             return null;
         }
@@ -731,7 +731,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterFrameData(ID_CHAPTER);
     }
     
-    public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
+    public void setChapters(Iterable<ID3v2ChapterFrameData> chapters) {
         if(chapters != null) {
             invalidateDataLength();
             boolean first = true;
@@ -746,7 +746,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         }
     }
 
-    public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
+    public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
         if (obseleteFormat) {
             return null;
         }
@@ -754,7 +754,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterTOCFrameData(ID_CHAPTER_TOC);
     }
     
-    public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> toc) {
+    public void setChapterTOC(Iterable<ID3v2ChapterTOCFrameData> toc) {
         if(toc != null) {
             invalidateDataLength();
             boolean first = true;
@@ -813,11 +813,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
-    private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
+    private List<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
         if (frameSet != null) {
-            ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<ID3v2ChapterFrameData>();
             List<ID3v2Frame> frames = frameSet.getFrames();
+            ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<ID3v2ChapterFrameData>(frames.size());
             for (ID3v2Frame frame : frames) {
                 ID3v2ChapterFrameData frameData;
                 try {
@@ -833,11 +833,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return null;
     }
 
-    private ArrayList<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
+    private List<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
         if (frameSet != null) {
-            ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<ID3v2ChapterTOCFrameData>();
             List<ID3v2Frame> frames = frameSet.getFrames();
+            ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<ID3v2ChapterTOCFrameData>(frames.size());
             for (ID3v2Frame frame : frames) {
                 ID3v2ChapterTOCFrameData frameData;
                 try {
