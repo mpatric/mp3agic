@@ -88,7 +88,8 @@ public class Mp3Stream {
                 initCustomTag();
             }
         } finally {
-            ris.close();
+            //Closing of the stream must not be our job.
+            //ris.close();
         }
     }
 
