@@ -88,6 +88,7 @@
 					</execution>
 				</executions>
 				<configuration>
+                    <locale>en_US</locale><!-- this line is required for non US systems -->
 					<quiet>true</quiet>
 					<show>private</show>
 					<doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
