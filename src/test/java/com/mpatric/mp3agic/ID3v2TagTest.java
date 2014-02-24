@@ -413,6 +413,23 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals(1885, id3tag.getAlbumImage().length);
 		assertEquals("image/png", id3tag.getAlbumImageMimeType());
 	}
+	
+	public void testShouldReadID3v24YearAndLyrics() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/ID3v24YearWithLyrics.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals("2014", id3tag.getYear());
+		id3tag.setYear("2015");
+		assertEquals("2015", id3tag.getYear());
+		id3tag.clearFrameSet(AbstractID3v2Tag.ID_YEAR);
+		assertEquals("2015", id3tag.getYear());
+		id3tag.clearFrameSet(ID3v24Tag.ID_YEAR);
+		assertEquals(null, id3tag.getYear());
+		assertEquals("some lyrics", id3tag.getAsyncLyrics());
+		id3tag.setAsyncLyrics("new lyrics");
+		assertEquals("new lyrics", id3tag.getAsyncLyrics());
+		id3tag.clearFrameSet(AbstractID3v2Tag.ID_LYRICS_ASYNC);
+		assertEquals(null, id3tag.getAsyncLyrics());
+	}
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
