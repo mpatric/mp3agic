@@ -732,6 +732,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
+	public void clearAlbumImage() {
+		clearFrameSet(obseleteFormat ? ID_IMAGE_OBSELETE : ID_IMAGE);
+	}
+
 	public String getAlbumImageMimeType() {
 		ID3v2PictureFrameData frameData = createPictureFrameData(obseleteFormat ? ID_IMAGE_OBSELETE : ID_IMAGE);
 		if (frameData != null && frameData.getMimeType() != null) return frameData.getMimeType();

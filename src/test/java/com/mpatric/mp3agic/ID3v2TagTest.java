@@ -414,6 +414,14 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals("image/png", id3tag.getAlbumImageMimeType());
 	}
 
+	public void testShouldRemoveAlbumImageFrame() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v1andv23tagswithalbumimage.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals(1885, id3tag.getAlbumImage().length);
+		id3tag.clearAlbumImage();
+		assertNull(id3tag.getAlbumImage());
+	}
+
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
 		id3tag.setArtist("ARTIST");
