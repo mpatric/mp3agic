@@ -3,6 +3,9 @@ package com.mpatric.mp3agic;
 public class ID3v24Tag extends AbstractID3v2Tag {
 
 	public static final String VERSION = "4.0";
+	
+	public static final String ID_YEAR = "TDRC";
+	
 
 	public ID3v24Tag() {
 		super();
@@ -48,5 +51,21 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		}
 		frameSet.clear();
 		frameSet.addFrame(createFrame(ID_GENRE, frameData.toBytes()));
+	}
+	
+	@Override
+	public String getYear() {
+		ID3v2TextFrameData frameData = extractTextFrameData(ID_YEAR);
+		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
+		return null;
+	}
+
+	@Override
+	public void setYear(String year) {
+		if (year != null && year.length() > 0) {
+			invalidateDataLength();
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(year));
+			addFrame(createFrame(ID_YEAR, frameData.toBytes()), true);
+		}
 	}
 }

@@ -29,6 +29,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_CHAPTER_TOC = "CTOC";
     public static final String ID_CHAPTER = "CHAP";
 	public static final String ID_GROUPING = "TIT1";
+	public static final String ID_LYRICS_ASYNC = "USLT";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
 	public static final String ID_ENCODER_OBSELETE = "TEN";
 	public static final String ID_URL_OBSELETE = "WXX";
@@ -147,7 +148,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return currentOffset;
 	}
 
-	private void addFrame(ID3v2Frame frame, boolean replace) {
+	protected void addFrame(ID3v2Frame frame, boolean replace) {
 		ID3v2FrameSet frameSet = frameSets.get(frame.getId());
 		if (frameSet == null) {
 			frameSet = new ID3v2FrameSet(frame.getId());
@@ -291,7 +292,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return version;
 	}
 		
-	private void invalidateDataLength() {
+	protected void invalidateDataLength() {
 		dataLength = 0;
 	}
 
@@ -658,6 +659,20 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 	
+	public String getAsyncLyrics() {
+		ID3v2LyricsFrameData frameData = extractLyricsFrameData(ID_LYRICS_ASYNC);
+		if (frameData != null && frameData.getLyrics() != null) return frameData.getLyrics().toString();
+		return null;
+	}
+	
+	public void setAsyncLyrics(String lyrics) {
+		if (lyrics != null && lyrics.length() > 0) {
+			invalidateDataLength();
+			ID3v2LyricsFrameData frameData = new ID3v2LyricsFrameData(useFrameUnsynchronisation(), "eng", null, new EncodedText(lyrics));
+			addFrame(createFrame(ID_LYRICS_ASYNC, frameData.toBytes()), true);
+		}
+	}
+	
     public ArrayList<ID3v2ChapterFrameData> getChapters() {
         if (obseleteFormat) {
             return null;
@@ -784,7 +799,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return null;
     }
 	
-	private ID3v2TextFrameData extractTextFrameData(String id) {
+	protected ID3v2TextFrameData extractTextFrameData(String id) {
 		ID3v2FrameSet frameSet = frameSets.get(id);
 		if (frameSet != null) {
 			ID3v2Frame frame = (ID3v2Frame) frameSet.getFrames().get(0);
@@ -847,6 +862,25 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 				return frameData;
 			} catch (InvalidDataException e) {
 				// do nothing
+			}
+		}
+		return null;
+	}
+	
+	private ID3v2LyricsFrameData extractLyricsFrameData(String id)
+	{
+		ID3v2FrameSet frameSet = frameSets.get(id);
+		if (frameSet != null) {
+			Iterator<ID3v2Frame> iterator = frameSet.getFrames().iterator();
+			while (iterator.hasNext()) {
+				ID3v2Frame frame = (ID3v2Frame) iterator.next();
+				ID3v2LyricsFrameData frameData;
+				try {
+					frameData = new ID3v2LyricsFrameData(useFrameUnsynchronisation(), frame.getData());
+						return frameData;
+				} catch (InvalidDataException e) {
+					// Do nothing
+				}
 			}
 		}
 		return null;
