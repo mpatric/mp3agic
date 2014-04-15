@@ -1,6 +1,7 @@
 package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -347,10 +348,18 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return obseleteFormat;
 	}
 
+	protected List<String> splitTextFrameValues(String s) {
+		return (s == null) ? new ArrayList<String>() : Arrays.asList(s);
+	}
+
 	public String getTrack() {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_TRACK_OBSELETE : ID_TRACK);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getTracks() {
+		return splitTextFrameValues(getTrack());
 	}
 
 	public void setTrack(String track) {
@@ -365,6 +374,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_PART_OF_SET_OBSELETE : ID_PART_OF_SET);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getPartOfSets() {
+		return splitTextFrameValues(getPartOfSet());
 	}
 
 	public void setPartOfSet(String partOfSet) {
@@ -394,6 +407,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getGroupings() {
+		return splitTextFrameValues(getGrouping());
+	}
+
 	public void setGrouping(String grouping) {
 		if (grouping != null && grouping.length() > 0) {
 			invalidateDataLength();
@@ -406,6 +423,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_ARTIST_OBSELETE : ID_ARTIST);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getArtists() {
+		return splitTextFrameValues(getArtist());
 	}
 
 	public void setArtist(String artist) {
@@ -422,6 +443,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getAlbumArtists() {
+		return splitTextFrameValues(getAlbumArtist());
+	}
+
 	public void setAlbumArtist(String albumArtist) {
 	if (albumArtist != null && albumArtist.length() > 0) {
 		invalidateDataLength();
@@ -434,6 +459,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_TITLE_OBSELETE : ID_TITLE);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getTitles() {
+		return splitTextFrameValues(getTitle());
 	}
 
 	public void setTitle(String title) {
@@ -450,6 +479,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getAlbums() {
+		return splitTextFrameValues(getAlbum());
+	}
+
 	public void setAlbum(String album) {
 		if (album != null && album.length() > 0) {
 			invalidateDataLength();
@@ -462,6 +495,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_YEAR_OBSELETE : ID_YEAR);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getYears() {
+		return splitTextFrameValues(getYear());
 	}
 
 	public void setYear(String year) {
@@ -524,6 +561,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 	
+	public List<String> getGenreDescriptions() {
+		return splitTextFrameValues(getGenreDescription());
+	}
+
 	public void setGenreDescription(String text) throws IllegalArgumentException {
 		int genreNum = ID3v1Genres.matchGenreDescription(text);
 		if (genreNum < 0) {
@@ -566,6 +607,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getComments() {
+		return splitTextFrameValues(getComment());
+	}
+
 	public void setComment(String comment) {
 		if (comment != null && comment.length() > 0) {
 			invalidateDataLength();
@@ -594,6 +639,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getComposers() {
+		return splitTextFrameValues(getComposer());
+	}
+
 	public void setComposer(String composer) {
 		if (composer != null && composer.length() > 0) {
 			invalidateDataLength();
@@ -606,6 +655,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_PUBLISHER_OBSELETE : ID_PUBLISHER);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getPublishers() {
+		return splitTextFrameValues(getPublisher());
 	}
 
 	public void setPublisher(String publisher) {
@@ -622,6 +675,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getOriginalArtists() {
+		return splitTextFrameValues(getOriginalArtist());
+	}
+
 	public void setOriginalArtist(String originalArtist) {
 		if (originalArtist != null && originalArtist.length() > 0) {
 			invalidateDataLength();
@@ -634,6 +691,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_COPYRIGHT_OBSELETE : ID_COPYRIGHT);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getCopyrights() {
+		return splitTextFrameValues(getCopyright());
 	}
 
 	public void setCopyright(String copyright) {
@@ -650,6 +711,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
+	public List<String> getUrls() {
+		return splitTextFrameValues(getUrl());
+	}
+
 	public void setUrl(String url) {
 		if (url != null && url.length() > 0) {
 			invalidateDataLength();
@@ -658,7 +723,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 	
-    public ArrayList<ID3v2ChapterFrameData> getChapters() {
+    public List<ID3v2ChapterFrameData> getChapters() {
         if (obseleteFormat) {
             return null;
         }
@@ -666,7 +731,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterFrameData(ID_CHAPTER);
     }
     
-    public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
+    public void setChapters(Iterable<ID3v2ChapterFrameData> chapters) {
         if(chapters != null) {
             invalidateDataLength();
             boolean first = true;
@@ -681,7 +746,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         }
     }
 
-    public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
+    public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
         if (obseleteFormat) {
             return null;
         }
@@ -689,7 +754,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return extractChapterTOCFrameData(ID_CHAPTER_TOC);
     }
     
-    public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> toc) {
+    public void setChapterTOC(Iterable<ID3v2ChapterTOCFrameData> toc) {
         if(toc != null) {
             invalidateDataLength();
             boolean first = true;
@@ -708,6 +773,10 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		ID3v2TextFrameData frameData = extractTextFrameData(obseleteFormat ? ID_ENCODER_OBSELETE: ID_ENCODER);
 		if (frameData != null && frameData.getText() != null) return frameData.getText().toString();
 		return null;
+	}
+
+	public List<String> getEncoders() {
+		return splitTextFrameValues(getEncoder());
 	}
 
 	public void setEncoder(String encoder) {
@@ -744,11 +813,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
-    private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
+    private List<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
         if (frameSet != null) {
-            ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<ID3v2ChapterFrameData>();
             List<ID3v2Frame> frames = frameSet.getFrames();
+            ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<ID3v2ChapterFrameData>(frames.size());
             for (ID3v2Frame frame : frames) {
                 ID3v2ChapterFrameData frameData;
                 try {
@@ -764,11 +833,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return null;
     }
 
-    private ArrayList<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
+    private List<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
         if (frameSet != null) {
-            ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<ID3v2ChapterTOCFrameData>();
             List<ID3v2Frame> frames = frameSet.getFrames();
+            ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<ID3v2ChapterTOCFrameData>(frames.size());
             for (ID3v2Frame frame : frames) {
                 ID3v2ChapterTOCFrameData frameData;
                 try {
