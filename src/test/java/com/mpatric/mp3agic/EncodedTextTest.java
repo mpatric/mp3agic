@@ -160,6 +160,14 @@ public class EncodedTextTest extends TestCase {
 		assertEquals(encodedText, encodedText2);
 	}
 	
+	public void testUTF16ShouldDecodeBEWhenSpecifiedInBOM() throws Exception {
+		// id3 v2.2 and 2.3: encoding set to UTF_16 (type 1), but BOM set to big endian, so interpret as UTF_16BE
+		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, UNICODE_TEST_STRING);
+		byte bytes[] = encodedText.toBytes(true, true);
+		EncodedText encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, bytes);
+		assertEquals(encodedText, encodedText2);
+	}
+	
 	public void testShouldThrowExceptionWhenEncodingWithInvalidCharacterSet() throws Exception {
 		try {
 			new EncodedText((byte)4, TEST_STRING);
