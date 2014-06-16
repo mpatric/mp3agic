@@ -665,10 +665,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 	
-	public void setAsyncLyrics(String lyrics) {
+	@Override
+	public void setAsyncLyrics(String lyrics,String language) {
 		if (lyrics != null && lyrics.length() > 0) {
 			invalidateDataLength();
-			ID3v2LyricsFrameData frameData = new ID3v2LyricsFrameData(useFrameUnsynchronisation(), "eng", null, new EncodedText(lyrics));
+			ID3v2LyricsFrameData frameData = new ID3v2LyricsFrameData(useFrameUnsynchronisation(), language, null, new EncodedText(lyrics));
 			addFrame(createFrame(ID_LYRICS_ASYNC, frameData.toBytes()), true);
 		}
 	}

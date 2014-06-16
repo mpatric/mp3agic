@@ -51,7 +51,7 @@ public interface ID3v2 extends ID3v1 {
 	void setEncoder(String encoder);
 	
 	String getAsyncLyrics();
-	void setAsyncLyrics(String lyrics);
+	void setAsyncLyrics(String lyrics, String language);
 	
 	byte[] getAlbumImage();
 	void setAlbumImage(byte[] albumImage, String mimeType);

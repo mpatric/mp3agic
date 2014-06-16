@@ -27,12 +27,12 @@ public class EncodedText {
 		CHARSET_UTF_8
 	};
 	
-	private static final byte[] textEncodingFallback = {0, 2, 1, 3};
+	private static final byte[] textEncodingFallback = {0, 1, 2, 3};
 
 	private static final byte[][] boms = {
 		{},
-		{(byte)0xff, (byte)0xfe},
-		{(byte) 0xfe, (byte) 0xff},
+        {(byte)0xFF, (byte)0xFE},//LITTLE
+        {(byte)0xFE, (byte)0xFF},//BIG
 		{}
 	};
 	

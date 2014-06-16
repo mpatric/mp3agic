@@ -25,7 +25,8 @@ public class ID3v2LyricsFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
+
+    @Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
@@ -39,14 +40,20 @@ public class ID3v2LyricsFrameData extends AbstractID3v2FrameData {
 		} else {
 			description = new EncodedText(bytes[0], "");
 			marker = 4;
+            marker++;
+            marker++;
 		}
 		lyrics = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, bytes.length - marker));
 	}
 
+    @Override
 	protected byte[] packFrameData() {
 		byte[] bytes = new byte[getLength()];
-		if (lyrics != null) bytes[0] = lyrics.getTextEncoding();
-		else bytes[0] = 0;
+		if (lyrics != null){ 
+		    bytes[0] = lyrics.getTextEncoding();
+		} else {
+		    bytes[0] = 0;
+		}
 		String langPadded;
 		if (language == null) {
 			langPadded = DEFAULT_LANGUAGE;
@@ -61,24 +68,32 @@ public class ID3v2LyricsFrameData extends AbstractID3v2FrameData {
 		}
 		int marker = 4;
 		if (description != null) {
-			byte[] descriptionBytes = description.toBytes(true, true);
+			byte[] descriptionBytes = description.toBytes(false, true);
 			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
 			marker += descriptionBytes.length;
 		} else {
 			bytes[marker++] = 0;
+            bytes[marker++] = 0;
 		}
 		if (lyrics != null) {
-			byte[] commentBytes = lyrics.toBytes(true, false);
+			byte[] commentBytes = lyrics.toBytes(false, false);
 			BufferTools.copyIntoByteBuffer(commentBytes, 0, commentBytes.length, bytes, marker);
 		}
 		return bytes;
 	}
 
+	@Override
 	protected int getLength() {
 		int length = 4;
-		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
-		if (lyrics != null) length += lyrics.toBytes(true, false).length;
+		if (description != null){
+		    length += description.toBytes(false, true).length;
+		} else {
+		    length++;
+            length++;
+		}
+		if (lyrics != null){
+		    length += lyrics.toBytes(false, false).length;
+		}
 		return length;
 	}
 	
