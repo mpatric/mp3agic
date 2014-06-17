@@ -246,8 +246,11 @@ public class Mp3File extends FileWrapper {
 			id3v2Tag = null;
 		} else {
 			int bufferLength;
-			if (hasXingFrame()) bufferLength = xingOffset;
-			else bufferLength = startOffset;
+			if (hasXingFrame()) {
+			    bufferLength = xingOffset;
+			} else {
+			    bufferLength = startOffset;
+			}
 			byte[] bytes = new byte[bufferLength];
 			file.seek(0);
 			int bytesRead = file.read(bytes, 0, bufferLength);
