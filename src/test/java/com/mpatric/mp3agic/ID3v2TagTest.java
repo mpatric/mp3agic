@@ -106,6 +106,34 @@ public class ID3v2TagTest extends TestCase {
 		assertEquals(0x44B, id3v2tag.getLength());
 	}
 	
+	public void testShouldReadTagFieldsFromMp3With24tag() throws Exception {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/v24tagswithalbumimage.mp3");
+		ID3v2 id3v24tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals("4.0", id3v24tag.getVersion());
+		assertEquals("1", id3v24tag.getTrack());
+		assertEquals("ARTIST123456789012345678901234", id3v24tag.getArtist());
+		assertEquals("TITLE1234567890123456789012345", id3v24tag.getTitle());
+		assertEquals("ALBUM1234567890123456789012345", id3v24tag.getAlbum());
+		assertEquals(0x0d, id3v24tag.getGenre());
+		assertEquals("Pop", id3v24tag.getGenreDescription());
+		assertEquals("COMMENT123456789012345678901", id3v24tag.getComment());
+		assertEquals("COMPOSER23456789012345678901234", id3v24tag.getComposer());
+		assertEquals("ORIGARTIST234567890123456789012", id3v24tag.getOriginalArtist());
+		assertEquals("COPYRIGHT2345678901234567890123", id3v24tag.getCopyright());
+		assertEquals("URL2345678901234567890123456789", id3v24tag.getUrl());
+		assertEquals("COMMERCIALURL234567890123456789", id3v24tag.getCommercialUrl());
+		assertEquals("COPYRIGHTURL2345678901234567890", id3v24tag.getCopyrightUrl());
+		assertEquals("OFFICIALARTISTURL23456789012345", id3v24tag.getArtistUrl());
+		assertEquals("OFFICIALAUDIOFILE23456789012345", id3v24tag.getAudiofileUrl());
+		assertEquals("OFFICIALAUDIOSOURCE234567890123", id3v24tag.getAudioSourceUrl());
+		assertEquals("INTERNETRADIOSTATIONURL23456783", id3v24tag.getRadiostationUrl());
+		assertEquals("PAYMENTURL234567890123456789012", id3v24tag.getPaymentUrl());
+		assertEquals("PUBLISHERURL2345678901234567890", id3v24tag.getPublisherUrl());
+		assertEquals("ENCODER234567890123456789012345", id3v24tag.getEncoder());
+		assertEquals(1885, id3v24tag.getAlbumImage().length);
+		assertEquals("image/png", id3v24tag.getAlbumImageMimeType());
+	}
+
 	public void testShouldReadTagFieldsFromMp3With32tag() throws Exception {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v1andv23tagswithalbumimage.mp3");
 		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
@@ -131,7 +159,7 @@ public class ID3v2TagTest extends TestCase {
 		setTagFields(id3tag);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v23Tag(data);
-		assertEquals(2131, data.length);
+		assertEquals(2340, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -141,7 +169,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setFooter(true);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v24Tag(data);
-		assertEquals(2141, data.length);
+		assertEquals(2350, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -151,7 +179,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setPadding(true);
 		byte[] data = id3tag.toBytes();
 		ID3v2 id3tagCopy = new ID3v24Tag(data);
-		assertEquals(2131 + AbstractID3v2Tag.PADDING_LENGTH, data.length);
+		assertEquals(2340 + AbstractID3v2Tag.PADDING_LENGTH, data.length);
 		assertEquals(id3tag, id3tagCopy);
 	}
 	
@@ -161,7 +189,7 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setFooter(true);
 		id3tag.setPadding(true);
 		byte[] data = id3tag.toBytes();
-		assertEquals(2141, data.length);
+		assertEquals(2350, data.length);
 	}
 	
 	public void testShouldExtractGenreNumberFromCombinedGenreStringsCorrectly() throws Exception {
@@ -434,6 +462,14 @@ public class ID3v2TagTest extends TestCase {
 		id3tag.setOriginalArtist("ORIGINALARTIST");
 		id3tag.setCopyright("COPYRIGHT");
 		id3tag.setUrl("URL");
+		id3tag.setCommercialUrl("COMMERCIALURL");
+		id3tag.setCopyrightUrl("COPYRIGHTURL");
+		id3tag.setArtistUrl("OFFICIALARTISTURL");
+		id3tag.setAudiofileUrl("OFFICIALAUDIOFILEURL");
+		id3tag.setAudioSourceUrl("OFFICIALAUDIOSOURCEURL");
+		id3tag.setRadiostationUrl("INTERNETRADIOSTATIONURL");
+		id3tag.setPaymentUrl("PAYMENTURL");
+		id3tag.setPublisherUrl("PUBLISHERURL");
 		id3tag.setEncoder("ENCODER");
 		byte[] albumImage = TestHelper.loadFile("src/test/resources/image.png");
 		id3tag.setAlbumImage(albumImage, "image/png");
