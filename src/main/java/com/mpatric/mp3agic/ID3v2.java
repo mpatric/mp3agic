@@ -14,6 +14,18 @@ public interface ID3v2 extends ID3v1 {
 	boolean hasUnsynchronisation();
 	void setUnsynchronisation(boolean unsynchronisation);
 	
+	int getBPM();
+	void setBPM(int bpm);
+	
+	String getGrouping();
+	void setGrouping(String key);
+	
+	String getKey();
+	void setKey(String key);
+	
+	String getDate();
+	void setDate(String date);
+	
 	String getComposer();
 	void setComposer(String composer);
 	
@@ -61,10 +73,7 @@ public interface ID3v2 extends ID3v1 {
 
 	boolean isCompilation();
 	void setCompilation(boolean compilation);
-
-	String getGrouping();
-	void setGrouping(String grouping);
-
+	
 	ArrayList<ID3v2ChapterFrameData> getChapters();
 	void setChapters(ArrayList<ID3v2ChapterFrameData> chapters);
 	
