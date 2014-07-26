@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.mpatric'
+version = '0.8.3-SNAPSHOT'
+description = "A java library for reading mp3 files and manipulating mp3 file ID3 tags (ID3v1 and ID3v2.2 to ID3v2.4)"
+
+sourceCompatibility = 8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version:'4.11'
+}
