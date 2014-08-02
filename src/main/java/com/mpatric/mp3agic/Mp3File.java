@@ -123,9 +123,11 @@ public class Mp3File implements Closeable {
 				try {
 					ID3v2TagFactory.sanityCheckTag(bytes);
 					return AbstractID3v2Tag.HEADER_LENGTH + BufferTools.unpackSynchsafeInteger(bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 1], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 2], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 3]);
-				} catch (NoSuchTagException | UnsupportedTagException e) {
+				} catch (NoSuchTagException e) {
 					// do nothing
-				}
+				} catch (UnsupportedTagException e) {
+                    // do nothing
+                }
             }
 		} catch (IOException e) {
 			// do nothing
@@ -442,7 +444,8 @@ public class Mp3File implements Closeable {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
 
-        try (RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw")) {
+        RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
+        try {
             if (hasId3v2Tag()) {
                 saveFile.write(id3v2Tag.toBytes());
             }
@@ -453,8 +456,10 @@ public class Mp3File implements Closeable {
             if (hasId3v1Tag()) {
                 saveFile.write(id3v1Tag.toBytes());
             }
+        } finally {
+            saveFile.close();
         }
-	}
+    }
 
 	private void saveMpegFrames(RandomAccessFile saveFile) throws IOException {
         if(filename == null) {
@@ -466,7 +471,9 @@ public class Mp3File implements Closeable {
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
         byte[] bytes = new byte[bufferLength];
-        try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+
+        RandomAccessFile file = new RandomAccessFile(filename, "r");
+        try {
             file.seek(filePos);
             while (true) {
                 int bytesRead = file.read(bytes, 0, bufferLength);
@@ -478,8 +485,10 @@ public class Mp3File implements Closeable {
                     break;
                 }
             }
+        } finally {
+            file.close();
         }
-	}
+    }
 
     @Override
     public void close() throws IOException {
