@@ -1,25 +1,35 @@
 # mp3agic
-[![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
 
 A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
 See [mp3agic-examples](https://github.com/mpatric/mp3agic-examples "mp3agic-examples") for example applications that use this library - including a simple set of command-line tools that perform tasks like printing mp3 and ID3 details, renaming mp3 files using details from the ID3 tags, retagging mp3 files, attaching images to and extracting images from mp3 files.
 
-Releases are available via Maven central. To add a dependency to mp3agic, use:
+This version of the library is not published to maven central yet. 
+I won't do it unless mpatrick decides these changes shouldn't be merged, if he decides to merge them then wait for him to upload a new release.
+In the mean time, clone the repo and install on the local maven repository using ```gradle install```.
 
-```xml
-<dependency>
-  <groupId>com.mpatric</groupId>
-  <artifactId>mp3agic</artifactId>
-  <version>0.8.2</version>
-</dependency>
-```
+# Warning
+## This build is a custom build
+Do NOT use unless you know what you are doing. That said, only 3 tests are failing (Removing custom tags) due to the fact
+that the underlying file read technique changed from reading a file directly to operating on it entirely with an on-memory 
+byte array.
+
+This decouples the actual tag reading from where the mp3 data must come from, enabling usage on scenarios where data is not stored
+on files, like the cloud or using asynchronous I/O.
+
+Dropping in this version of the library instead of mpatrick's one **should** work, but i can't guarantee it
+as i have not tested it myself (Unless you delete custom tags, as those tests are failing).
+Mp3File has gained 3 new constructors that accept a byte array as a data source, the API hasn't changed in any other way.
+This also means that the examples below will work with the ```byte[]``` constructors, but i'm lazy enough not to update them.
+
+I have also added a gradle build file, just because gradle is awesome and maven is too much boilerplate to maintain.
+The pom file has been wiped out as i do **not** plan to maintain a maven xml file for no benefit.
 
 ## Some features
 
 * 100% Java
 * read low-level mpeg frame data
-* read, write, add and remove ID3v1 and ID3v2 tags (ID3v2.3 and ID3v2.4)
+* read, write, add and  ~~remove~~ ID3v1 and ID3v2 tags (ID3v2.3 and ID3v2.4)
 * read obsolete 3-letter ID3v2.2 tags (but not write them)
 * correctly read VBR files by looking at the actual mpeg frames
 * read and write embedded images (such as album art)
@@ -28,10 +38,7 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 
 ## Development
 
-mp3agic uses various tools to ease the development process.
-* [Maven](http://maven.apache.org/) is used to resolve dependencies and to build mp3agic.
-* [Travis CI](https://travis-ci.org/mpatric/mp3agic) is used as a continuous integration server.
-* [Sonar](http://nemo.sonarqube.org/dashboard/index/com.mpatric:mp3agic) is used for static code analysis (updated every saturday).
+mp3agic ~~uses~~ used to employ various tools to ease the development process, now it's just gradle (At least for now, who knows...).
 
 
 ### Building
@@ -39,16 +46,14 @@ mp3agic uses various tools to ease the development process.
 To build mp3agic, you will need:
 
 * [JDK 6+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) - Oracle or OpenJDK
-* [maven](http://maven.apache.org/) - Version 3 recommended
+* [Gradle](http://www.gradle.org/)
 
-After installing these tools simply run 'mvn clean package' and find the jar in the target folder.
+After installing these tools simply run 'gradle build' and find the jar in the target folder.
 
-Other Useful maven lifecycles:
+Other Useful gradle tasks:
 
 * clean - remove binaries, docs and temporary build files
-* compile - compile the library
-* test - run all unit tests
-* package - package compiled code into a jar
+* build - compile and test the library
 
 ## How to use it
 
