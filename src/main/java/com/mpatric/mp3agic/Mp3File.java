@@ -1,11 +1,14 @@
 package com.mpatric.mp3agic;
 
-import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mp3File extends FileWrapper {
+public class Mp3File implements Closeable {
 
 	private static final int DEFAULT_BUFFER_LENGTH = 65536;
 	private static final int MINIMUM_BUFFER_LENGTH = 40;
@@ -33,6 +36,8 @@ public class Mp3File extends FileWrapper {
 	private ID3v2 id3v2Tag;
 	private byte[] customTag;
 	private boolean scanFile;
+    private SeekerByteArrayInputStream fileStream;
+    private String filename;
 	
 	protected Mp3File() {
 	}
@@ -49,92 +54,126 @@ public class Mp3File extends FileWrapper {
 		this(filename, DEFAULT_BUFFER_LENGTH, scanFile);
 	}
 	
-	public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {		
-		super(filename);
-		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
-		this.bufferLength = bufferLength;
-		this.scanFile = scanFile;
-		init();
+	public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+		byte[] buffer = new byte[bufferLength];
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        FileInputStream inputStream = new FileInputStream(filename);
+
+        int bytesRead;
+        while((bytesRead = inputStream.read(buffer, 0, bufferLength)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        this.filename = filename;
+        initFileStream(outputStream.toByteArray());
+        initFields(bufferLength, scanFile);
+		readMp3Tags();
 	}
 
-	private void init() throws IOException, UnsupportedTagException, InvalidDataException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
+    public Mp3File(byte[] fileContents) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(fileContents, DEFAULT_BUFFER_LENGTH, true);
+    }
+
+    public Mp3File(byte[] fileContents, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(fileContents, bufferLength, true);
+    }
+
+    public Mp3File(byte[] fileContents, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(fileContents, DEFAULT_BUFFER_LENGTH, scanFile);
+    }
+
+    public Mp3File(byte[] fileContents, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        initFileStream(fileContents);
+        initFields(bufferLength, scanFile);
+        readMp3Tags();
+    }
+
+    private void initFields(int bufferLength, boolean scanFile) {
+        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
+        this.bufferLength = bufferLength;
+        this.scanFile = scanFile;
+    }
+
+    private void initFileStream(byte[] fileContents) {
+        fileStream = new SeekerByteArrayInputStream(fileContents);
+    }
+
+    private void readMp3Tags() throws IOException, UnsupportedTagException, InvalidDataException {
 		try {
-			initId3v1Tag(file);
-			scanFile(file);
+			initId3v1Tag();
+			scanFile();
 			if (startOffset < 0) {
 				throw new InvalidDataException("No mpegs frames found");
 			}
-			initId3v2Tag(file);
+			initId3v2Tag();
 			if (scanFile) {
-				initCustomTag(file);
+				initCustomTag();
 			}
 		} finally {
-			file.close();
+			fileStream.close();
 		}
 	}
 	
-	protected int preScanFile(RandomAccessFile file) {
+	protected int preScanFile() {
 		byte[] bytes = new byte[AbstractID3v2Tag.HEADER_LENGTH];
 		try {
-			file.seek(0);
-			int bytesRead = file.read(bytes, 0, AbstractID3v2Tag.HEADER_LENGTH);
+			fileStream.rewindToZero();
+			int bytesRead = fileStream.read(bytes, 0, AbstractID3v2Tag.HEADER_LENGTH);
 			if (bytesRead == AbstractID3v2Tag.HEADER_LENGTH) {
 				try {
 					ID3v2TagFactory.sanityCheckTag(bytes);
 					return AbstractID3v2Tag.HEADER_LENGTH + BufferTools.unpackSynchsafeInteger(bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 1], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 2], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 3]);
-				} catch (NoSuchTagException e) {
-					// do nothing
-				} catch (UnsupportedTagException e) {
+				} catch (NoSuchTagException | UnsupportedTagException e) {
 					// do nothing
 				}
-			}
+            }
 		} catch (IOException e) {
 			// do nothing
 		}
 		return 0;
 	}
 
-	private void scanFile(RandomAccessFile file) throws IOException, InvalidDataException {
+	private void scanFile() throws IOException, InvalidDataException {
 		byte[] bytes = new byte[bufferLength];
-		int fileOffset = preScanFile(file);
-		file.seek(fileOffset);
+		int fileOffset = preScanFile();
+		fileStream.seek(fileOffset);
 		boolean lastBlock = false;
 		int lastOffset = fileOffset;
 		while (!lastBlock) {
-			int bytesRead = file.read(bytes, 0, bufferLength);
+			int bytesRead = fileStream.read(bytes, 0, bufferLength);
 			if (bytesRead < bufferLength) lastBlock = true;
 			if (bytesRead >= MINIMUM_BUFFER_LENGTH) {
-				while (true) {
-					try {
-						int offset = 0;
-						if (startOffset < 0) {
-							offset = scanBlockForStart(bytes, bytesRead, fileOffset, offset);
-							if (startOffset >= 0 && ! scanFile) {
-								return;
-							}
-							lastOffset = startOffset;
-						}
-						offset = scanBlock(bytes, bytesRead, fileOffset, offset);
-						fileOffset += offset;
-						file.seek(fileOffset);
-						break;
-					} catch (InvalidDataException e) {
-						if (frameCount < 2) {
-							startOffset = -1;
-							xingOffset = -1;
-							frameCount = 0;
-							bitrates.clear();
-							lastBlock = false;
-							fileOffset = lastOffset + 1;
-							if (fileOffset == 0) throw new InvalidDataException("Valid start of mpeg frames not found", e);
-							file.seek(fileOffset);
-							break;
-						}
-						return;
-					}
-				}
-			}
+                while (true) {
+                    try {
+                        int offset = 0;
+                        if (startOffset < 0) {
+                            offset = scanBlockForStart(bytes, bytesRead, fileOffset, offset);
+                            if (startOffset >= 0 && !scanFile) {
+                                return;
+                            }
+                            lastOffset = startOffset;
+                        }
+                        offset = scanBlock(bytes, bytesRead, fileOffset, offset);
+                        fileOffset += offset;
+                        fileStream.seek(fileOffset);
+                        break;
+                    } catch (InvalidDataException e) {
+                        if (frameCount < 2) {
+                            startOffset = -1;
+                            xingOffset = -1;
+                            frameCount = 0;
+                            bitrates.clear();
+                            lastBlock = false;
+                            fileOffset = lastOffset + 1;
+                            if (fileOffset == 0)
+                                throw new InvalidDataException("Valid start of mpeg frames not found", e);
+                            fileStream.seek(fileOffset);
+                            break;
+                        }
+                        return;
+                    }
+                }
+            }
 		}
 	}
 
@@ -190,7 +229,7 @@ public class Mp3File extends FileWrapper {
 	}
 
 	private int maxEndOffset() {
-		int maxEndOffset = (int)getLength();
+		int maxEndOffset = fileStream.getContentLength();
 		if (hasId3v1Tag()) maxEndOffset -= ID3v1Tag.TAG_LENGTH;
 		return maxEndOffset;
 	}
@@ -215,24 +254,23 @@ public class Mp3File extends FileWrapper {
 		if (sampleRate != frame.getSampleRate()) throw new InvalidDataException("Inconsistent frame header");
 		if (! layer.equals(frame.getLayer())) throw new InvalidDataException("Inconsistent frame header");
 		if (! version.equals(frame.getVersion())) throw new InvalidDataException("Inconsistent frame header");
-		if (offset + frame.getLengthInBytes() > getLength()) throw new InvalidDataException("Frame would extend beyond end of file");
+		if (offset + frame.getLengthInBytes() > fileStream.getContentLength()) throw new InvalidDataException("Frame would extend beyond end of file");
 	}
 	
 	private void addBitrate(int bitrate) {
-		Integer key = new Integer(bitrate);
-		MutableInteger count = bitrates.get(key);
+		MutableInteger count = bitrates.get(bitrate);
 		if (count != null) {
 			count.increment();
 		} else {
-			bitrates.put(key, new MutableInteger(1));
+			bitrates.put(bitrate, new MutableInteger(1));
 		}
 		this.bitrate = ((this.bitrate * (frameCount - 1)) + bitrate) / frameCount;
 	}
 	
-	private void initId3v1Tag(RandomAccessFile file) throws IOException {
+	private void initId3v1Tag() throws IOException {
 		byte[] bytes = new byte[ID3v1Tag.TAG_LENGTH];
-		file.seek(getLength() - ID3v1Tag.TAG_LENGTH);
-		int bytesRead = file.read(bytes, 0, ID3v1Tag.TAG_LENGTH);
+		fileStream.seek(fileStream.getContentLength() - ID3v1Tag.TAG_LENGTH);
+		int bytesRead = fileStream.read(bytes, 0, ID3v1Tag.TAG_LENGTH);
 		if (bytesRead < ID3v1Tag.TAG_LENGTH) throw new IOException("Not enough bytes read");
 		try {
 			id3v1Tag = new ID3v1Tag(bytes);
@@ -241,7 +279,7 @@ public class Mp3File extends FileWrapper {
 		}
 	}
 	
-	private void initId3v2Tag(RandomAccessFile file) throws IOException, UnsupportedTagException, InvalidDataException {
+	private void initId3v2Tag() throws IOException, UnsupportedTagException, InvalidDataException {
 		if (xingOffset == 0 || startOffset == 0) {
 			id3v2Tag = null;
 		} else {
@@ -249,8 +287,8 @@ public class Mp3File extends FileWrapper {
 			if (hasXingFrame()) bufferLength = xingOffset;
 			else bufferLength = startOffset;
 			byte[] bytes = new byte[bufferLength];
-			file.seek(0);
-			int bytesRead = file.read(bytes, 0, bufferLength);
+			fileStream.seek(0);
+			int bytesRead = fileStream.read(bytes, 0, bufferLength);
 			if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
 			try {
 				id3v2Tag = ID3v2TagFactory.createTag(bytes);
@@ -260,16 +298,16 @@ public class Mp3File extends FileWrapper {
 		}
 	}
 	
-	private void initCustomTag(RandomAccessFile file) throws IOException {
-		int bufferLength = (int)(getLength() - (endOffset + 1));
+	private void initCustomTag() throws IOException {
+		int bufferLength = (fileStream.getContentLength() - (endOffset + 1));
 		if (hasId3v1Tag()) bufferLength -= ID3v1Tag.TAG_LENGTH;
 		if (bufferLength <= 0) {
 			customTag = null;
 		}
 		else {
 			customTag = new byte[bufferLength];
-			file.seek(endOffset + 1);
-			int bytesRead = file.read(customTag, 0, bufferLength);
+			fileStream.seek(endOffset + 1);
+			int bytesRead = fileStream.read(customTag, 0, bufferLength);
 			if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
 		}
 	}
@@ -400,47 +438,51 @@ public class Mp3File extends FileWrapper {
 	}
 	
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (filename.compareToIgnoreCase(newFilename) == 0) {
+		if (filename != null && filename.compareToIgnoreCase(newFilename) == 0) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
-		RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
-		try {
-			if (hasId3v2Tag()) {
-				saveFile.write(id3v2Tag.toBytes());
-			}
-			saveMpegFrames(saveFile);
-			if (hasCustomTag()) {
-				saveFile.write(customTag);
-			}
-			if (hasId3v1Tag()) {
-				saveFile.write(id3v1Tag.toBytes());
-			}
-		} finally {
-			saveFile.close();
-		}
+
+        try (RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw")) {
+            if (hasId3v2Tag()) {
+                saveFile.write(id3v2Tag.toBytes());
+            }
+            saveMpegFrames(saveFile);
+            if (hasCustomTag()) {
+                saveFile.write(customTag);
+            }
+            if (hasId3v1Tag()) {
+                saveFile.write(id3v1Tag.toBytes());
+            }
+        }
 	}
 
 	private void saveMpegFrames(RandomAccessFile saveFile) throws IOException {
+        if(filename == null) {
+            throw new IllegalStateException("Files loaded from byte arrays cannot be saved back to disk");
+        }
+
 		int filePos = xingOffset;
 		if (filePos < 0) filePos = startOffset;
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
-		byte[] bytes = new byte[bufferLength];
-		try {
-			file.seek(filePos);
-			while (true) {
-				int bytesRead = file.read(bytes, 0, bufferLength);
-				if (filePos + bytesRead <= endOffset) {
-					saveFile.write(bytes, 0, bytesRead);
-					filePos += bytesRead;
-				} else {
-					saveFile.write(bytes, 0, endOffset - filePos + 1);
-					break;
-				}
-			}
-		} finally {
-			file.close();
-		}
+        byte[] bytes = new byte[bufferLength];
+        try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+            file.seek(filePos);
+            while (true) {
+                int bytesRead = file.read(bytes, 0, bufferLength);
+                if (filePos + bytesRead <= endOffset) {
+                    saveFile.write(bytes, 0, bytesRead);
+                    filePos += bytesRead;
+                } else {
+                    saveFile.write(bytes, 0, endOffset - filePos + 1);
+                    break;
+                }
+            }
+        }
 	}
+
+    @Override
+    public void close() throws IOException {
+        fileStream.close();
+    }
 }
