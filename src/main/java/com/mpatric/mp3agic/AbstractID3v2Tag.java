@@ -12,6 +12,14 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_IMAGE = "APIC";
 	public static final String ID_ENCODER = "TENC";
 	public static final String ID_URL = "WXXX";
+	public static final String ID_ARTIST_URL = "WOAR";
+	public static final String ID_COMMERCIAL_URL = "WCOM";
+	public static final String ID_COPYRIGHT_URL = "WCOP";
+	public static final String ID_AUDIOFILE_URL = "WOAF";
+	public static final String ID_AUDIOSOURCE_URL = "WOAS";
+	public static final String ID_RADIOSTATION_URL = "WORS";
+	public static final String ID_PAYMENT_URL = "WPAY";
+	public static final String ID_PUBLISHER_URL = "WPUB";
 	public static final String ID_COPYRIGHT = "TCOP";
 	public static final String ID_ORIGINAL_ARTIST = "TOPE";
 	public static final String ID_COMPOSER = "TCOM";
@@ -644,6 +652,118 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
+	public String getArtistUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_ARTIST_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setArtistUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_ARTIST_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getCommercialUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_COMMERCIAL_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setCommercialUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_COMMERCIAL_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getCopyrightUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_COPYRIGHT_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setCopyrightUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_COPYRIGHT_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getAudiofileUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_AUDIOFILE_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setAudiofileUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_AUDIOFILE_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getAudioSourceUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_AUDIOSOURCE_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setAudioSourceUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_AUDIOSOURCE_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getRadiostationUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_RADIOSTATION_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setRadiostationUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_RADIOSTATION_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getPaymentUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_PAYMENT_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setPaymentUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_PAYMENT_URL, frameData.toBytes()), true);
+		}
+	}
+
+	public String getPublisherUrl() {
+		ID3v2WWWFrameData frameData = extractWWWFrameData(ID_PUBLISHER_URL);
+		if (frameData != null) return frameData.getUrl();
+		return null;
+	}
+
+	public void setPublisherUrl(String url) {
+		if (url != null && url.length() > 0) {
+			invalidateDataLength();
+			ID3v2WWWFrameData frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), url);
+			addFrame(createFrame(ID_PUBLISHER_URL, frameData.toBytes()), true);
+		}
+	}
+
 	public String getUrl() {
 		ID3v2UrlFrameData frameData = extractUrlFrameData(obseleteFormat ? ID_URL_OBSELETE : ID_URL);
 		if (frameData != null) return frameData.getUrl();
@@ -803,6 +923,21 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 	
+	private ID3v2WWWFrameData extractWWWFrameData(String id) {
+		ID3v2FrameSet frameSet = frameSets.get(id);
+		if (frameSet != null) {
+			ID3v2Frame frame = (ID3v2Frame) frameSet.getFrames().get(0);
+			ID3v2WWWFrameData frameData;
+			try {
+				frameData = new ID3v2WWWFrameData(useFrameUnsynchronisation(), frame.getData());
+				return frameData;
+			} catch (InvalidDataException e) {
+				// do nothing
+			}
+		}
+		return null;
+	}
+
 	private ID3v2UrlFrameData extractUrlFrameData(String id) {
 		ID3v2FrameSet frameSet = frameSets.get(id);
 		if (frameSet != null) {
