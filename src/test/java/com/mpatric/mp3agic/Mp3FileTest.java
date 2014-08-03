@@ -60,7 +60,7 @@ public class Mp3FileTest extends TestCase {
 		}
 	}
 	
-	public void testShouldFindProbableStartOfMpegFramesWithPrescan() throws IOException {
+	public void testShouldFindProbableStartOfMpegFramesWithPrescan() throws IOException, InvalidDataException, UnsupportedTagException {
 		Mp3FileForTesting mp3file = new Mp3FileForTesting(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
 		assertEquals(0x44B, mp3file.preScanResult);
 	}
@@ -278,9 +278,9 @@ public class Mp3FileTest extends TestCase {
 
 		int preScanResult;
 
-		public Mp3FileForTesting(String filename) throws IOException {
-			RandomAccessFile file = new RandomAccessFile(filename, "r");
-			preScanResult = preScanFile(file);
+		public Mp3FileForTesting(String filename) throws IOException, InvalidDataException, UnsupportedTagException {
+			super(filename);
+			preScanResult = preScanFile();
 		}
 	}
 }
