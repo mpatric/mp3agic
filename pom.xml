@@ -74,6 +74,14 @@
 					</archive>
 				</configuration>
 			</plugin>
+		  	<plugin>
+      	 		<groupId>org.apache.maven.plugins</groupId>
+       			<artifactId>maven-release-plugin</artifactId>
+       			<version>2.5</version>
+       			<configuration>
+         				<tagNameFormat>v@{project.version}</tagNameFormat>
+       			</configuration>
+     		</plugin>
 			<!-- attach "bundling javadoc jar" to the package phase -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
