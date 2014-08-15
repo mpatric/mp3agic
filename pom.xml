@@ -24,15 +24,18 @@
 	</licenses>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/mpatric/mp3agic.git</developerConnection>
-		<connection>scm:git:git://github.com/mpatric/mp3agic.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/mrdevjay/mp3agic.git</developerConnection>
+		<connection>scm:git:git://github.com/mrdevjay/mp3agic.git</connection>
 		<tag>HEAD</tag>
-		<url>http://github.com/mpatric/mp3agic</url>
+		<url>http://github.com/mrdevjay/mp3agic</url>
 	</scm>
 	
 	<developers>
 	    <developer>
 		<name>Michael Patricios</name>
+	    </developer>
+	    <developer>
+		<name>MrDevJay</name>
 	    </developer>
 	</developers>
 
