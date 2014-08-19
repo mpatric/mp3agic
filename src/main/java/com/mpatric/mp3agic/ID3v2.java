@@ -41,6 +41,30 @@ public interface ID3v2 extends ID3v1 {
 	String getCopyright();
 	void setCopyright(String copyright);
 	
+	String getArtistUrl();
+	void setArtistUrl(String url);
+
+	String getCommercialUrl();
+	void setCommercialUrl(String url);
+
+	String getCopyrightUrl();
+	void setCopyrightUrl(String url);
+
+	String getAudiofileUrl();
+	void setAudiofileUrl(String url);
+
+	String getAudioSourceUrl();
+	void setAudioSourceUrl(String url);
+
+	String getRadiostationUrl();
+	void setRadiostationUrl(String url);
+
+	String getPaymentUrl();
+	void setPaymentUrl(String url);
+
+	String getPublisherUrl();
+	void setPublisherUrl(String url);
+
 	String getUrl();
 	void setUrl(String url);
 
