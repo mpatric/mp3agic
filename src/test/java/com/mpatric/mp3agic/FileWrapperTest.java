@@ -3,8 +3,6 @@ package com.mpatric.mp3agic;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.mpatric.mp3agic.FileWrapper;
-
 import junit.framework.TestCase;
 
 public class FileWrapperTest extends TestCase {
@@ -15,7 +13,7 @@ public class FileWrapperTest extends TestCase {
 	private static final String MALFORMED_FILENAME = "malformed.?";
 
 	public void testShouldReadValidFile() throws IOException {
-		FileWrapper fileWrapper = new FileWrapper(VALID_FILENAME);
+		FileMediaSource fileWrapper = new FileMediaSource(VALID_FILENAME);
 		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
 		assertTrue(fileWrapper.getLastModified() > 0);
 		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
@@ -23,7 +21,7 @@ public class FileWrapperTest extends TestCase {
 	
 	public void testShouldFailForNonExistentFile() throws IOException {
 		try {
-			new FileWrapper(NON_EXISTANT_FILENAME);
+			new FileMediaSource(NON_EXISTANT_FILENAME);
 			fail("FileNotFoundException expected but not thrown");
 		} catch (FileNotFoundException e) {
 			// expected
@@ -32,7 +30,7 @@ public class FileWrapperTest extends TestCase {
 	
 	public void testShouldFailForMalformedFilename() throws IOException {
 		try {
-			new FileWrapper(MALFORMED_FILENAME);
+			new FileMediaSource(MALFORMED_FILENAME);
 			fail("FileNotFoundException expected but not thrown");
 		} catch (FileNotFoundException e) {
 			// expected
@@ -41,7 +39,7 @@ public class FileWrapperTest extends TestCase {
 	
 	public void testShouldFailForNullFilename() throws IOException {
 		try {
-			new FileWrapper(null);
+			new FileMediaSource(null);
 			fail("NullPointerException expected but not thrown");
 		} catch (NullPointerException e) {
 			// expected

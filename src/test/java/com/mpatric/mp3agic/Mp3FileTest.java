@@ -279,7 +279,7 @@ public class Mp3FileTest extends TestCase {
 		int preScanResult;
 
 		public Mp3FileForTesting(String filename) throws IOException {
-			RandomAccessFile file = new RandomAccessFile(filename, "r");
+            RandomAccessMediaSource file = new RandomAccessMediaFile(filename, "r");
 			preScanResult = preScanFile(file);
 		}
 	}

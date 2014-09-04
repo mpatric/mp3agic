@@ -5,7 +5,7 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mp3File extends FileWrapper {
+public class Mp3File {
 
 	private static final int DEFAULT_BUFFER_LENGTH = 65536;
 	private static final int MINIMUM_BUFFER_LENGTH = 40;
@@ -33,6 +33,8 @@ public class Mp3File extends FileWrapper {
 	private ID3v2 id3v2Tag;
 	private byte[] customTag;
 	private boolean scanFile;
+
+    private MediaSource mediaSource;
 	
 	protected Mp3File() {
 	}
@@ -44,13 +46,25 @@ public class Mp3File extends FileWrapper {
 	public Mp3File(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		this(filename, bufferLength, true);
 	}
+
+    public Mp3File(byte[] mediaContent, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(mediaContent, DEFAULT_BUFFER_LENGTH, scanFile);
+    }
 	
 	public Mp3File(String filename, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
 		this(filename, DEFAULT_BUFFER_LENGTH, scanFile);
 	}
-	
-	public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {		
-		super(filename);
+
+    public Mp3File(byte[] mediaContent, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        this.mediaSource = new ByteArrayMediaSource(mediaContent);
+        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
+        this.bufferLength = bufferLength;
+        this.scanFile = scanFile;
+        init();
+    }
+
+	public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        this.mediaSource = new FileMediaSource(filename);
 		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
 		this.bufferLength = bufferLength;
 		this.scanFile = scanFile;
@@ -58,7 +72,7 @@ public class Mp3File extends FileWrapper {
 	}
 
 	private void init() throws IOException, UnsupportedTagException, InvalidDataException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
+		RandomAccessMediaSource file = mediaSource.open();
 		try {
 			initId3v1Tag(file);
 			scanFile(file);
@@ -74,7 +88,7 @@ public class Mp3File extends FileWrapper {
 		}
 	}
 	
-	protected int preScanFile(RandomAccessFile file) {
+	protected int preScanFile(RandomAccessMediaSource file) {
 		byte[] bytes = new byte[AbstractID3v2Tag.HEADER_LENGTH];
 		try {
 			file.seek(0);
@@ -95,7 +109,7 @@ public class Mp3File extends FileWrapper {
 		return 0;
 	}
 
-	private void scanFile(RandomAccessFile file) throws IOException, InvalidDataException {
+	private void scanFile(RandomAccessMediaSource file) throws IOException, InvalidDataException {
 		byte[] bytes = new byte[bufferLength];
 		int fileOffset = preScanFile(file);
 		file.seek(fileOffset);
@@ -190,7 +204,7 @@ public class Mp3File extends FileWrapper {
 	}
 
 	private int maxEndOffset() {
-		int maxEndOffset = (int)getLength();
+		int maxEndOffset = (int)mediaSource.getLength();
 		if (hasId3v1Tag()) maxEndOffset -= ID3v1Tag.TAG_LENGTH;
 		return maxEndOffset;
 	}
@@ -215,7 +229,7 @@ public class Mp3File extends FileWrapper {
 		if (sampleRate != frame.getSampleRate()) throw new InvalidDataException("Inconsistent frame header");
 		if (! layer.equals(frame.getLayer())) throw new InvalidDataException("Inconsistent frame header");
 		if (! version.equals(frame.getVersion())) throw new InvalidDataException("Inconsistent frame header");
-		if (offset + frame.getLengthInBytes() > getLength()) throw new InvalidDataException("Frame would extend beyond end of file");
+		if (offset + frame.getLengthInBytes() > mediaSource.getLength()) throw new InvalidDataException("Frame would extend beyond end of file");
 	}
 	
 	private void addBitrate(int bitrate) {
@@ -229,9 +243,9 @@ public class Mp3File extends FileWrapper {
 		this.bitrate = ((this.bitrate * (frameCount - 1)) + bitrate) / frameCount;
 	}
 	
-	private void initId3v1Tag(RandomAccessFile file) throws IOException {
+	private void initId3v1Tag(RandomAccessMediaSource file) throws IOException {
 		byte[] bytes = new byte[ID3v1Tag.TAG_LENGTH];
-		file.seek(getLength() - ID3v1Tag.TAG_LENGTH);
+		file.seek(mediaSource.getLength() - ID3v1Tag.TAG_LENGTH);
 		int bytesRead = file.read(bytes, 0, ID3v1Tag.TAG_LENGTH);
 		if (bytesRead < ID3v1Tag.TAG_LENGTH) throw new IOException("Not enough bytes read");
 		try {
@@ -241,7 +255,7 @@ public class Mp3File extends FileWrapper {
 		}
 	}
 	
-	private void initId3v2Tag(RandomAccessFile file) throws IOException, UnsupportedTagException, InvalidDataException {
+	private void initId3v2Tag(RandomAccessMediaSource file) throws IOException, UnsupportedTagException, InvalidDataException {
 		if (xingOffset == 0 || startOffset == 0) {
 			id3v2Tag = null;
 		} else {
@@ -260,8 +274,8 @@ public class Mp3File extends FileWrapper {
 		}
 	}
 	
-	private void initCustomTag(RandomAccessFile file) throws IOException {
-		int bufferLength = (int)(getLength() - (endOffset + 1));
+	private void initCustomTag(RandomAccessMediaSource file) throws IOException {
+		int bufferLength = (int)(mediaSource.getLength() - (endOffset + 1));
 		if (hasId3v1Tag()) bufferLength -= ID3v1Tag.TAG_LENGTH;
 		if (bufferLength <= 0) {
 			customTag = null;
@@ -400,7 +414,7 @@ public class Mp3File extends FileWrapper {
 	}
 	
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (filename.compareToIgnoreCase(newFilename) == 0) {
+		if (mediaSource.getFilename().compareToIgnoreCase(newFilename) == 0) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
 		RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
@@ -425,7 +439,7 @@ public class Mp3File extends FileWrapper {
 		if (filePos < 0) filePos = startOffset;
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
+		RandomAccessMediaSource file = mediaSource.open();
 		byte[] bytes = new byte[bufferLength];
 		try {
 			file.seek(filePos);
