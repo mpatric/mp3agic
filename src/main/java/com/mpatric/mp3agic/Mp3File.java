@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
@@ -51,26 +52,42 @@ public class Mp3File extends FileWrapper {
 	
 	public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {		
 		super(filename);
-		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
-		this.bufferLength = bufferLength;
-		this.scanFile = scanFile;
-		init();
+		init(bufferLength, scanFile);
 	}
 
-	private void init() throws IOException, UnsupportedTagException, InvalidDataException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
+	public Mp3File(File file) throws IOException, UnsupportedTagException, InvalidDataException {
+		this(file, DEFAULT_BUFFER_LENGTH, true);
+	}
+	
+	public Mp3File(File file, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		this(file, bufferLength, true);
+	}
+	
+	public Mp3File(File file, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+		super(file);
+		init(bufferLength, scanFile);
+	}
+
+	private void init(int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
+		
+		this.bufferLength = bufferLength;
+		this.scanFile = scanFile;
+		
+		RandomAccessFile randomAccessFile = new RandomAccessFile(file.getPath(), "r");
+		
 		try {
-			initId3v1Tag(file);
-			scanFile(file);
+			initId3v1Tag(randomAccessFile);
+			scanFile(randomAccessFile);
 			if (startOffset < 0) {
 				throw new InvalidDataException("No mpegs frames found");
 			}
-			initId3v2Tag(file);
+			initId3v2Tag(randomAccessFile);
 			if (scanFile) {
-				initCustomTag(file);
+				initCustomTag(randomAccessFile);
 			}
 		} finally {
-			file.close();
+			randomAccessFile.close();
 		}
 	}
 	
@@ -400,7 +417,7 @@ public class Mp3File extends FileWrapper {
 	}
 	
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (filename.compareToIgnoreCase(newFilename) == 0) {
+		if (file.compareTo(new File(newFilename)) == 0) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
 		RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
@@ -425,12 +442,12 @@ public class Mp3File extends FileWrapper {
 		if (filePos < 0) filePos = startOffset;
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
+		RandomAccessFile randomAccessFile = new RandomAccessFile(this.file.getPath(), "r");
 		byte[] bytes = new byte[bufferLength];
 		try {
-			file.seek(filePos);
+			randomAccessFile.seek(filePos);
 			while (true) {
-				int bytesRead = file.read(bytes, 0, bufferLength);
+				int bytesRead = randomAccessFile.read(bytes, 0, bufferLength);
 				if (filePos + bytesRead <= endOffset) {
 					saveFile.write(bytes, 0, bytesRead);
 					filePos += bytesRead;
@@ -440,7 +457,7 @@ public class Mp3File extends FileWrapper {
 				}
 			}
 		} finally {
-			file.close();
+			randomAccessFile.close();
 		}
 	}
 }
