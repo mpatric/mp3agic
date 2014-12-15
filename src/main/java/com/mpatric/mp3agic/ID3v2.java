@@ -18,7 +18,7 @@ public interface ID3v2 extends ID3v1 {
 	void setBPM(int bpm);
 	
 	String getGrouping();
-	void setGrouping(String key);
+	void setGrouping(String grouping);
 	
 	String getKey();
 	void setKey(String key);

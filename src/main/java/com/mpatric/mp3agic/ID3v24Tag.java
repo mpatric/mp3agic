@@ -65,10 +65,10 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		return null;
 	}
 
-	public void setRecordingTime(String rec_year) {
-		if (rec_year != null && rec_year.length() > 0) {
+	public void setRecordingTime(String recTime) {
+		if (recTime != null && recTime.length() > 0) {
 			invalidateDataLength();
-			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(rec_year));
+			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(recTime));
 			addFrame(createFrame(ID_RECTIME, frameData.toBytes()), true);
 		}
 	}
