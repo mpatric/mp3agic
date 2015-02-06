@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -91,7 +91,7 @@
 					<quiet>true</quiet>
 					<show>private</show>
 					<doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
-					<bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2013 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
+					<bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2015 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
 				</configuration>
 			</plugin>
 			<!-- attach "bundling source jar" to the package phase -->
