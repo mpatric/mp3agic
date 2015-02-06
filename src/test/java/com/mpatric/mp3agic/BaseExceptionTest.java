@@ -1,22 +1,20 @@
 package com.mpatric.mp3agic;
 
-import com.mpatric.mp3agic.BaseException;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.NoSuchTagException;
-import com.mpatric.mp3agic.NotSupportedException;
-import com.mpatric.mp3agic.UnsupportedTagException;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class BaseExceptionTest extends TestCase {
+public class BaseExceptionTest {
 
-	public void testShouldGenerateCorrectDetailedMessageForSingleException() throws Exception {
+    @Test
+	public void generatesCorrectDetailedMessageForSingleException() {
 		BaseException e = new BaseException("ONE");
 		assertEquals("ONE", e.getMessage());
 		assertEquals("[com.mpatric.mp3agic.BaseException: ONE]", e.getDetailedMessage());
 	}
-	
-	public void testShouldGenerateCorrectDetailedMessageForChainedBaseExceptions() throws Exception {
+
+    @Test
+	public void generatesCorrectDetailedMessageForChainedBaseExceptions() {
 		BaseException e1 = new BaseException("ONE");
 		BaseException e2 = new UnsupportedTagException("TWO", e1);
 		BaseException e3 = new NotSupportedException("THREE", e2);
@@ -25,8 +23,9 @@ public class BaseExceptionTest extends TestCase {
 		assertEquals("FIVE", e5.getMessage());
 		assertEquals("[com.mpatric.mp3agic.InvalidDataException: FIVE] caused by [com.mpatric.mp3agic.NoSuchTagException: FOUR] caused by [com.mpatric.mp3agic.NotSupportedException: THREE] caused by [com.mpatric.mp3agic.UnsupportedTagException: TWO] caused by [com.mpatric.mp3agic.BaseException: ONE]", e5.getDetailedMessage());
 	}
-	
-	public void testShouldGenerateCorrectDetailedMessageForChainedExceptionsWithOtherExceptionInMix() throws Exception {
+
+    @Test
+	public void generatesCorrectDetailedMessageForChainedExceptionsWithOtherExceptionInMix() {
 		BaseException e1 = new BaseException("ONE");
 		BaseException e2 = new UnsupportedTagException("TWO", e1);
 		Exception e3 = new Exception("THREE", e2);
