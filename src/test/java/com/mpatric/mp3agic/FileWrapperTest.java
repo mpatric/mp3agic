@@ -12,7 +12,7 @@ public class FileWrapperTest {
     private static final String fs = File.separator;
     private static final String VALID_FILENAME = "src" + fs + "test" + fs + "resources" + fs + "notags.mp3";
     private static final long VALID_FILE_LENGTH = 2869;
-    private static final String NON_EXISTANT_FILENAME = "just-not.there";
+    private static final String NON_EXISTENT_FILENAME = "just-not.there";
     private static final String MALFORMED_FILENAME = "malformed.?";
 
     @Test
@@ -27,7 +27,7 @@ public class FileWrapperTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testShouldFailForNonExistentFile() throws IOException {
-            new FileWrapper(NON_EXISTANT_FILENAME);
+            new FileWrapper(NON_EXISTENT_FILENAME);
     }
 
     @Test(expected = FileNotFoundException.class)
