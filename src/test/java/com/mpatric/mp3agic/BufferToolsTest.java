@@ -511,7 +511,7 @@ public class BufferToolsTest {
 
     @Test
 	public void shouldConvertNonAsciiCharactersToQuestionMarksInString() {
-		assertEquals("?12?34?567???89?", BufferTools.asciiOnly("�12�34�567���89�"));
+		assertEquals("?12?34?567???89?", BufferTools.asciiOnly("ü12¬34ü567¬¬¬89ü"));
 	}
 
     @Test
