@@ -1,12 +1,13 @@
 package com.mpatric.mp3agic;
 
-import java.util.Arrays;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ID3v2ChapterFrameDataTest extends TestCase {
-	
-	public void testShouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+public class ID3v2ChapterFrameDataTest {
+
+    @Test
+	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
 		ID3v2ChapterFrameData frameData1 = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		ID3v2TextFrameData subFrameData1 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
 		frameData1.addSubframe("TIT2", subFrameData1);
@@ -15,8 +16,9 @@ public class ID3v2ChapterFrameDataTest extends TestCase {
 		frameData2.addSubframe("TIT2", subFrameData2);
 		assertEquals(frameData1, frameData2);		
 	}
-	
-	public void testShouldConvertFrameDataToBytesAndBackToEquivalentObject() throws Exception {
+
+    @Test
+	public void shouldConvertFrameDataToBytesAndBackToEquivalentObject() throws Exception {
 		ID3v2ChapterFrameData frameData = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		ID3v2TextFrameData subFrameData = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
 		frameData.addSubframe("TIT2", subFrameData);
@@ -33,7 +35,7 @@ public class ID3v2ChapterFrameDataTest extends TestCase {
 				0,
 				'H', 'e', 'l', 'l', 'o', ' ', 't', 'h', 'e', 'r', 'e'
 		};
-		assertTrue(Arrays.equals(expectedBytes, bytes));
+		assertArrayEquals(expectedBytes, bytes);
 		ID3v2ChapterFrameData frameDataCopy = new ID3v2ChapterFrameData(false, bytes);
 		assertEquals(frameData, frameDataCopy);
 	}
