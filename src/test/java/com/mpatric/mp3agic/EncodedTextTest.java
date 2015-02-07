@@ -230,15 +230,13 @@ public class EncodedTextTest {
 		assertEquals("00 43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f", TestHelper.bytesToHexString(encodedText.toBytes()));
 	}
 
-    @Test
-	public void shouldThrowAnExceptionWhenAttemptingToTranscodeToACharacterSetWithUnmappableCharacters() {
-		EncodedText encodedText;
-		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING);
-		try {
-			encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1, true);
-			fail("CharacterCodingException expected but not thrown");
-		} catch (CharacterCodingException e) {
-		}
+    @Test(expected = CharacterCodingException.class)
+	public void shouldThrowAnExceptionWhenAttemptingToTranscodeToACharacterSetWithUnmappableCharacters() throws CharacterCodingException {
+        // given
+		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING);
+
+        // expect exception
+        encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1, true);
 	}
 
     @Test

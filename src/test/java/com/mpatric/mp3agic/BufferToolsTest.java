@@ -121,13 +121,11 @@ public class BufferToolsTest {
 		try {
 			BufferTools.stringToByteBuffer(original, -1, 1);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, original.length(), 1);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
     @Test
@@ -136,18 +134,15 @@ public class BufferToolsTest {
 		try {
 			BufferTools.stringToByteBuffer(original, 0, -1);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, 0, original.length() + 1);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, 3, original.length() - 2);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 	
 	// string into existing byte buffer
@@ -229,13 +224,11 @@ public class BufferToolsTest {
 		try {
 			BufferTools.stringIntoByteBuffer(s, -1, 1, buffer, 0);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, s.length(), 1, buffer, 0);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
     @Test
@@ -245,18 +238,15 @@ public class BufferToolsTest {
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, -1, buffer, 0);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, s.length() + 1, buffer, 0);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 3, s.length() - 2, buffer, 0);
 			fail("StringIndexOutOfBoundsException expected but not thrown");
-		} catch (StringIndexOutOfBoundsException e) {
-		}
+		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
     @Test
@@ -266,13 +256,11 @@ public class BufferToolsTest {
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, 1, buffer, 10);
 			fail("ArrayIndexOutOfBoundsException expected but not thrown");
-		} catch (ArrayIndexOutOfBoundsException e) {
-		}
+		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, buffer.length - s.length() + 1);
 			fail("ArrayIndexOutOfBoundsException expected but not thrown");
-		} catch (ArrayIndexOutOfBoundsException e) {
-		}
+		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 	}
 	
 	// trim strings
@@ -404,13 +392,25 @@ public class BufferToolsTest {
 		assertTrue(Arrays.equals(new byte[] {4}, BufferTools.copyBuffer(buffer, 4, 1)));
 	}
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void throwsExceptionWhenCopyingBufferWithInvalidOffsetAndOrLength() {
-		byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-        BufferTools.copyBuffer(buffer, -1, buffer.length);
-        BufferTools.copyBuffer(buffer, buffer.length, 1);
-        BufferTools.copyBuffer(buffer, 1, buffer.length);
-	}
+    @Test
+    public void throwsExceptionWhenCopyingBufferWithInvalidOffsetAndOrLength() {
+        byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+        try {
+            BufferTools.copyBuffer(buffer, -1, buffer.length);
+            fail("ArrayIndexOutOfBoundsException expected but not thrown");
+        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+
+        try {
+            BufferTools.copyBuffer(buffer, buffer.length, 1);
+            fail("ArrayIndexOutOfBoundsException expected but not thrown");
+        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+
+        try {
+            BufferTools.copyBuffer(buffer, 1, buffer.length);
+            fail("ArrayIndexOutOfBoundsException expected but not thrown");
+        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+    }
 
     @Test
 	public void shouldDetermineUnsynchronisationSizesCorrectly() {
