@@ -112,6 +112,24 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.14.1</version>
 			</plugin>
+
+            <!-- code coverage -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+
+            <!-- needed by coveralls -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>

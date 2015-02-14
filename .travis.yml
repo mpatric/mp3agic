@@ -1,4 +1,9 @@
 language: java
+
 script: mvn verify
+
 jdk:
   - oraclejdk7
+
+after_success:
+- mvn clean cobertura:cobertura coveralls:report
