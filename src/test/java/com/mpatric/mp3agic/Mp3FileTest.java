@@ -1,20 +1,15 @@
 package com.mpatric.mp3agic;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
 
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.MpegFrame;
-import com.mpatric.mp3agic.MutableInteger;
-import com.mpatric.mp3agic.NotSupportedException;
-import com.mpatric.mp3agic.UnsupportedTagException;
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
-
-public class Mp3FileTest extends TestCase {
+public class Mp3FileTest {
 	
 	private static final String fs = File.separator;
 	private static final String MP3_WITH_NO_TAGS = "src" + fs + "test" + fs + "resources" + fs + "notags.mp3";
@@ -24,8 +19,9 @@ public class Mp3FileTest extends TestCase {
 	private static final String MP3_WITH_ID3V23_UNICODE_TAGS = "src" + fs + "test" + fs + "resources" + fs + "v23unicodetags.mp3";
 	private static final String NOT_AN_MP3 = "src" + fs + "test" + fs + "resources" + fs + "notanmp3.mp3";
 	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "src" + fs + "test" + fs + "resources" + fs + "incompletempegframe.mp3";
-	
-	public void testShouldLoadMp3WithNoTags() throws IOException, UnsupportedTagException, InvalidDataException {
+
+    @Test
+	public void shouldLoadMp3WithNoTags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 41);
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 256);
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 1024);
@@ -35,8 +31,9 @@ public class Mp3FileTest extends TestCase {
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 1024);
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 5000);
 	}
-	
-	public void testShouldLoadMp3WithId3Tags() throws IOException, UnsupportedTagException, InvalidDataException {
+
+    @Test
+	public void shouldLoadMp3WithId3Tags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithTags(MP3_WITH_ID3V1_AND_ID3V23_TAGS, 41);
 		loadAndCheckTestMp3WithTags(MP3_WITH_ID3V1_AND_ID3V23_TAGS, 256);
 		loadAndCheckTestMp3WithTags(MP3_WITH_ID3V1_AND_ID3V23_TAGS, 1024);
@@ -46,8 +43,9 @@ public class Mp3FileTest extends TestCase {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 1024);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 5000);
 	}
-	
-	public void testShouldLoadMp3WithFakeStartAndEndFrames() throws IOException, UnsupportedTagException, InvalidDataException {
+
+    @Test
+	public void shouldLoadMp3WithFakeStartAndEndFrames() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithTags(MP3_WITH_DUMMY_START_AND_END_FRAMES, 41);
 		loadAndCheckTestMp3WithTags(MP3_WITH_DUMMY_START_AND_END_FRAMES, 256);
 		loadAndCheckTestMp3WithTags(MP3_WITH_DUMMY_START_AND_END_FRAMES, 1024);
@@ -57,8 +55,9 @@ public class Mp3FileTest extends TestCase {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 1024);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 5000);
 	}
-	
-	public void testShouldLoadMp3WithCustomTag() throws IOException, UnsupportedTagException, InvalidDataException {
+
+    @Test
+	public void shouldLoadMp3WithCustomTag() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 41);
 		loadAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
 		loadAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 1024);
@@ -68,8 +67,9 @@ public class Mp3FileTest extends TestCase {
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 1024);
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 5000);
 	}
-	
-	public void testShouldThrowExceptionForFileThatIsNotAnMp3() throws Exception {
+
+    @Test
+	public void shouldThrowExceptionForFileThatIsNotAnMp3() throws Exception {
 		try {
 			new Mp3File(NOT_AN_MP3);
 			fail("InvalidDataException expected but not thrown");
@@ -77,8 +77,9 @@ public class Mp3FileTest extends TestCase {
 			assertEquals("No mpegs frames found", e.getMessage());
 		}
 	}
-	
-	public void testShouldThrowExceptionForFileThatIsNotAnMp3ForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldThrowExceptionForFileThatIsNotAnMp3ForFileConstructor() throws Exception {
 		try {
 			new Mp3File(new File(NOT_AN_MP3));
 			fail("InvalidDataException expected but not thrown");
@@ -86,13 +87,15 @@ public class Mp3FileTest extends TestCase {
 			assertEquals("No mpegs frames found", e.getMessage());
 		}
 	}
-	
-	public void testShouldFindProbableStartOfMpegFramesWithPrescan() throws IOException {
+
+    @Test
+	public void shouldFindProbableStartOfMpegFramesWithPrescan() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
 	}
-	
-	public void testShouldFindProbableStartOfMpegFramesWithPrescanForFileConstructor() throws IOException {
+
+    @Test
+	public void shouldFindProbableStartOfMpegFramesWithPrescanForFileConstructor() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS));
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
 	}
@@ -101,12 +104,14 @@ public class Mp3FileTest extends TestCase {
 		assertEquals(0x44B, mp3File.preScanResult);
 	}
 
-	public void testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile() throws Exception {
+    @Test
+	public void shouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile(mp3File);
 	}
-	
-	public void testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFileForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldThrowExceptionIfSavingMp3WithSameNameAsSourceFileForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS));
 		testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile(mp3File);
 	}
@@ -122,7 +127,8 @@ public class Mp3FileTest extends TestCase {
 		}
 	}
 
-	public void testShouldSaveLoadedMp3WhichIsEquivalentToOriginal() throws Exception {
+    @Test
+	public void shouldSaveLoadedMp3WhichIsEquivalentToOriginal() throws Exception {
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 41);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 1024);
@@ -132,8 +138,9 @@ public class Mp3FileTest extends TestCase {
 		copyAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 1024);
 		copyAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 5000);
 	}
-	
-	public void testShouldLoadAndCheckMp3ContainingUnicodeFields() throws Exception {
+
+    @Test
+	public void shouldLoadAndCheckMp3ContainingUnicodeFields() throws Exception {
 		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
 		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
 		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 1024);
@@ -143,8 +150,9 @@ public class Mp3FileTest extends TestCase {
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 1024);
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 5000);
 	}
-	
-	public void testShouldSaveLoadedMp3WithUnicodeFieldsWhichIsEquivalentToOriginal() throws Exception {
+
+    @Test
+	public void shouldSaveLoadedMp3WithUnicodeFieldsWhichIsEquivalentToOriginal() throws Exception {
 		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
 		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
 		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 1024);
@@ -154,17 +162,19 @@ public class Mp3FileTest extends TestCase {
 		copyAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 1024);
 		copyAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 5000);
 	}
-	
-	public void testShouldIgnoreIncompleteMpegFrame() throws Exception {
+
+    @Test
+	public void shouldIgnoreIncompleteMpegFrame() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_INCOMPLETE_MPEG_FRAME, 256);
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
 	}
-	
-	public void testShouldIgnoreIncompleteMpegFrameForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldIgnoreIncompleteMpegFrameForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME), 256);
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
 	}
-	
+
 	private void testShouldIgnoreIncompleteMpegFrame(Mp3File mp3File) throws Exception {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
@@ -173,28 +183,32 @@ public class Mp3FileTest extends TestCase {
 		assertTrue(mp3File.hasId3v2Tag());
 		assertEquals(5, mp3File.getFrameCount());
 	}
-	
-	public void testShouldInitialiseProperlyWhenNotScanningFile() throws Exception {
+
+    @Test
+	public void shouldInitialiseProperlyWhenNotScanningFile() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_INCOMPLETE_MPEG_FRAME, 256, false);
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
 	}
-	
-	public void testShouldInitialiseProperlyWhenNotScanningFileForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldInitialiseProperlyWhenNotScanningFileForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME), 256, false);
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
 	}
-	
+
 	private void testShouldInitialiseProperlyWhenNotScanningFile(Mp3File mp3File) throws Exception {
 		assertTrue(mp3File.hasId3v1Tag());
 		assertTrue(mp3File.hasId3v2Tag());
 	}
-	
-	public void testShouldRemoveId3v1Tag() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v1Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v1Tag(new Mp3File(filename));
 	}
-	
-	public void testShouldRemoveId3v1TagForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v1TagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v1Tag(new Mp3File(filename));
 	}
@@ -212,17 +226,19 @@ public class Mp3FileTest extends TestCase {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
-	public void testShouldRemoveId3v2Tag() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v2Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v2Tag(new Mp3File(filename));
 	}
-	
-	public void testShouldRemoveId3v2TagForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v2TagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v2Tag(new Mp3File(filename));
 	}
-	
+
 	private void testShouldRemoveId3v2Tag(Mp3File mp3File) throws Exception {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -236,17 +252,19 @@ public class Mp3FileTest extends TestCase {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
-	public void testShouldRemoveCustomTag() throws Exception {
+
+    @Test
+	public void shouldRemoveCustomTag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveCustomTag(new Mp3File(filename));
 	}
-	
-	public void testShouldRemoveCustomTagForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldRemoveCustomTagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveCustomTag(new Mp3File(filename));
 	}
-	
+
 	private void testShouldRemoveCustomTag(Mp3File mp3File) throws Exception {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -260,17 +278,19 @@ public class Mp3FileTest extends TestCase {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
-	public void testShouldRemoveId3v1AndId3v2AndCustomTags() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v1AndId3v2AndCustomTags() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
 	}
-	
-	public void testShouldRemoveId3v1AndId3v2AndCustomTagsForFileConstructor() throws Exception {
+
+    @Test
+	public void shouldRemoveId3v1AndId3v2AndCustomTagsForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
 	}
-	
+
 	private void testShouldRemoveId3v1AndId3v2AndCustomTags(Mp3File mp3File) throws Exception {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -304,7 +324,7 @@ public class Mp3FileTest extends TestCase {
 			Mp3File copyMp3file = loadAndCheckTestMp3WithCustomTag(saveFilename, 5000);
 			assertEquals(mp3File.getId3v1Tag(), copyMp3file.getId3v1Tag());
 			assertEquals(mp3File.getId3v2Tag(), copyMp3file.getId3v2Tag());
-			assertTrue(Arrays.equals(mp3File.getCustomTag(), copyMp3file.getCustomTag()));
+			assertArrayEquals(mp3File.getCustomTag(), copyMp3file.getCustomTag());
 			return copyMp3file;
 		} finally {
 			TestHelper.deleteFile(saveFilename);
@@ -435,11 +455,11 @@ public class Mp3FileTest extends TestCase {
 		assertFalse(mp3File.isCopyright());
 		assertEquals(128, mp3File.getXingBitrate());
 		assertEquals(125, mp3File.getBitrate());
-		assertEquals(1, ((MutableInteger)mp3File.getBitrates().get(new Integer(224))).getValue());
-		assertEquals(1, ((MutableInteger)mp3File.getBitrates().get(new Integer(112))).getValue());
-		assertEquals(2, ((MutableInteger)mp3File.getBitrates().get(new Integer(96))).getValue());
-		assertEquals(1, ((MutableInteger)mp3File.getBitrates().get(new Integer(192))).getValue());
-		assertEquals(1, ((MutableInteger)mp3File.getBitrates().get(new Integer(32))).getValue());
+		assertEquals(1, (mp3File.getBitrates().get(224)).getValue());
+		assertEquals(1, (mp3File.getBitrates().get(112)).getValue());
+		assertEquals(2, (mp3File.getBitrates().get(96)).getValue());
+		assertEquals(1, (mp3File.getBitrates().get(192)).getValue());
+		assertEquals(1, (mp3File.getBitrates().get(32)).getValue());
 		assertEquals(156, mp3File.getLengthInMilliseconds());
 		return mp3File;
 	}

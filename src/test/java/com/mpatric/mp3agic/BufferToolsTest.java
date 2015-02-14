@@ -154,7 +154,7 @@ public class BufferToolsTest {
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0);
 		byte[] expectedBuffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, 0, 0, 0, 0, 0, 0};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -164,7 +164,7 @@ public class BufferToolsTest {
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0, "UTF-16BE");
 		byte[] expectedBuffer = {0x03, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac, 0, 0};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -174,7 +174,7 @@ public class BufferToolsTest {
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 6);
 		byte[] expectedBuffer = {0, 0, 0, 0, 0, 0, BYTE_T, BYTE_A, BYTE_G, BYTE_DASH};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -184,7 +184,7 @@ public class BufferToolsTest {
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 2, "UTF-16BE");
 		byte[] expectedBuffer = {0, 0, 0x03, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -194,7 +194,7 @@ public class BufferToolsTest {
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0);
 		byte[] expectedBuffer = {BYTE_A, BYTE_G, 0, 0, 0, 0, 0, 0, 0, 0};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -204,7 +204,7 @@ public class BufferToolsTest {
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0, "UTF-16BE");
 		byte[] expectedBuffer = {0x03, (byte)0xb5, 0x03, (byte)0xb9, 0, 0, 0, 0, 0, 0};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -214,7 +214,7 @@ public class BufferToolsTest {
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 4);
 		byte[] expectedBuffer = {0, 0, 0, 0, BYTE_A, BYTE_G, 0, 0, 0, 0};
-		assertTrue(Arrays.equals(expectedBuffer, buffer));
+		assertArrayEquals(expectedBuffer, buffer);
 	}
 
     @Test
@@ -354,16 +354,16 @@ public class BufferToolsTest {
 
     @Test
 	public void shouldPackIntegerCorrectly() {
-		assertTrue(Arrays.equals(new byte[] {BYTE_FF, BYTE_FB, BYTE_90, BYTE_44}, BufferTools.packInteger(0xFFFB9044)));
+		assertArrayEquals(new byte[] {BYTE_FF, BYTE_FB, BYTE_90, BYTE_44}, BufferTools.packInteger(0xFFFB9044));
 	}
 
     @Test
 	public void shouldPackSynchsafeIntegersCorrectly() {
-		assertTrue(Arrays.equals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x41}, BufferTools.packSynchsafeInteger(1217)));
-		assertTrue(Arrays.equals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x4B}, BufferTools.packSynchsafeInteger(1227)));
-		assertTrue(Arrays.equals(new byte[] {(byte)0, (byte)0, (byte)0x07, (byte)0x6A}, BufferTools.packSynchsafeInteger(1002)));
-		assertTrue(Arrays.equals(new byte[] {(byte)0, (byte)0, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x0101)));
-		assertTrue(Arrays.equals(new byte[] {(byte)8, (byte)4, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x01010101)));
+		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x41}, BufferTools.packSynchsafeInteger(1217));
+		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x4B}, BufferTools.packSynchsafeInteger(1227));
+		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x07, (byte)0x6A}, BufferTools.packSynchsafeInteger(1002));
+		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x0101));
+		assertArrayEquals(new byte[] {(byte)8, (byte)4, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x01010101));
 	}
 
     @Test
@@ -385,11 +385,11 @@ public class BufferToolsTest {
     @Test
 	public void shouldCopyBuffersWithValidOffsetsAndLengths() {
 		byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-		assertTrue(Arrays.equals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 0, buffer.length)));
-		assertTrue(Arrays.equals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 1, buffer.length - 1)));
-		assertTrue(Arrays.equals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 0, buffer.length - 1)));
-		assertTrue(Arrays.equals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 1, buffer.length - 2)));
-		assertTrue(Arrays.equals(new byte[] {4}, BufferTools.copyBuffer(buffer, 4, 1)));
+		assertArrayEquals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 0, buffer.length));
+		assertArrayEquals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 1, buffer.length - 1));
+		assertArrayEquals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 0, buffer.length - 1));
+		assertArrayEquals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 1, buffer.length - 2));
+		assertArrayEquals(new byte[] {4}, BufferTools.copyBuffer(buffer, 4, 1));
 	}
 
     @Test
@@ -440,8 +440,8 @@ public class BufferToolsTest {
 		byte[] expectedBuffer = {BYTE_FF, 0, BYTE_FB, 2, 3, 4, BYTE_FF, 0, BYTE_E0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, 0, BYTE_F0};
 		byte[] unsynchronised = BufferTools.unsynchroniseBuffer(buffer);
 		byte[] synchronised = BufferTools.synchroniseBuffer(unsynchronised);
-		assertTrue(Arrays.equals(expectedBuffer, unsynchronised));
-		assertTrue(Arrays.equals(buffer, synchronised));
+		assertArrayEquals(expectedBuffer, unsynchronised);
+		assertArrayEquals(buffer, synchronised);
 	}
 
     @Test
@@ -450,8 +450,8 @@ public class BufferToolsTest {
 		byte[] expectedBuffer = {BYTE_FF, 0, 0, 2, 3, 4, BYTE_FF, 0, 0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, 0, 0};
 		byte[] unsynchronised = BufferTools.unsynchroniseBuffer(buffer);
 		byte[] synchronised = BufferTools.synchroniseBuffer(unsynchronised);
-		assertTrue(Arrays.equals(expectedBuffer, unsynchronised));
-		assertTrue(Arrays.equals(buffer, synchronised));
+		assertArrayEquals(expectedBuffer, unsynchronised);
+		assertArrayEquals(buffer, synchronised);
 	}
 
     @Test
@@ -460,8 +460,8 @@ public class BufferToolsTest {
 		byte[] expectedBuffer = {BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0};
 		byte[] unsynchronised = BufferTools.unsynchroniseBuffer(buffer);
 		byte[] synchronised = BufferTools.synchroniseBuffer(unsynchronised);
-		assertTrue(Arrays.equals(expectedBuffer, unsynchronised));
-		assertTrue(Arrays.equals(buffer, synchronised));
+		assertArrayEquals(expectedBuffer, unsynchronised);
+		assertArrayEquals(buffer, synchronised);
 	}
 
     @Test
@@ -470,8 +470,8 @@ public class BufferToolsTest {
 		byte[] expectedBuffer = {BYTE_FF, 0};
 		byte[] unsynchronised = BufferTools.unsynchroniseBuffer(buffer);
 		byte[] synchronised = BufferTools.synchroniseBuffer(unsynchronised);
-		assertTrue(Arrays.equals(expectedBuffer, unsynchronised));
-		assertTrue(Arrays.equals(buffer, synchronised));
+		assertArrayEquals(expectedBuffer, unsynchronised);
+		assertArrayEquals(buffer, synchronised);
 	}
 
     @Test

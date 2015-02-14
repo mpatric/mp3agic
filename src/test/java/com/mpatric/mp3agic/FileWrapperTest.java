@@ -26,22 +26,22 @@ public class FileWrapperTest {
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void testShouldFailForNonExistentFile() throws IOException {
+    public void shouldFailForNonExistentFile() throws IOException {
             new FileWrapper(NON_EXISTENT_FILENAME);
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void testShouldFailForMalformedFilename() throws IOException {
+    public void shouldFailForMalformedFilename() throws IOException {
         new FileWrapper(MALFORMED_FILENAME);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testShouldFailForNullFilename() throws IOException {
+    public void shouldFailForNullFilename() throws IOException {
         new FileWrapper((String) null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testShouldFailForNullFilenameFile() throws IOException {
+    public void shouldFailForNullFilenameFile() throws IOException {
         new FileWrapper((java.io.File) null);
     }
 }

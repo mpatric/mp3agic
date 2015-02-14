@@ -2,8 +2,6 @@ package com.mpatric.mp3agic;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
 public class ID3v1TagTest {
@@ -105,7 +103,7 @@ public class ID3v1TagTest {
 		expectedBuffer[expectedBuffer.length - 3] = 0x00;
 		expectedBuffer[expectedBuffer.length - 2] = 0x01;
 		expectedBuffer[expectedBuffer.length - 1] = 0x0D;
-		assertTrue(Arrays.equals(expectedBuffer, id3v1tag.toBytes()));
+		assertArrayEquals(expectedBuffer, id3v1tag.toBytes());
 	}
 
     @Test
@@ -123,7 +121,7 @@ public class ID3v1TagTest {
 		expectedBuffer[expectedBuffer.length - 3] = 0x00;
 		expectedBuffer[expectedBuffer.length - 2] = -0x02; // 254 as a signed byte
 		expectedBuffer[expectedBuffer.length - 1] = -0x73; // 0x8D as a signed byte
-		assertTrue(Arrays.equals(expectedBuffer, id3v1tag.toBytes()));
+		assertArrayEquals(expectedBuffer, id3v1tag.toBytes());
 	}
 
     @Test

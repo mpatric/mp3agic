@@ -1,11 +1,11 @@
 package com.mpatric.mp3agic;
 
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.MpegFrame;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class MpegFrameTest extends TestCase {
+public class MpegFrameTest {
 
 	private static final byte BYTE_FF = -0x01;
 	private static final byte BYTE_FB = -0x05;
@@ -19,6 +19,7 @@ public class MpegFrameTest extends TestCase {
 	private static final byte BYTE_40 = 0x40;
 	private static final byte BYTE_02 = 0x02;
 
+    @Test
 	public void testBitwiseLeftShiftOperationsOnLong() {
 		long original = 0xFFFFFFFE; // 1111 1111 1111 1111 1111 1111 1111 1110
 		long expectedShl1 = 0xFFFFFFFC; // 1111 1111 1111 1111 1111 1111 1111 1100
@@ -28,7 +29,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(expectedShl28, original << 28);
 		assertEquals(expectedShl30, original << 30);
 	}
-	
+
+    @Test
 	public void testBitwiseRightShiftOperationsOnLong() {
 		long original = 0x80000000; // 1000 0000 0000 0000 0000 0000 0000 0000
 		long expectedShr1 = 0xC0000000; // 1100 0000 0000 0000 0000 0000 0000 0000
@@ -38,7 +40,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(expectedShr28, original >> 28);
 		assertEquals(expectedShr30, original >> 30);
 	}
-	
+
+    @Test
 	public void testShiftingByteIntoBiggerNumber() {
 		byte original = -0x02; // 1111 1110
 		long originalAsLong = (original & 0xFF);
@@ -53,7 +56,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(expectedShl23, originalAsLong << 23);
 	}
 
-	public void testShouldExtractValidFields() {
+    @Test
+	public void shouldExtractValidFields() {
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting();
 		assertEquals(0x000007FF, mpegFrame.extractField(0xFFE00000, 0xFFE00000L));
 		assertEquals(0x000007FF, mpegFrame.extractField(0xFFEFFFFF, 0xFFE00000L));
@@ -61,7 +65,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(0x00000055, mpegFrame.extractField(0xFFEFFF55, 0x000000FFL));
 	}
 
-	public void testShouldExtractValidMpegVersion1Header() throws InvalidDataException {
+    @Test
+	public void shouldExtractValidMpegVersion1Header() throws InvalidDataException {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
 		assertEquals(MpegFrame.MPEG_VERSION_1_0, mpegFrame.getVersion());
@@ -79,7 +84,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(523, mpegFrame.getLengthInBytes());
 	}
 
-	public void testShouldProcessValidMpegVersion2Header() throws InvalidDataException {
+    @Test
+	public void shouldProcessValidMpegVersion2Header() throws InvalidDataException {
 		byte[] frameData = {BYTE_FF, BYTE_F3, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
 		assertEquals(MpegFrame.MPEG_VERSION_2_0, mpegFrame.getVersion());
@@ -97,7 +103,8 @@ public class MpegFrameTest extends TestCase {
 		assertEquals(627, mpegFrame.getLengthInBytes());
 	}
 
-	public void testShouldThrowExceptionForInvalidFrameSync() {
+    @Test
+	public void shouldThrowExceptionForInvalidFrameSync() {
 		byte[] frameData = {BYTE_FF, BYTE_DB, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -106,8 +113,9 @@ public class MpegFrameTest extends TestCase {
 			assertEquals("Frame sync missing", e.getMessage()); 
 		}
 	}
-	
-	public void testShouldThrowExceptionForInvalidMpegVersion() {
+
+    @Test
+	public void shouldThrowExceptionForInvalidMpegVersion() {
 		byte[] frameData = {BYTE_FF, BYTE_EB, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -116,8 +124,9 @@ public class MpegFrameTest extends TestCase {
 			assertEquals("Invalid mpeg audio version in frame header", e.getMessage()); 
 		}
 	}
-	
-	public void testShouldThrowExceptionForInvalidMpegLayer() {
+
+    @Test
+	public void shouldThrowExceptionForInvalidMpegLayer() {
 		byte[] frameData = {BYTE_FF, BYTE_F9, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -127,7 +136,8 @@ public class MpegFrameTest extends TestCase {
 		}
 	}
 
-	public void testShouldThrowExceptionForFreeBitrate() {
+    @Test
+	public void shouldThrowExceptionForFreeBitrate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_02, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -136,8 +146,9 @@ public class MpegFrameTest extends TestCase {
 			assertEquals("Invalid bitrate in frame header", e.getMessage()); 
 		}
 	}
-	
-	public void testShouldThrowExceptionForInvalidBitrate() {
+
+    @Test
+	public void shouldThrowExceptionForInvalidBitrate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_F2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -147,7 +158,8 @@ public class MpegFrameTest extends TestCase {
 		}
 	}
 
-	public void testShouldThrowExceptionForInvalidSampleRate() {
+    @Test
+	public void shouldThrowExceptionForInvalidSampleRate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_AE, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
@@ -167,8 +179,5 @@ public class MpegFrameTest extends TestCase {
 			super(frameData);
 		}
 
-		public int extractField(int frameHeader, int bitMask) {
-			return super.extractField(frameHeader, bitMask);
-		}
 	}
 }
