@@ -466,6 +466,27 @@ public class ID3v2TagTest {
 		id3tag.clearAlbumImage();
 		assertNull(id3tag.getAlbumImage());
 	}
+    
+    @Test
+    public void shouldReadBPM() throws Exception {
+    	byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithbpm.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals(84, id3tag.getBPM());
+    }
+    
+    @Test
+    public void shouldReadFloatingPointBPM() throws Exception {
+    	byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithbpmfloat.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals(84, id3tag.getBPM());
+    }
+    
+    @Test
+    public void shouldReadFloatingPointBPMWithCommaDelimiter() throws Exception {
+    	byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithbpmfloatwithcomma.mp3");
+		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		assertEquals(84, id3tag.getBPM());
+    }
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
