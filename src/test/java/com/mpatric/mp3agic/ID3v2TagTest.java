@@ -488,6 +488,35 @@ public class ID3v2TagTest {
 		assertEquals(84, id3tag.getBPM());
     }
 
+    @Test
+    public void shouldReadWmpRating() throws Exception {
+        byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithwmprating.mp3");
+                ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+                assertEquals(3, id3tag.getWmpRating());
+    }
+
+    @Test
+    public void shouldWriteWmpRating() throws Exception {
+        ID3v2 id3tag = new ID3v23Tag();
+        setTagFields(id3tag);
+        final int expectedUnsetValue = -1;
+        assertEquals(expectedUnsetValue, id3tag.getWmpRating());
+        final int newValue = 4;
+        id3tag.setWmpRating(newValue);
+        assertEquals(newValue, id3tag.getWmpRating());
+    }
+
+    @Test
+    public void shouldIgnoreInvalidWmpRatingOnWrite() throws Exception {
+        ID3v2 id3tag = new ID3v23Tag();
+        setTagFields(id3tag);
+        final int originalValue = id3tag.getWmpRating();
+        final int invalidValue = 6;
+        id3tag.setWmpRating(invalidValue);
+        assertEquals(originalValue, id3tag.getWmpRating());
+    }
+
+
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
 		id3tag.setArtist("ARTIST");
