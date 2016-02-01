@@ -88,6 +88,9 @@ public interface ID3v2 extends ID3v1 {
 	void clearAlbumImage();
 	String getAlbumImageMimeType();
 	
+	int getWmpRating();
+	void setWmpRating(int rating);
+	
 	String getItunesComment();
 	void setItunesComment(String itunesComment);
 	

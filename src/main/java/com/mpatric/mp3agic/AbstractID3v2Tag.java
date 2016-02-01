@@ -40,6 +40,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_CHAPTER_TOC = "CTOC";
     public static final String ID_CHAPTER = "CHAP";
 	public static final String ID_GROUPING = "TIT1";
+	public static final String ID_RATING = "POPM";
 	public static final String ID_IMAGE_OBSELETE = "PIC";
 	public static final String ID_ENCODER_OBSELETE = "TEN";
 	public static final String ID_URL_OBSELETE = "WXX";
@@ -925,6 +926,26 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			invalidateDataLength();
 		}
 	}
+	
+	
+        @Override
+        public int getWmpRating() {
+                final ID3v2PopmFrameData frameData = extractPopmFrameData(ID_RATING);
+                if (frameData != null && frameData.getAddress() != null) {
+                        return frameData.getRating();
+                }
+                return -1;
+        }
+
+        @Override
+        public void setWmpRating(final int rating) {
+                if (rating >= 0 && rating < 6) {
+                        invalidateDataLength();
+                        final ID3v2PopmFrameData frameData = new ID3v2PopmFrameData(useFrameUnsynchronisation(), rating);
+                        final byte[] bytes = frameData.toBytes();
+                        addFrame(createFrame(ID_RATING, bytes), true);
+                }
+        }	
 
     private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
@@ -1048,6 +1069,21 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 		return null;
 	}
+	
+        private ID3v2PopmFrameData extractPopmFrameData(final String id) {
+            final ID3v2FrameSet frameSet = frameSets.get(id);
+            if (frameSet != null) {
+                    final ID3v2Frame frame = frameSet.getFrames().get(0);
+                    ID3v2PopmFrameData frameData;
+                    try {
+                            frameData = new ID3v2PopmFrameData(useFrameUnsynchronisation(), frame.getData());
+                            return frameData;
+                    } catch (final InvalidDataException e) {
+                            // do nothing
+                    }
+            }
+            return null;
+        }	
 
 	public boolean equals(Object obj) {
 		if (! (obj instanceof AbstractID3v2Tag)) return false;
