@@ -6,13 +6,15 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mp3File extends FileWrapper {
+public class Mp3File extends FileWrapper implements ID3v1Source {
 
 	private static final int DEFAULT_BUFFER_LENGTH = 65536;
 	private static final int MINIMUM_BUFFER_LENGTH = 40;
 	private static final int XING_MARKER_OFFSET_1 = 13;
 	private static final int XING_MARKER_OFFSET_2 = 21;
 	private static final int XING_MARKER_OFFSET_3 = 36;
+        
+        private static final ID3v1Source EMPTY_TAG = new EmptyID3v1Tag();
 
 	protected int bufferLength;
 	private int xingOffset = -1;
@@ -460,4 +462,98 @@ public class Mp3File extends FileWrapper {
 			randomAccessFile.close();
 		}
 	}
+
+    private ID3v1Source getAnyTag() {
+        return hasId3v2Tag() ? getId3v2Tag() : hasId3v1Tag() ? getId3v1Tag() : EMPTY_TAG;
+    }
+
+    @Override
+    public String getAlbum() {
+        return getAnyTag().getAlbum();
+    }
+
+    @Override
+    public String getArtist() {
+        return getAnyTag().getArtist();
+    }
+
+    @Override
+    public String getComment() {
+        return getAnyTag().getComment();
+    }
+
+    @Override
+    public int getGenre() {
+        return getAnyTag().getGenre();
+    }
+
+    @Override
+    public String getGenreDescription() {
+        return getAnyTag().getGenreDescription();
+    }
+
+    @Override
+    public String getTitle() {
+        return getAnyTag().getTitle();
+    }
+
+    @Override
+    public String getTrack() {
+        return getAnyTag().getTrack();
+    }
+
+    @Override
+    public String getYear() {
+        return getAnyTag().getYear();
+    }
+
+    private static class EmptyID3v1Tag implements ID3v1Source {
+
+        @Override
+        public String getAlbum() {
+            return null;
+        }
+
+        @Override
+        public String getArtist() {
+            return null;
+        }
+
+        @Override
+        public String getComment() {
+            return null;
+        }
+
+        @Override
+        public int getGenre() {
+            return 0;
+        }
+
+        @Override
+        public String getGenreDescription() {
+            return null;
+        }
+
+        @Override
+        public String getTitle() {
+            return null;
+        }
+
+        @Override
+        public String getTrack() {
+            return null;
+        }
+
+        @Override
+        public String getVersion() {
+            return null;
+        }
+
+        @Override
+        public String getYear() {
+            return null;
+        }
+
+    }
+
 }
