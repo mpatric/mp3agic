@@ -291,6 +291,82 @@ public class Mp3FileTest {
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
 	}
 
+        @Test
+	public void shouldReadId3v1IfNoId3v2Present() throws Exception {
+		final Mp3File mp3File = new Mp3File();
+                
+                final ID3v1 id3v1 = new ID3v1Tag();
+                id3v1.setAlbum("v1 album");
+                id3v1.setArtist("v1 artist");
+                id3v1.setComment("v1 comment");
+                id3v1.setGenre(1);
+                id3v1.setTitle("v1 title");
+                id3v1.setTrack("v1 track");
+                id3v1.setYear("v1 year");
+
+                mp3File.setId3v1Tag(id3v1);
+                mp3File.setId3v2Tag(null);
+
+                assertEquals(id3v1.getAlbum(), mp3File.getAlbum());
+                assertEquals(id3v1.getArtist(), mp3File.getArtist());
+                assertEquals(id3v1.getComment(), mp3File.getComment());
+                assertEquals(id3v1.getGenre(), mp3File.getGenre());
+                assertEquals(id3v1.getGenreDescription(), mp3File.getGenreDescription());
+                assertEquals(id3v1.getTitle(), mp3File.getTitle());
+                assertEquals(id3v1.getTrack(), mp3File.getTrack());
+                assertEquals(id3v1.getYear(), mp3File.getYear());
+        }
+
+        @Test
+	public void shouldReadId3v2IfPresent() throws Exception {
+		final Mp3File mp3File = new Mp3File();
+                
+                final ID3v1 id3v1 = new ID3v1Tag();
+                id3v1.setAlbum("v1 album");
+                id3v1.setArtist("v1 artist");
+                id3v1.setComment("v1 comment");
+                id3v1.setGenre(1);
+                id3v1.setTitle("v1 title");
+                id3v1.setTrack("v1 track");
+                id3v1.setYear("v1 year");
+
+                final ID3v2 id3v2 = new ID3v22Tag();
+                id3v2.setAlbum("v2 album");
+                id3v2.setArtist("v2 artist");
+                id3v2.setComment("v2 comment");
+                id3v2.setGenre(2);
+                id3v2.setTitle("v2 title");
+                id3v2.setTrack("v2 track");
+                id3v2.setYear("v2 year");
+
+                mp3File.setId3v1Tag(id3v1);
+                mp3File.setId3v2Tag(id3v2);
+
+                assertEquals(id3v2.getAlbum(), mp3File.getAlbum());
+                assertEquals(id3v2.getArtist(), mp3File.getArtist());
+                assertEquals(id3v2.getComment(), mp3File.getComment());
+                assertEquals(id3v2.getGenre(), mp3File.getGenre());
+                assertEquals(id3v2.getGenreDescription(), mp3File.getGenreDescription());
+                assertEquals(id3v2.getTitle(), mp3File.getTitle());
+                assertEquals(id3v2.getTrack(), mp3File.getTrack());
+                assertEquals(id3v2.getYear(), mp3File.getYear());
+        }
+
+        @Test
+	public void shouldReturnEmptyValuesIfNoTagsPresent() throws Exception {
+		final Mp3File mp3File = new Mp3File();
+                mp3File.setId3v1Tag(null);
+                mp3File.setId3v2Tag(null);
+                assertNull(mp3File.getAlbum());
+                assertNull(mp3File.getArtist());
+                assertNull(mp3File.getComment());
+                assertEquals(0, mp3File.getGenre());
+                assertNull(mp3File.getGenreDescription());
+                assertNull(mp3File.getTitle());
+                assertNull(mp3File.getTrack());
+                assertNull(mp3File.getYear());
+	}
+
 	private void testShouldRemoveId3v1AndId3v2AndCustomTags(Mp3File mp3File) throws Exception {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
