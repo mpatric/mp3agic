@@ -538,12 +538,15 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		if (frameData == null || frameData.getText() == null) {
 			return -1;
 		}
-		String bpmStr = frameData.getText().toString();
+		String bpmStr = frameData.getText().toString().trim();
+                if (bpmStr.isEmpty()) {
+                    return -1;
+                }
 		try {
 			return Integer.parseInt(bpmStr);
 		} catch (NumberFormatException e) {
 			// try float as some utilities add BPM like 67.8, or 67,8
-			return (int)Float.parseFloat(bpmStr.trim().replaceAll(",","."));
+			return (int)Float.parseFloat(bpmStr.replaceAll(",","."));
 		}
 	}
 
