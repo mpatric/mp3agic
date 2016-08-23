@@ -4,40 +4,36 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class FileMediaSource implements MediaSource {
-	
-	protected File file;
-	protected String filename;
-	protected long length;
-	protected long lastModified;
+public class FileMediaSource extends AbstractMediaSource {
 
-	protected FileMediaSource() {
-	}
+    protected File file;
 
-	public FileMediaSource(String filename) throws IOException {
-		this.filename = filename;
-		init();
-		length = file.length();
-		lastModified = file.lastModified();
-	}
+    protected long length;
 
-	private void init() throws IOException {
-		file = new File(filename);
-		if (!file.exists()) throw new FileNotFoundException("File not found " + filename);
-		if (!file.canRead()) throw new IOException("File not readable");
-	}
-	
-	public String getFilename() {
-		return filename;
-	}
+    protected long lastModified;
 
-	public long getLength() {
-		return length;
-	}
+    public FileMediaSource(String filename) throws IOException {
+        this.filename = filename;
+        init();
+        length = file.length();
+        lastModified = file.lastModified();
+    }
 
-	public long getLastModified() {
-		return lastModified;
-	}
+    private void init() throws IOException {
+        file = new File(filename);
+        if (!file.exists())
+            throw new FileNotFoundException("File not found " + filename);
+        if (!file.canRead())
+            throw new IOException("File not readable");
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
 
     @Override
     public RandomAccessMediaSource open() throws FileNotFoundException {

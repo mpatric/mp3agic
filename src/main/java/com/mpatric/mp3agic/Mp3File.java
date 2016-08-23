@@ -57,9 +57,9 @@ public class Mp3File {
 
     private boolean scanFile;
 
-    private MediaSource mediaSource;
+    protected MediaSource mediaSource;
 
-    protected Mp3File() {
+    Mp3File() {
     }
 
     public Mp3File(String filename) throws IOException, UnsupportedTagException, InvalidDataException {
@@ -76,8 +76,9 @@ public class Mp3File {
 
     public Mp3File(String filename, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
         this.mediaSource = new FileMediaSource(filename);
-        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1)
+        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) {
             throw new IllegalArgumentException("Buffer too small");
+        }
         this.bufferLength = bufferLength;
         this.scanFile = scanFile;
         init();
@@ -97,8 +98,9 @@ public class Mp3File {
 
     public Mp3File(byte[] mediaContent, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
         this.mediaSource = new ByteArrayMediaSource(mediaContent);
-        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1)
+        if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) {
             throw new IllegalArgumentException("Buffer too small");
+        }
         this.bufferLength = bufferLength;
         this.scanFile = scanFile;
         init();
@@ -109,9 +111,6 @@ public class Mp3File {
         try {
             initId3v1Tag(file);
             scanFile(file);
-            if (startOffset < 0) {
-                throw new InvalidDataException("No mpegs frames found");
-            }
             initId3v2Tag(file);
             if (scanFile) {
                 initCustomTag(file);
@@ -175,8 +174,9 @@ public class Mp3File {
                             bitrates.clear();
                             lastBlock = false;
                             fileOffset = lastOffset + 1;
-                            if (fileOffset == 0)
+                            if (fileOffset == 0) {
                                 throw new InvalidDataException("Valid start of mpeg frames not found", e);
+                            }
                             file.seek(fileOffset);
                             break;
                         }
@@ -307,10 +307,14 @@ public class Mp3File {
             id3v2Tag = null;
         } else {
             int bufferLength;
-            if (hasXingFrame())
+            if (hasXingFrame()) {
                 bufferLength = xingOffset;
-            else
+            } else {
                 bufferLength = startOffset;
+                if (startOffset < 0) {
+                    throw new InvalidDataException("No mpegs frames found");
+                }
+            }
             byte[] bytes = new byte[bufferLength];
             file.seek(0);
             int bytesRead = file.read(bytes, 0, bufferLength);
@@ -334,8 +338,9 @@ public class Mp3File {
             customTag = new byte[bufferLength];
             file.seek(endOffset + 1);
             int bytesRead = file.read(customTag, 0, bufferLength);
-            if (bytesRead < bufferLength)
+            if (bytesRead < bufferLength) {
                 throw new IOException("Not enough bytes read");
+            }
         }
     }
 
@@ -476,8 +481,18 @@ public class Mp3File {
         this.customTag = null;
     }
 
+    /**
+     * Sets a file name for the source of media content.
+     * 
+     * @param sourceFileName
+     */
+    public void setSourceFileName(String sourceFileName) {
+        mediaSource.setFilename(sourceFileName);
+    }
+
     public void save(String newFilename) throws IOException, NotSupportedException {
-        if (mediaSource.getFilename().compareToIgnoreCase(newFilename) == 0) {
+        // A new non-file based media source may not have a source file name set
+        if (mediaSource instanceof FileMediaSource && mediaSource.getFilename().compareToIgnoreCase(newFilename) == 0) {
             throw new IllegalArgumentException("Save filename same as source filename");
         }
         RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
@@ -523,4 +538,5 @@ public class Mp3File {
             file.close();
         }
     }
+
 }

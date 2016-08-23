@@ -2,7 +2,8 @@ package com.mpatric.mp3agic;
 
 import java.io.FileNotFoundException;
 
-public class ByteArrayMediaSource implements MediaSource {
+public class ByteArrayMediaSource extends AbstractMediaSource {
+
     private final byte[] mediaContent;
 
     public ByteArrayMediaSource(byte[] mediaContent) {
