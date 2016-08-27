@@ -1020,12 +1020,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
     }
 
     public void setText(String text) {
+        setText(null, text);
+    }
+
+    public void setText(String description, String text) {
         if (text != null && text.length() > 0) {
             invalidateDataLength();
-            ID3v2UserTextFrameData frameData = new ID3v2UserTextFrameData(useFrameUnsynchronisation(), null, new EncodedText(text));
-            addFrame(createFrame(ID_TEXT, frameData.toBytes()), true);
+            ID3v2UserTextFrameData frameData;
+            if (description != null && description.length() > 0) {
+                frameData = new ID3v2UserTextFrameData(useFrameUnsynchronisation(), new EncodedText(description), new EncodedText(text));
+            } else {
+                frameData = new ID3v2UserTextFrameData(useFrameUnsynchronisation(), null, new EncodedText(text));
+            }
+            // set replace to false since multiple TXXX are allowed
+            addFrame(createFrame(ID_TEXT, frameData.toBytes()), false);
         }
-    }    
+    }
 
     public List<String> getUrls() {
         List<ID3v2UrlFrameData> frameData = extractUrlFrameData(obseleteFormat ? ID_URL_OBSELETE : ID_URL);
@@ -1048,10 +1058,20 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
     }
 
     public void setUrl(String url) {
+        setUrl(null, url);
+    }
+
+    public void setUrl(String description, String url) {        
         if (url != null && url.length() > 0) {
             invalidateDataLength();
-            ID3v2UrlFrameData frameData = new ID3v2UrlFrameData(useFrameUnsynchronisation(), null, url);
-            addFrame(createFrame(ID_URL, frameData.toBytes()), true);
+            ID3v2UrlFrameData frameData;
+            if (description != null && description.length() > 0) {
+                frameData = new ID3v2UrlFrameData(useFrameUnsynchronisation(), new EncodedText(description), url);
+            } else {
+                frameData = new ID3v2UrlFrameData(useFrameUnsynchronisation(), null, url);
+            }
+            // set replace to false since multiple WXXX are allowed
+            addFrame(createFrame(ID_URL, frameData.toBytes()), false);
         }
     }
 
