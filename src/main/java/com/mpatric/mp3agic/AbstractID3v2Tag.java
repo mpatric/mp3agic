@@ -14,6 +14,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 
     public static final String ID_ENCODER = "TENC";
 
+    // User defined URL link frame
     public static final String ID_URL = "WXXX";
 
     public static final String ID_ARTIST_URL = "WOAR";
@@ -31,6 +32,9 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
     public static final String ID_PAYMENT_URL = "WPAY";
 
     public static final String ID_PUBLISHER_URL = "WPUB";
+
+    // User defined text information frame
+    public static final String ID_TEXT = "TXXX";
 
     public static final String ID_COPYRIGHT = "TCOP";
 
@@ -995,6 +999,34 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         }
     }
 
+    public List<String> getTexts() {
+        List<ID3v2UserTextFrameData> frameData = extractUserTextFrameData(ID_TEXT);
+        if (frameData != null) {
+            List<String> urls = new ArrayList<>(frameData.size());
+            for (ID3v2UserTextFrameData frame : frameData) {
+                urls.add(frame.getText().toString());
+            }
+            return urls;
+        }
+        return null;
+    }
+
+    public String getText() {
+        List<ID3v2UserTextFrameData> frameData = extractUserTextFrameData(ID_TEXT);
+        if (frameData != null) {
+            return frameData.get(0).getText().toString();
+        }
+        return null;
+    }
+
+    public void setText(String text) {
+        if (text != null && text.length() > 0) {
+            invalidateDataLength();
+            ID3v2UserTextFrameData frameData = new ID3v2UserTextFrameData(useFrameUnsynchronisation(), null, new EncodedText(text));
+            addFrame(createFrame(ID_TEXT, frameData.toBytes()), true);
+        }
+    }    
+
     public List<String> getUrls() {
         List<ID3v2UrlFrameData> frameData = extractUrlFrameData(obseleteFormat ? ID_URL_OBSELETE : ID_URL);
         if (frameData != null) {
@@ -1181,6 +1213,12 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
         return null;
     }
 
+    /**
+     * Extracts text information frame by id (T000 - TZZZ, excluding TXXX).
+     * 
+     * @param id frame id
+     * @return Text information frame
+     */
     protected ID3v2TextFrameData extractTextFrameData(String id) {
         ID3v2FrameSet frameSet = frameSets.get(id);
         if (frameSet != null) {
@@ -1192,6 +1230,31 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
             } catch (InvalidDataException e) {
                 // do nothing
             }
+        }
+        return null;
+    }
+
+    /**
+     * Extracts user defined text information frames by id (TXXX).
+     * 
+     * @param id frame id
+     * @return User defined text information frames
+     */
+    private ArrayList<ID3v2UserTextFrameData> extractUserTextFrameData(String id) {
+        ID3v2FrameSet frameSet = frameSets.get(id);
+        if (frameSet != null) {
+            List<ID3v2Frame> frames = frameSet.getFrames();
+            ArrayList<ID3v2UserTextFrameData> textData = new ArrayList<>(frames.size());
+            for (ID3v2Frame frame : frames) {
+                ID3v2UserTextFrameData frameData;
+                try {
+                    frameData = new ID3v2UserTextFrameData(useFrameUnsynchronisation(), frame.getData());
+                    textData.add(frameData);
+                } catch (InvalidDataException e) {
+                    // do nothing
+                }
+            }
+            return textData;
         }
         return null;
     }
