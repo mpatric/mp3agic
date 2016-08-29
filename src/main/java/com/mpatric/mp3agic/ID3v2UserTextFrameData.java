@@ -21,7 +21,7 @@ package com.mpatric.mp3agic;
  */
 public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
 
-    protected EncodedText text;
+    protected EncodedText value;
 
     protected EncodedText description;
     
@@ -29,10 +29,10 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
         super(unsynchronisation);
     }
     
-    public ID3v2UserTextFrameData(boolean unsynchronisation, EncodedText description, EncodedText text) {
+    public ID3v2UserTextFrameData(boolean unsynchronisation, EncodedText description, EncodedText value) {
         super(unsynchronisation);
         this.description = description;
-        this.text = text;
+        this.value = value;
     }
 
     public ID3v2UserTextFrameData(boolean unsynchronisation, byte[] bytes) throws InvalidDataException {
@@ -49,8 +49,7 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
             description = new EncodedText(bytes[0], "");
             marker = 1;
         }
-        text = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, marker - 1));
-        marker += text.getTerminator().length;
+        value = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, bytes.length - marker));
     }
     
     protected byte[] packFrameData() {
@@ -66,23 +65,27 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
             BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
             marker += descriptionBytes.length;
         } else {
+            // indicates no description
             bytes[marker++] = 0;
         }
-        if (text != null) {
-            byte[] textBytes = text.toBytes(true, true);
+        if (value != null) {
+            byte[] textBytes = value.toBytes(true, false);
             BufferTools.copyIntoByteBuffer(textBytes, 0, textBytes.length, bytes, marker);
             marker += textBytes.length;
-        } else {
-            bytes[marker++] = 0;
         }
         return bytes;
     }
     
     protected int getLength() {
         int length = 1;
-        if (description != null) length += description.toBytes(true, true).length;
-        else length++;
-        if (text != null) length += text.toBytes(true, true).length;
+        if (description != null) {
+            length += description.toBytes(true, true).length;
+        } else {
+            length++;
+        }
+        if (value != null) {
+            length += value.toBytes(true, false).length;
+        }
         return length;
     }
 
@@ -94,12 +97,12 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
         this.description = description;
     }
     
-    public EncodedText getText() {
-        return text;
+    public EncodedText getValue() {
+        return value;
     }
 
-    public void setText(EncodedText text) {
-        this.text = text;
+    public void setValue(EncodedText value) {
+        this.value = value;
     }
     
     @Override
@@ -107,7 +110,7 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }
 
@@ -125,10 +128,10 @@ public class ID3v2UserTextFrameData extends AbstractID3v2FrameData {
                 return false;
         } else if (!description.equals(other.description))
             return false;
-        if (text == null) {
-            if (other.text != null)
+        if (value == null) {
+            if (other.value != null)
                 return false;
-        } else if (!text.equals(other.text))
+        } else if (!value.equals(other.value))
             return false;
         return true;
     }

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class TestHelper {
+
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
@@ -48,6 +49,14 @@ public class TestHelper {
         for (int i = 0; i < buffer.length; i++) {
             if (buffer[i] == 0x20) {
                 buffer[i] = 0x00;
+            }
+        }
+    }
+
+    public static void replaceNullsWithSpaces(byte[] buffer) {
+        for (int i = 0; i < buffer.length; i++) {
+            if (buffer[i] == 0x00) {
+                buffer[i] = 0x20;
             }
         }
     }

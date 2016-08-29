@@ -1002,11 +1002,11 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
     public List<String> getTexts() {
         List<ID3v2UserTextFrameData> frameData = extractUserTextFrameData(ID_TEXT);
         if (frameData != null) {
-            List<String> urls = new ArrayList<>(frameData.size());
+            List<String> texts = new ArrayList<>(frameData.size());
             for (ID3v2UserTextFrameData frame : frameData) {
-                urls.add(frame.getText().toString());
+                texts.add(frame.getValue().toString());
             }
-            return urls;
+            return texts;
         }
         return null;
     }
@@ -1014,7 +1014,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
     public String getText() {
         List<ID3v2UserTextFrameData> frameData = extractUserTextFrameData(ID_TEXT);
         if (frameData != null) {
-            return frameData.get(0).getText().toString();
+            return frameData.get(0).getValue().toString();
         }
         return null;
     }

@@ -1,9 +1,9 @@
 package com.mpatric.mp3agic;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class ID3v2UrlFrameDataTest {
 
@@ -49,4 +49,5 @@ public class ID3v2UrlFrameDataTest {
         ID3v2UrlFrameData frameDataCopy = new ID3v2UrlFrameData(false, bytes);
         assertEquals(frameData, frameDataCopy);
     }
+
 }
