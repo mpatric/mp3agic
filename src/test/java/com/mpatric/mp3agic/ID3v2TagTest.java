@@ -553,6 +553,7 @@ public class ID3v2TagTest {
 			super(buffer);
 		}
 		
+		@Override
 		protected int unpackFrames(byte[] buffer, int offset, int framesLength) {
 			return offset;
 		}
@@ -568,6 +569,7 @@ public class ID3v2TagTest {
 			super(buffer);
 		}
 		
+		@Override
 		protected int unpackFrames(byte[] buffer, int offset, int framesLength) {
 			return offset;
 		}
@@ -579,6 +581,7 @@ public class ID3v2TagTest {
 			super(buffer);
 		}
 		
+		@Override
 		protected int unpackFrames(byte[] buffer, int offset, int framesLength) {
 			return offset;
 		}

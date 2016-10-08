@@ -10,7 +10,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
     protected int endTime;
     protected int startOffset;
     protected int endOffset;
-    protected ArrayList<ID3v2Frame> subframes = new ArrayList<ID3v2Frame>();
+    protected ArrayList<ID3v2Frame> subframes = new ArrayList<>();
 
     public ID3v2ChapterFrameData(boolean unsynchronisation) {
         super(unsynchronisation);
@@ -32,6 +32,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
         synchroniseAndUnpackFrameData(bytes);
     }
 
+    @Override
     protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
         ByteBuffer bb = ByteBuffer.wrap(bytes);
         
@@ -55,6 +56,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
         subframes.add(new ID3v2Frame(id, frame.toBytes()));
     }
 
+    @Override
     protected byte[] packFrameData() {
         ByteBuffer bb = ByteBuffer.allocate(getLength());
         bb.put(id.getBytes());

@@ -12,7 +12,7 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 	protected String address = "";
 	protected int rating = -1;
 
-	private static final Map<Byte, Integer> byteToRating = new HashMap<Byte, Integer>(5);
+	private static final Map<Byte, Integer> byteToRating = new HashMap<>(5);
 	private static final byte[] wmp9encodedRatings = { (byte) 0x00, (byte) 0x01, (byte) 0x40, (byte) 0x80, (byte) 0xC4,
 			(byte) 0xFF };
 

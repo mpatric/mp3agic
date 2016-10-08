@@ -22,6 +22,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 	
+	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 1, bytes[0]);
 		if (marker >= 0) {
@@ -38,6 +39,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		}
 	}
 	
+	@Override
 	protected byte[] packFrameData() {
 		byte[] bytes = new byte[getLength()];
 		if (description != null) bytes[0] = description.getTextEncoding();
@@ -59,6 +61,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		return bytes;
 	}
 	
+	@Override
 	protected int getLength() {
 		int length = 1;
 		if (description != null) length += description.toBytes(true, true).length;
