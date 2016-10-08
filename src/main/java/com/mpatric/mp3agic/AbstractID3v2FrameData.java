@@ -8,7 +8,7 @@ public abstract class AbstractID3v2FrameData {
 		this.unsynchronisation = unsynchronisation;
 	}
 	
-	protected void synchroniseAndUnpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected final void synchroniseAndUnpackFrameData(byte[] bytes) throws InvalidDataException {
 		if (unsynchronisation && BufferTools.sizeSynchronisationWouldSubtract(bytes) > 0) {
 			byte[] synchronisedBytes = BufferTools.synchroniseBuffer(bytes);
 			unpackFrameData(synchronisedBytes);

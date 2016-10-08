@@ -10,7 +10,7 @@ public class ID3v2FrameSet {
 	
 	public ID3v2FrameSet(String id) {
 		this.id = id;
-		frames = new ArrayList<ID3v2Frame>();
+		frames = new ArrayList<>();
 	}
 
 	public String getId() {

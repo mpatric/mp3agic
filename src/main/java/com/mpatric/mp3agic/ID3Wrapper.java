@@ -2,8 +2,8 @@ package com.mpatric.mp3agic;
 
 public class ID3Wrapper {
 
-	private ID3v1 id3v1Tag;
-	private ID3v2 id3v2Tag;
+	private final ID3v1 id3v1Tag;
+	private final ID3v2 id3v2Tag;
 
 	public ID3Wrapper(ID3v1 id3v1Tag, ID3v2 id3v2Tag) {
 		this.id3v1Tag = id3v1Tag;

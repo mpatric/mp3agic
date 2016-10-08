@@ -70,7 +70,7 @@ public class BufferTools {
 	
 	public static String padStringRight(String s, int length, char padWith) {
 		if (s.length() >= length) return s;
-		StringBuffer stringBuffer = new StringBuffer(s);
+		StringBuilder stringBuffer = new StringBuilder(s);
 		while (stringBuffer.length() < length) {
 			stringBuffer.append(padWith);
 		}
@@ -216,10 +216,10 @@ public class BufferTools {
 	}
 
 	public static String substitute(String s, String replaceThis, String withThis) {
-		if (replaceThis.length() < 1 || s.indexOf(replaceThis) < 0) {
+		if (replaceThis.length() < 1 || !s.contains(replaceThis)) {
 			return s;
 		}
-		StringBuffer newString = new StringBuffer();
+		StringBuilder newString = new StringBuilder();
 		int lastPosition = 0;
 		int position = 0;
 		while ((position = s.indexOf(replaceThis, position)) >= 0) {
@@ -239,7 +239,7 @@ public class BufferTools {
 	}
 
 	public static String asciiOnly(String s) {
-		StringBuffer newString = new StringBuffer();
+		StringBuilder newString = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char ch = s.charAt(i);
 			if (ch < 32 || ch > 126) {

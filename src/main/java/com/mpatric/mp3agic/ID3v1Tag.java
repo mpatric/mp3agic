@@ -73,6 +73,7 @@ public class ID3v1Tag implements ID3v1 {
 		}
 	}
 	
+	@Override
 	public byte[] toBytes() {
 		byte[] bytes = new byte[TAG_LENGTH];
 		packTag(bytes);
@@ -104,7 +105,7 @@ public class ID3v1Tag implements ID3v1 {
 			packField(bytes, comment, COMMENT_LENGTH_V1_1, COMMENT_OFFSET);
 			String trackTemp = numericsOnly(track);
 			if (trackTemp.length() > 0) {			
-				int trackInt = Integer.parseInt(trackTemp.toString());
+				int trackInt = Integer.parseInt(trackTemp);
 				if (trackInt < 128) {
 					bytes[TRACK_OFFSET] = (byte)trackInt;
 				} else {
@@ -124,7 +125,7 @@ public class ID3v1Tag implements ID3v1 {
 	}
 	
 	private String numericsOnly(String s) {
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder stringBuffer = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			char ch = s.charAt(i);
 			if (ch >= '0' && ch <= '9') {
@@ -136,6 +137,7 @@ public class ID3v1Tag implements ID3v1 {
 		return stringBuffer.toString();
 	}
 	
+	@Override
 	public String getVersion() {
 		if (track == null) {
 			return VERSION_0;
@@ -144,54 +146,67 @@ public class ID3v1Tag implements ID3v1 {
 		}
 	}
 
+	@Override
 	public String getTrack() {
 		return track;
 	}
 
+	@Override
 	public void setTrack(String track) {
 		this.track = track;
 	}
 
+	@Override
 	public String getArtist() {
 		return artist;
 	}
 
+	@Override
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
+	@Override
 	public String getAlbum() {
 		return album;
 	}
 
+	@Override
 	public void setAlbum(String album) {
 		this.album = album;
 	}
 
+	@Override
 	public String getYear() {
 		return year;
 	}
 
+	@Override
 	public void setYear(String year) {
 		this.year = year;
 	}
 	
+	@Override
 	public int getGenre() {
 		return genre;
 	}
 
+	@Override
 	public void setGenre(int genre) {
 		this.genre = genre;
 	}
 
+	@Override
 	public String getGenreDescription() {
 		try {
 			return ID3v1Genres.GENRES[genre];
@@ -200,10 +215,12 @@ public class ID3v1Tag implements ID3v1 {
 		}
 	}
 
+	@Override
 	public String getComment() {
 		return comment;
 	}
 
+	@Override
 	public void setComment(String comment) {
 		this.comment = comment;
 	}

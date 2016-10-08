@@ -26,6 +26,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		synchroniseAndUnpackFrameData(bytes);
 	}
 	
+	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
@@ -43,6 +44,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		comment = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, bytes.length - marker));
 	}
 
+	@Override
 	protected byte[] packFrameData() {
 		byte[] bytes = new byte[getLength()];
 		if (comment != null) bytes[0] = comment.getTextEncoding();
@@ -74,6 +76,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		return bytes;
 	}
 
+	@Override
 	protected int getLength() {
 		int length = 4;
 		if (description != null) length += description.toBytes(true, true).length;

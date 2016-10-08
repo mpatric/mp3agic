@@ -15,6 +15,7 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		super(buffer);
 	}
 	
+	@Override
 	protected void unpackFlags(byte[] buffer) {
 		unsynchronisation = BufferTools.checkBit(buffer[FLAGS_OFFSET], UNSYNCHRONISATION_BIT);
 		extendedHeader = BufferTools.checkBit(buffer[FLAGS_OFFSET], EXTENDED_HEADER_BIT);
@@ -22,6 +23,7 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		footer = BufferTools.checkBit(buffer[FLAGS_OFFSET], FOOTER_BIT);
 	}
 	
+	@Override
 	protected void packFlags(byte[] bytes, int offset) {
 		bytes[offset + FLAGS_OFFSET] = BufferTools.setBit(bytes[offset + FLAGS_OFFSET], UNSYNCHRONISATION_BIT, unsynchronisation);
 		bytes[offset + FLAGS_OFFSET] = BufferTools.setBit(bytes[offset + FLAGS_OFFSET], EXTENDED_HEADER_BIT, extendedHeader);
@@ -29,14 +31,17 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		bytes[offset + FLAGS_OFFSET] = BufferTools.setBit(bytes[offset + FLAGS_OFFSET], FOOTER_BIT, footer);
 	}
 	
+	@Override
 	protected boolean useFrameUnsynchronisation() {
 		return unsynchronisation;
 	}
 	
+	@Override
 	protected ID3v2Frame createFrame(byte[] buffer, int currentOffset) throws InvalidDataException {
 		return new ID3v24Frame(buffer, currentOffset);
 	}
 	
+	@Override
 	protected ID3v2Frame createFrame(String id, byte[] data) {
 		return new ID3v24Frame(id, data);
 	}
