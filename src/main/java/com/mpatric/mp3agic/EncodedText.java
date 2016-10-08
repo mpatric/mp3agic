@@ -193,6 +193,7 @@ public class EncodedText {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		try {
 			return bytesToString(value, characterSetForTextEncoding(textEncoding));

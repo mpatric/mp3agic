@@ -18,7 +18,7 @@ public class BaseException extends Exception {
 	
 	public String getDetailedMessage() {
 		Throwable t = this;
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		while (true) {
 			s.append('[');
 			s.append(t.getClass().getName());

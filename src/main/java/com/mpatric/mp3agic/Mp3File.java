@@ -19,7 +19,7 @@ public class Mp3File extends FileWrapper {
 	private int startOffset = -1;
 	private int endOffset = -1;
 	private int frameCount = 0;
-	private Map<Integer, MutableInteger> bitrates = new HashMap<Integer, MutableInteger>();
+	private Map<Integer, MutableInteger> bitrates = new HashMap<>();
 	private int xingBitrate;
 	private double bitrate = 0;
 	private String channelMode;
@@ -74,9 +74,7 @@ public class Mp3File extends FileWrapper {
 		this.bufferLength = bufferLength;
 		this.scanFile = scanFile;
 		
-		RandomAccessFile randomAccessFile = new RandomAccessFile(file.getPath(), "r");
-		
-		try {
+		try (RandomAccessFile randomAccessFile = new RandomAccessFile(file.getPath(), "r")) {
 			initId3v1Tag(randomAccessFile);
 			scanFile(randomAccessFile);
 			if (startOffset < 0) {
@@ -86,8 +84,6 @@ public class Mp3File extends FileWrapper {
 			if (scanFile) {
 				initCustomTag(randomAccessFile);
 			}
-		} finally {
-			randomAccessFile.close();
 		}
 	}
 	
@@ -100,11 +96,9 @@ public class Mp3File extends FileWrapper {
 				try {
 					ID3v2TagFactory.sanityCheckTag(bytes);
 					return AbstractID3v2Tag.HEADER_LENGTH + BufferTools.unpackSynchsafeInteger(bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 1], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 2], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 3]);
-				} catch (NoSuchTagException e) {
+				} catch (NoSuchTagException | UnsupportedTagException e) {
 					// do nothing
-				} catch (UnsupportedTagException e) {
-					// do nothing
-				}
+				}				
 			}
 		} catch (IOException e) {
 			// do nothing
@@ -420,8 +414,7 @@ public class Mp3File extends FileWrapper {
 		if (file.compareTo(new File(newFilename)) == 0) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
-		RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw");
-		try {
+		try (RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw")) {
 			if (hasId3v2Tag()) {
 				saveFile.write(id3v2Tag.toBytes());
 			}
@@ -432,8 +425,6 @@ public class Mp3File extends FileWrapper {
 			if (hasId3v1Tag()) {
 				saveFile.write(id3v1Tag.toBytes());
 			}
-		} finally {
-			saveFile.close();
 		}
 	}
 
