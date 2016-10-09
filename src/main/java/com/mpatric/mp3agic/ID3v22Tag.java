@@ -17,11 +17,13 @@ public class ID3v22Tag extends AbstractID3v2Tag {
 		super(buffer, obseleteFormat);
 	}
 	
+	@Override
 	protected void unpackFlags(byte[] bytes) {
 		unsynchronisation = BufferTools.checkBit(bytes[FLAGS_OFFSET], UNSYNCHRONISATION_BIT);
 		compression = BufferTools.checkBit(bytes[FLAGS_OFFSET], COMPRESSION_BIT);
 	}
 
+	@Override
 	protected void packFlags(byte[] bytes, int offset) {
 		bytes[offset + FLAGS_OFFSET] = BufferTools.setBit(bytes[offset + FLAGS_OFFSET], UNSYNCHRONISATION_BIT, unsynchronisation);
 		bytes[offset + FLAGS_OFFSET] = BufferTools.setBit(bytes[offset + FLAGS_OFFSET], COMPRESSION_BIT, compression);

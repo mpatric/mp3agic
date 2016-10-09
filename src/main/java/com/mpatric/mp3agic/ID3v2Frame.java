@@ -42,7 +42,7 @@ public class ID3v2Frame {
 		dataLength = data.length;
 	}
 
-	protected void unpackFrame(byte[] buffer, int offset) throws InvalidDataException {
+	protected final void unpackFrame(byte[] buffer, int offset) throws InvalidDataException {
 		int dataOffset = unpackHeader(buffer, offset);
 		sanityCheckUnpackedHeader();
 		data = BufferTools.copyBuffer(buffer, dataOffset, dataLength);
