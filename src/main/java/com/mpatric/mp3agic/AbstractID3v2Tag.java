@@ -62,6 +62,28 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_PART_OF_SET_OBSELETE = "TPA";
 	public static final String ID_COMPILATION_OBSELETE = "TCP";
 	public static final String ID_GROUPING_OBSELETE = "TT1";
+
+	public static final byte PICTURETYPE_OTHER = 0x0;
+	public static final byte PICTURETYPE_32PXICON = 0x1;
+	public static final byte PICTURETYPE_OTHERICON = 0x2;
+	public static final byte PICTURETYPE_FRONTCOVER = 0x3;
+	public static final byte PICTURETYPE_BACKCOVER = 0x4;
+	public static final byte PICTURETYPE_LEAFLET = 0x5;
+	public static final byte PICTURETYPE_MEDIA = 0x6;
+	public static final byte PICTURETYPE_LEADARTIST = 0x7;
+	public static final byte PICTURETYPE_ARTIST = 0x8;
+	public static final byte PICTURETYPE_CONDUCTOR = 0x9;
+	public static final byte PICTURETYPE_BAND = 0xA;
+	public static final byte PICTURETYPE_COMPOSER = 0xB;
+	public static final byte PICTURETYPE_LYRICIST = 0xC;
+	public static final byte PICTURETYPE_RECORDINGLOCATION = 0xD;
+	public static final byte PICTURETYPE_DURING_RECORDING = 0xE;
+	public static final byte PICTURETYPE_DURING_PERFORMANCE = 0xF;
+	public static final byte PICTURETYPE_SCREEN_CAPTURE = 0x10;
+	public static final byte PICTURETYPE_ILLUSTRATION = 0x12;
+	public static final byte PICTURETYPE_BAND_LOGOTYPE = 0x13;
+	public static final byte PICTURETYPE_PUBLISHER_LOGOTYPE = 0x14;
+
 	
 	protected static final String TAG = "ID3";
 	protected static final String FOOTER_TAG = "3DI";
@@ -982,9 +1004,17 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 
 	@Override
 	public void setAlbumImage(byte[] albumImage, String mimeType) {
-		if (albumImage != null && albumImage.length > 0 && mimeType != null && mimeType.length() > 0) { 
+		setAlbumImage(albumImage, mimeType, (byte) 0, null);
+	}
+
+	@Override
+	public void setAlbumImage(byte[] albumImage, String mimeType, byte imageType, String imageDescription) {
+		if (albumImage != null && albumImage.length > 0 && mimeType != null && mimeType.length() > 0) {
 			invalidateDataLength();
-			ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(useFrameUnsynchronisation(),  mimeType, (byte)0, null, albumImage); 
+			ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(
+					useFrameUnsynchronisation(),  mimeType, imageType,
+					null == imageDescription ? null : new EncodedText(imageDescription),
+					albumImage);
 			addFrame(createFrame(ID_IMAGE, frameData.toBytes()), true);
 		}
 	}

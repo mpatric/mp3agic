@@ -85,6 +85,7 @@ public interface ID3v2 extends ID3v1 {
 	
 	byte[] getAlbumImage();
 	void setAlbumImage(byte[] albumImage, String mimeType);
+	void setAlbumImage(byte[] albumImage, String mimeType, byte imageType, String imageDescription);
 	void clearAlbumImage();
 	String getAlbumImageMimeType();
 	
