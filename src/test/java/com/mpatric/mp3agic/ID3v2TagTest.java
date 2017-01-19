@@ -84,7 +84,6 @@ public class ID3v2TagTest {
 		assertEquals(1, (id3v2tag.getFrameSets().get("TOPE")).getFrames().size());
 		assertEquals(1, (id3v2tag.getFrameSets().get("TCOM")).getFrames().size());
 		assertEquals(2, (id3v2tag.getFrameSets().get("COMM")).getFrames().size());
-		assertEquals(1, (id3v2tag.getFrameSets().get("USLT")).getFrames().size());
 		assertEquals(1, (id3v2tag.getFrameSets().get("TPE1")).getFrames().size());
 		assertEquals(1, (id3v2tag.getFrameSets().get("TALB")).getFrames().size());
 		assertEquals(1, (id3v2tag.getFrameSets().get("TRCK")).getFrames().size());
