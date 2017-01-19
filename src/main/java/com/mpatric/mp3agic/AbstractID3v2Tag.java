@@ -1,11 +1,7 @@
 package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class AbstractID3v2Tag implements ID3v2 {
 
@@ -26,6 +22,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final String ID_COMPOSER = "TCOM";
 	public static final String ID_PUBLISHER = "TPUB";
 	public static final String ID_COMMENT = "COMM";
+	public static final String ID_TEXT_LYRICS = "USLT";
 	public static final String ID_GENRE = "TCON";
 	public static final String ID_YEAR = "TYER";
 	public static final String ID_DATE = "TDAT";
@@ -698,6 +695,48 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			addFrame(createFrame(ID_COMMENT, frameData.toBytes()), true);
 		}
 	}
+        
+        protected ID3v2CommentFrameData extractLyricsFrameData(String id)
+        {
+            ID3v2FrameSet frameSet = frameSets.get(id);
+            if (frameSet != null) {
+                Iterator<ID3v2Frame> iterator = frameSet.getFrames().iterator();
+                while (iterator.hasNext()) {
+                    ID3v2Frame frame = (ID3v2Frame) iterator.next();
+                    ID3v2CommentFrameData frameData;
+                    try {
+                        frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), frame.getData());
+                        return frameData;
+                    } catch (InvalidDataException e) {
+                        // Do nothing
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public String getLyrics() {
+            ID3v2CommentFrameData frameData;
+            if (obseleteFormat)
+                return null;
+            else
+                frameData = extractLyricsFrameData(ID_TEXT_LYRICS);
+            
+            if (frameData != null)
+                return frameData.getComment().toString();
+            
+            return null;
+        }
+        
+        @Override
+        public void setLyrics(String lyrics) {
+            if (lyrics != null && lyrics.length() > 0) {
+                invalidateDataLength();
+                ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(useFrameUnsynchronisation(), "eng", null, new EncodedText(lyrics));
+                addFrame(createFrame(ID_TEXT_LYRICS, frameData.toBytes()), true);
+            }
+        }
 
 	@Override
 	public String getComposer() {

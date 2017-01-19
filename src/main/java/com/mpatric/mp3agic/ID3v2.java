@@ -93,6 +93,9 @@ public interface ID3v2 extends ID3v1 {
 	
 	String getItunesComment();
 	void setItunesComment(String itunesComment);
+        
+        String getLyrics();
+        void setLyrics(String lyrics);
 	
 	/**
 	 * Set genre from text.
