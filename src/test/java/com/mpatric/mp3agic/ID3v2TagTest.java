@@ -551,7 +551,7 @@ public class ID3v2TagTest {
 	
 	class ID3v22TagForTesting extends ID3v22Tag {
 		
-		public ID3v22TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
+		ID3v22TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
 		}
 		
@@ -563,11 +563,11 @@ public class ID3v2TagTest {
 	
 	class ID3v23TagForTesting extends ID3v23Tag {
 		
-		public ID3v23TagForTesting() {
+		ID3v23TagForTesting() {
 			super();
 		}
 		
-		public ID3v23TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
+		ID3v23TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
 		}
 		
@@ -579,7 +579,7 @@ public class ID3v2TagTest {
 	
 	class ID3v24TagForTesting extends ID3v24Tag {
 		
-		public ID3v24TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
+		ID3v24TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
 		}
 		
