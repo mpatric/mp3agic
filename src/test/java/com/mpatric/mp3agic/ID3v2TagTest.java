@@ -591,11 +591,9 @@ public class ID3v2TagTest {
 	
 	class ID3v2TagFactoryForTesting {
 		
-		protected static final int HEADER_LENGTH = 10;
-		protected static final String TAG = "ID3";
-		protected static final int MAJOR_VERSION_OFFSET = 3;
+		static final int MAJOR_VERSION_OFFSET = 3;
 
-		public ID3v2 createTag(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
+		ID3v2 createTag(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			int majorVersion = buffer[MAJOR_VERSION_OFFSET];
 			switch (majorVersion) {
 				case 2: return new ID3v22TagForTesting(buffer);
