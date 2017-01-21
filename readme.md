@@ -13,7 +13,7 @@ Releases are available via Maven central. To add a dependency to mp3agic, use:
 <dependency>
   <groupId>com.mpatric</groupId>
   <artifactId>mp3agic</artifactId>
-  <version>0.8.3</version>
+  <version>0.8.4</version>
 </dependency>
 ```
 
@@ -40,7 +40,7 @@ mp3agic uses various tools to ease the development process.
 
 To build mp3agic, you will need:
 
-* [JDK 6+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) - Oracle or OpenJDK
+* [JDK 8+](http://www.oracle.com/technetwork/java/javase/downloads/index.html) - Oracle or OpenJDK
 * [maven](http://maven.apache.org/) - Version 3 recommended
 
 After installing these tools simply run 'mvn clean package' and find the jar in the target folder.
@@ -230,4 +230,4 @@ Thanks for sharing!
 
 ## Copyright
 
-Copyright (c) 2006-2015 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2017 Michael Patricios. See mit-license.txt for details.
