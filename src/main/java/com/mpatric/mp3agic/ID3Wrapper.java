@@ -267,6 +267,20 @@ public class ID3Wrapper {
 		}
 	}
 
+	public void setLyrics(String lyrics) {
+		if (id3v2Tag != null) {
+                    id3v2Tag.setLyrics(lyrics);
+		}
+	}
+
+	public String getLyrics() {
+		if (id3v2Tag != null) {
+			return id3v2Tag.getLyrics();
+		} else {
+			return null;
+		}
+	}
+
 	public void clearComment() {
 		if (id3v2Tag != null) {
 			id3v2Tag.clearFrameSet(AbstractID3v2Tag.ID_COMMENT);

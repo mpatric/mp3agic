@@ -144,6 +144,7 @@ if (mp3file.hasId3v2Tag()) {
   System.out.println("Year: " + id3v2Tag.getYear());
   System.out.println("Genre: " + id3v2Tag.getGenre() + " (" + id3v2Tag.getGenreDescription() + ")");
   System.out.println("Comment: " + id3v2Tag.getComment());
+  System.out.println("Lyrics: " + id3v2Tag.getLyrics());
   System.out.println("Composer: " + id3v2Tag.getComposer());
   System.out.println("Publisher: " + id3v2Tag.getPublisher());
   System.out.println("Original artist: " + id3v2Tag.getOriginalArtist());
@@ -196,6 +197,7 @@ id3v2Tag.setAlbum("The Album");
 id3v2Tag.setYear("2001");
 id3v2Tag.setGenre(12);
 id3v2Tag.setComment("Some comment");
+id3v2Tag.setLyrics("Some lyrics");
 id3v2Tag.setComposer("The Composer");
 id3v2Tag.setPublisher("A Publisher");
 id3v2Tag.setOriginalArtist("Another Artist");

@@ -112,6 +112,7 @@ public class ID3v2TagTest {
 		assertEquals(0x0d, id3v24tag.getGenre());
 		assertEquals("Pop", id3v24tag.getGenreDescription());
 		assertEquals("COMMENT123456789012345678901", id3v24tag.getComment());
+		assertEquals("LYRICS1234567890123456789012345", id3v24tag.getLyrics());
 		assertEquals("COMPOSER23456789012345678901234", id3v24tag.getComposer());
 		assertEquals("ORIGARTIST234567890123456789012", id3v24tag.getOriginalArtist());
 		assertEquals("COPYRIGHT2345678901234567890123", id3v24tag.getCopyright());
@@ -141,6 +142,7 @@ public class ID3v2TagTest {
 		assertEquals(0x0d, id3tag.getGenre());
 		assertEquals("Pop", id3tag.getGenreDescription());
 		assertEquals("COMMENT123456789012345678901", id3tag.getComment());
+		assertEquals("LYRICS1234567890123456789012345", id3tag.getLyrics());
 		assertEquals("COMPOSER23456789012345678901234", id3tag.getComposer());
 		assertEquals("ORIGARTIST234567890123456789012", id3tag.getOriginalArtist());
 		assertEquals("COPYRIGHT2345678901234567890123", id3tag.getCopyright());
