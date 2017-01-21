@@ -368,7 +368,7 @@ public class ID3v2TagTest {
 		id3tag.setUrl("URL");
 		id3tag.setEncoder("\u03B9\u03AC");
 		byte[] albumImage = TestHelper.loadFile("src/test/resources/image.png");
-		id3tag.setAlbumImage(albumImage, "image/png");
+		id3tag.setAlbumImage(albumImage, "image/png", ID3v23Tag.PICTURETYPE_OTHER, "\u03B3\u03B5\u03B9\u03AC");
 	}
 
     @Test
