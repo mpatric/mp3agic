@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +21,7 @@ public class FileWrapperTest {
         FileWrapper fileWrapper = new FileWrapper(VALID_FILENAME);
         System.out.println(fileWrapper.getFilename());
         System.out.println(VALID_FILENAME);
-        assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+        assertEquals(fileWrapper.getFilename(), Paths.get(VALID_FILENAME).toAbsolutePath().toString());
         assertTrue(fileWrapper.getLastModified() > 0);
         assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
     }
