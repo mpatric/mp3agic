@@ -18,19 +18,19 @@ public class FileWrapper {
 	}
 
 	public FileWrapper(String filename) throws IOException {
-        this.path = Paths.get(filename).toAbsolutePath();
+        this.path = Paths.get(filename);
 		init();
 	}
 	
 	public FileWrapper(File file) throws IOException {
         if (file == null) throw new NullPointerException();
-        this.path = Paths.get(file.getAbsolutePath()).toAbsolutePath();
+        this.path = Paths.get(file.getPath());
 		init();
 	}
 
     public FileWrapper(Path path) throws IOException {
         if (path == null) throw new NullPointerException();
-        this.path = path.toAbsolutePath();
+        this.path = path;
         init();
     }
 	

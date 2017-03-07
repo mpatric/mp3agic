@@ -21,7 +21,7 @@ public class FileWrapperTest {
         FileWrapper fileWrapper = new FileWrapper(VALID_FILENAME);
         System.out.println(fileWrapper.getFilename());
         System.out.println(VALID_FILENAME);
-        assertEquals(fileWrapper.getFilename(), Paths.get(VALID_FILENAME).toAbsolutePath().toString());
+        assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
         assertTrue(fileWrapper.getLastModified() > 0);
         assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
     }

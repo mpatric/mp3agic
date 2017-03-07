@@ -436,7 +436,7 @@ public class Mp3File extends FileWrapper {
 	}
 
     public void save(String newFilename) throws IOException, NotSupportedException {
-        if (path.compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
+        if (path.toAbsolutePath().compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
             throw new IllegalArgumentException("Save filename same as source filename");
         }
         try (SeekableByteChannel saveFile = Files.newByteChannel(Paths.get(newFilename),  EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
