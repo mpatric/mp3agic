@@ -4,7 +4,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
@@ -469,12 +472,12 @@ public class Mp3FileTest {
 		int preScanResult;
 
 		public Mp3FileForTesting(String filename) throws IOException {
-			RandomAccessFile file = new RandomAccessFile(filename, "r");
+			SeekableByteChannel file = Files.newByteChannel(Paths.get(filename), StandardOpenOption.READ);
 			preScanResult = preScanFile(file);
 		}
 		
 		public Mp3FileForTesting(File filename) throws IOException {
-			RandomAccessFile file = new RandomAccessFile(filename, "r");
+			SeekableByteChannel file = Files.newByteChannel(filename.toPath(), StandardOpenOption.READ);
 			preScanResult = preScanFile(file);
 		}
 	}

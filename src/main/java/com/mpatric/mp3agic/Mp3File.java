@@ -2,9 +2,12 @@ package com.mpatric.mp3agic;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.EnumSet;
 
 public class Mp3File extends FileWrapper {
 
@@ -68,86 +71,103 @@ public class Mp3File extends FileWrapper {
 		init(bufferLength, scanFile);
 	}
 
+    public Mp3File(Path path) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(path, DEFAULT_BUFFER_LENGTH, true);
+    }
+
+    public Mp3File(Path path, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+        this(path, bufferLength, true);
+    }
+
+    public Mp3File(Path path, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+        super(path);
+        init(bufferLength, scanFile);
+    }
+
 	private void init(int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
 		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
 		
 		this.bufferLength = bufferLength;
 		this.scanFile = scanFile;
-		
-		try (RandomAccessFile randomAccessFile = new RandomAccessFile(file.getPath(), "r")) {
-			initId3v1Tag(randomAccessFile);
-			scanFile(randomAccessFile);
-			if (startOffset < 0) {
-				throw new InvalidDataException("No mpegs frames found");
-			}
-			initId3v2Tag(randomAccessFile);
-			if (scanFile) {
-				initCustomTag(randomAccessFile);
-			}
+
+        try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
+            initId3v1Tag(seekableByteChannel);
+            scanFile(seekableByteChannel);
+            if (startOffset < 0) {
+                throw new InvalidDataException("No mpegs frames found");
+            }
+            initId3v2Tag(seekableByteChannel);
+            if (scanFile) {
+                initCustomTag(seekableByteChannel);
+            }
 		}
-	}
-	
-	protected int preScanFile(RandomAccessFile file) {
-		byte[] bytes = new byte[AbstractID3v2Tag.HEADER_LENGTH];
-		try {
-			file.seek(0);
-			int bytesRead = file.read(bytes, 0, AbstractID3v2Tag.HEADER_LENGTH);
-			if (bytesRead == AbstractID3v2Tag.HEADER_LENGTH) {
-				try {
-					ID3v2TagFactory.sanityCheckTag(bytes);
-					return AbstractID3v2Tag.HEADER_LENGTH + BufferTools.unpackSynchsafeInteger(bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 1], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 2], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 3]);
-				} catch (NoSuchTagException | UnsupportedTagException e) {
-					// do nothing
-				}				
-			}
-		} catch (IOException e) {
-			// do nothing
-		}
-		return 0;
 	}
 
-	private void scanFile(RandomAccessFile file) throws IOException, InvalidDataException {
-		byte[] bytes = new byte[bufferLength];
-		int fileOffset = preScanFile(file);
-		file.seek(fileOffset);
-		boolean lastBlock = false;
-		int lastOffset = fileOffset;
-		while (!lastBlock) {
-			int bytesRead = file.read(bytes, 0, bufferLength);
-			if (bytesRead < bufferLength) lastBlock = true;
-			if (bytesRead >= MINIMUM_BUFFER_LENGTH) {
-				while (true) {
-					try {
-						int offset = 0;
-						if (startOffset < 0) {
-							offset = scanBlockForStart(bytes, bytesRead, fileOffset, offset);
-							if (startOffset >= 0 && ! scanFile) {
-								return;
-							}
-							lastOffset = startOffset;
-						}
-						offset = scanBlock(bytes, bytesRead, fileOffset, offset);
-						fileOffset += offset;
-						file.seek(fileOffset);
-						break;
-					} catch (InvalidDataException e) {
-						if (frameCount < 2) {
-							startOffset = -1;
-							xingOffset = -1;
-							frameCount = 0;
-							bitrates.clear();
-							lastBlock = false;
-							fileOffset = lastOffset + 1;
-							if (fileOffset == 0) throw new InvalidDataException("Valid start of mpeg frames not found", e);
-							file.seek(fileOffset);
-							break;
-						}
-						return;
-					}
-				}
-			}
-		}
-	}
+    protected int preScanFile(SeekableByteChannel seekableByteChannel) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(AbstractID3v2Tag.HEADER_LENGTH);
+        try {
+            seekableByteChannel.position(0);
+            byteBuffer.clear();
+            int bytesRead = seekableByteChannel.read(byteBuffer);
+            if (bytesRead == AbstractID3v2Tag.HEADER_LENGTH) {
+                try {
+                    byte[] bytes = byteBuffer.array();
+                    ID3v2TagFactory.sanityCheckTag(bytes);
+                    return AbstractID3v2Tag.HEADER_LENGTH + BufferTools.unpackSynchsafeInteger(bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 1], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 2], bytes[AbstractID3v2Tag.DATA_LENGTH_OFFSET + 3]);
+                } catch (NoSuchTagException | UnsupportedTagException e) {
+                    // do nothing
+                }
+            }
+        } catch (IOException e) {
+            // do nothing
+        }
+        return 0;
+    }
+
+    private void scanFile(SeekableByteChannel seekableByteChannel) throws IOException, InvalidDataException {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
+        int fileOffset = preScanFile(seekableByteChannel);
+        seekableByteChannel.position(fileOffset);
+        boolean lastBlock = false;
+        int lastOffset = fileOffset;
+        while (!lastBlock) {
+            byteBuffer.clear();
+            int bytesRead = seekableByteChannel.read(byteBuffer);
+            byte[] bytes = byteBuffer.array();
+            if (bytesRead < bufferLength) lastBlock = true;
+            if (bytesRead >= MINIMUM_BUFFER_LENGTH) {
+                while (true) {
+                    try {
+                        int offset = 0;
+                        if (startOffset < 0) {
+                            offset = scanBlockForStart(bytes, bytesRead, fileOffset, offset);
+                            if (startOffset >= 0 && ! scanFile) {
+                                return;
+                            }
+                            lastOffset = startOffset;
+                        }
+                        offset = scanBlock(bytes, bytesRead, fileOffset, offset);
+                        fileOffset += offset;
+                        seekableByteChannel.position(fileOffset);
+                        break;
+                    } catch (InvalidDataException e) {
+                        if (frameCount < 2) {
+                            startOffset = -1;
+                            xingOffset = -1;
+                            frameCount = 0;
+                            bitrates.clear();
+                            lastBlock = false;
+                            fileOffset = lastOffset + 1;
+                            if (fileOffset == 0) throw new InvalidDataException("Valid start of mpeg frames not found", e);
+                            seekableByteChannel.position(fileOffset);
+                            break;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
 	private int scanBlockForStart(byte[] bytes, int bytesRead, int absoluteOffset, int offset) {
 		while (offset < bytesRead - MINIMUM_BUFFER_LENGTH) {
@@ -239,51 +259,55 @@ public class Mp3File extends FileWrapper {
 		}
 		this.bitrate = ((this.bitrate * (frameCount - 1)) + bitrate) / frameCount;
 	}
-	
-	private void initId3v1Tag(RandomAccessFile file) throws IOException {
-		byte[] bytes = new byte[ID3v1Tag.TAG_LENGTH];
-		file.seek(getLength() - ID3v1Tag.TAG_LENGTH);
-		int bytesRead = file.read(bytes, 0, ID3v1Tag.TAG_LENGTH);
-		if (bytesRead < ID3v1Tag.TAG_LENGTH) throw new IOException("Not enough bytes read");
-		try {
-			id3v1Tag = new ID3v1Tag(bytes);
-		} catch (NoSuchTagException e) {
-			id3v1Tag = null;
-		}
-	}
-	
-	private void initId3v2Tag(RandomAccessFile file) throws IOException, UnsupportedTagException, InvalidDataException {
-		if (xingOffset == 0 || startOffset == 0) {
-			id3v2Tag = null;
-		} else {
-			int bufferLength;
-			if (hasXingFrame()) bufferLength = xingOffset;
-			else bufferLength = startOffset;
-			byte[] bytes = new byte[bufferLength];
-			file.seek(0);
-			int bytesRead = file.read(bytes, 0, bufferLength);
-			if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
-			try {
-				id3v2Tag = ID3v2TagFactory.createTag(bytes);
-			} catch (NoSuchTagException e) {
-				id3v2Tag = null;
-			}
-		}
-	}
-	
-	private void initCustomTag(RandomAccessFile file) throws IOException {
-		int bufferLength = (int)(getLength() - (endOffset + 1));
-		if (hasId3v1Tag()) bufferLength -= ID3v1Tag.TAG_LENGTH;
-		if (bufferLength <= 0) {
-			customTag = null;
-		}
-		else {
-			customTag = new byte[bufferLength];
-			file.seek(endOffset + 1);
-			int bytesRead = file.read(customTag, 0, bufferLength);
-			if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
-		}
-	}
+
+    private void initId3v1Tag(SeekableByteChannel seekableByteChannel) throws IOException {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(ID3v1Tag.TAG_LENGTH);
+        seekableByteChannel.position(getLength() - ID3v1Tag.TAG_LENGTH);
+        byteBuffer.clear();
+        int bytesRead = seekableByteChannel.read(byteBuffer);
+        if (bytesRead < ID3v1Tag.TAG_LENGTH) throw new IOException("Not enough bytes read");
+        try {
+            id3v1Tag = new ID3v1Tag(byteBuffer.array());
+        } catch (NoSuchTagException e) {
+            id3v1Tag = null;
+        }
+    }
+
+    private void initId3v2Tag(SeekableByteChannel seekableByteChannel) throws IOException, UnsupportedTagException, InvalidDataException {
+        if (xingOffset == 0 || startOffset == 0) {
+            id3v2Tag = null;
+        } else {
+            int bufferLength;
+            if (hasXingFrame()) bufferLength = xingOffset;
+            else bufferLength = startOffset;
+            ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
+            seekableByteChannel.position(0);
+            byteBuffer.clear();
+            int bytesRead = seekableByteChannel.read(byteBuffer);
+            if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
+            try {
+                id3v2Tag = ID3v2TagFactory.createTag(byteBuffer.array());
+            } catch (NoSuchTagException e) {
+                id3v2Tag = null;
+            }
+        }
+    }
+
+    private void initCustomTag(SeekableByteChannel seekableByteChannel) throws IOException {
+        int bufferLength = (int)(getLength() - (endOffset + 1));
+        if (hasId3v1Tag()) bufferLength -= ID3v1Tag.TAG_LENGTH;
+        if (bufferLength <= 0) {
+            customTag = null;
+        }
+        else {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
+            seekableByteChannel.position(endOffset + 1);
+            byteBuffer.clear();
+            int bytesRead = seekableByteChannel.read(byteBuffer);
+            customTag = byteBuffer.array();
+            if (bytesRead < bufferLength) throw new IOException("Not enough bytes read");
+        }
+    }
 
 	public int getFrameCount() {
 		return frameCount;
@@ -409,46 +433,57 @@ public class Mp3File extends FileWrapper {
 	public void removeCustomTag() {
 		this.customTag = null;
 	}
-	
-	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (file.compareTo(new File(newFilename)) == 0) {
-			throw new IllegalArgumentException("Save filename same as source filename");
-		}
-		try (RandomAccessFile saveFile = new RandomAccessFile(newFilename, "rw")) {
-			if (hasId3v2Tag()) {
-				saveFile.write(id3v2Tag.toBytes());
-			}
-			saveMpegFrames(saveFile);
-			if (hasCustomTag()) {
-				saveFile.write(customTag);
-			}
-			if (hasId3v1Tag()) {
-				saveFile.write(id3v1Tag.toBytes());
-			}
-		}
-	}
 
-	private void saveMpegFrames(RandomAccessFile saveFile) throws IOException {
-		int filePos = xingOffset;
-		if (filePos < 0) filePos = startOffset;
-		if (filePos < 0) return;
-		if (endOffset < filePos) return;
-		RandomAccessFile randomAccessFile = new RandomAccessFile(this.file.getPath(), "r");
-		byte[] bytes = new byte[bufferLength];
-		try {
-			randomAccessFile.seek(filePos);
-			while (true) {
-				int bytesRead = randomAccessFile.read(bytes, 0, bufferLength);
-				if (filePos + bytesRead <= endOffset) {
-					saveFile.write(bytes, 0, bytesRead);
-					filePos += bytesRead;
-				} else {
-					saveFile.write(bytes, 0, endOffset - filePos + 1);
-					break;
-				}
-			}
-		} finally {
-			randomAccessFile.close();
-		}
-	}
+    public void save(String newFilename) throws IOException, NotSupportedException {
+        if (path.toAbsolutePath().compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
+            throw new IllegalArgumentException("Save filename same as source filename");
+        }
+        try (SeekableByteChannel saveFile = Files.newByteChannel(Paths.get(newFilename),  EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
+            if (hasId3v2Tag()) {
+                ByteBuffer byteBuffer = ByteBuffer.wrap(id3v2Tag.toBytes());
+                byteBuffer.rewind();
+                saveFile.write(byteBuffer);
+            }
+            saveMpegFrames(saveFile);
+            if (hasCustomTag()) {
+                ByteBuffer byteBuffer = ByteBuffer.wrap(customTag);
+                byteBuffer.rewind();
+                saveFile.write(byteBuffer);
+            }
+            if (hasId3v1Tag()) {
+                ByteBuffer byteBuffer = ByteBuffer.wrap(id3v1Tag.toBytes());
+                byteBuffer.rewind();
+                saveFile.write(byteBuffer);
+            }
+            saveFile.close();
+        }
+    }
+
+    private void saveMpegFrames(SeekableByteChannel saveFile) throws IOException {
+        int filePos = xingOffset;
+        if (filePos < 0) filePos = startOffset;
+        if (filePos < 0) return;
+        if (endOffset < filePos) return;
+        SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
+        try {
+            seekableByteChannel.position(filePos);
+            while (true) {
+                byteBuffer.clear();
+                int bytesRead = seekableByteChannel.read(byteBuffer);
+                byteBuffer.rewind();
+                if (filePos + bytesRead <= endOffset) {
+                    byteBuffer.limit(bytesRead);
+                    saveFile.write(byteBuffer);
+                    filePos += bytesRead;
+                } else {
+                    byteBuffer.limit(endOffset - filePos + 1);
+                    saveFile.write(byteBuffer);
+                    break;
+                }
+            }
+        } finally {
+            seekableByteChannel.close();
+        }
+    }
 }
