@@ -269,7 +269,7 @@ public class ID3Wrapper {
 
 	public void setLyrics(String lyrics) {
 		if (id3v2Tag != null) {
-                    id3v2Tag.setLyrics(lyrics);
+			id3v2Tag.setLyrics(lyrics);
 		}
 	}
 
