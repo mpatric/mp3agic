@@ -54,7 +54,7 @@ public class ID3v2Frame {
 		unpackFlags(buffer, offset);
 		return offset + HEADER_LENGTH;
 	}
-	
+
 	protected void unpackDataLength(byte[] buffer, int offset) {
 		dataLength = BufferTools.unpackInteger(buffer[offset + DATA_LENGTH_OFFSET], buffer[offset + DATA_LENGTH_OFFSET + 1], buffer[offset + DATA_LENGTH_OFFSET + 2], buffer[offset + DATA_LENGTH_OFFSET + 3]);
 	}
@@ -69,25 +69,25 @@ public class ID3v2Frame {
 		unsynchronisation = BufferTools.checkBit(buffer[offset + FLAGS2_OFFSET], UNSYNCHRONISATION_BIT);
 		dataLengthIndicator = BufferTools.checkBit(buffer[offset + FLAGS2_OFFSET], DATA_LENGTH_INDICATOR_BIT);
 	}
-	
+
 	protected void sanityCheckUnpackedHeader() throws InvalidDataException {
 		for (int i = 0; i < id.length(); i++) {
-			if (! ((id.charAt(i) >= 'A' && id.charAt(i) <= 'Z') || (id.charAt(i) >= '0' && id.charAt(i) <= '9'))) {
+			if (!((id.charAt(i) >= 'A' && id.charAt(i) <= 'Z') || (id.charAt(i) >= '0' && id.charAt(i) <= '9'))) {
 				throw new InvalidDataException("Not a valid frame - invalid tag " + id);
 			}
 		}
 	}
-	
+
 	public byte[] toBytes() throws NotSupportedException {
 		byte[] bytes = new byte[getLength()];
 		packFrame(bytes, 0);
 		return bytes;
 	}
-	
+
 	public void toBytes(byte[] bytes, int offset) throws NotSupportedException {
 		packFrame(bytes, offset);
 	}
-	
+
 	public void packFrame(byte[] bytes, int offset) throws NotSupportedException {
 		packHeader(bytes, offset);
 		BufferTools.copyIntoByteBuffer(data, 0, data.length, bytes, offset + HEADER_LENGTH);
@@ -105,7 +105,7 @@ public class ID3v2Frame {
 	protected byte[] packDataLength() {
 		return BufferTools.packInteger(dataLength);
 	}
-	
+
 	private byte[] packFlags() {
 		byte[] bytes = new byte[2];
 		bytes[0] = BufferTools.setBit(bytes[0], PRESERVE_TAG_BIT, preserveTag);
@@ -134,7 +134,7 @@ public class ID3v2Frame {
 	public byte[] getData() {
 		return data;
 	}
-	
+
 	public void setData(byte[] data) {
 		this.data = data;
 		if (data == null) dataLength = 0;
@@ -144,7 +144,7 @@ public class ID3v2Frame {
 	public boolean hasDataLengthIndicator() {
 		return dataLengthIndicator;
 	}
-	
+
 	public boolean hasCompression() {
 		return compression;
 	}

@@ -13,7 +13,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	public ID3v2PictureFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
-	
+
 	public ID3v2PictureFrameData(boolean unsynchronisation, String mimeType, byte pictureType, EncodedText description, byte[] imageData) {
 		super(unsynchronisation);
 		this.mimeType = mimeType;
@@ -26,7 +26,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
+
 	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		int marker = BufferTools.indexOfTerminator(bytes, 1, 1);
@@ -43,7 +43,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		marker += 2;
 		int marker2 = BufferTools.indexOfTerminatorForEncoding(bytes, marker, bytes[0]);
 		if (marker2 >= 0) {
-			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker , marker2 - marker));
+			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, marker, marker2 - marker));
 			marker2 += description.getTerminator().length;
 		} else {
 			description = new EncodedText(bytes[0], "");
@@ -51,7 +51,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		}
 		imageData = BufferTools.copyBuffer(bytes, marker2, bytes.length - marker2);
 	}
-	
+
 	@Override
 	protected byte[] packFrameData() {
 		byte[] bytes = new byte[getLength()];
@@ -67,7 +67,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		}
 		int marker = mimeTypeLength + 1;
 		bytes[marker++] = 0;
-		bytes[marker++] = pictureType; 
+		bytes[marker++] = pictureType;
 		if (description != null && description.toBytes().length > 0) {
 			byte[] descriptionBytes = description.toBytes(true, true);
 			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
@@ -90,7 +90,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 		if (imageData != null) length += imageData.length;
 		return length;
 	}
-	
+
 	public String getMimeType() {
 		return mimeType;
 	}
@@ -110,11 +110,11 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	public EncodedText getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(EncodedText description) {
 		this.description = description;
 	}
-	
+
 	public byte[] getImageData() {
 		return imageData;
 	}

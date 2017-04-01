@@ -1,7 +1,7 @@
 package com.mpatric.mp3agic;
 
 public class ID3v23Tag extends AbstractID3v2Tag {
-	
+
 	public static final String VERSION = "3.0";
 
 	public ID3v23Tag() {
@@ -12,7 +12,7 @@ public class ID3v23Tag extends AbstractID3v2Tag {
 	public ID3v23Tag(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 		super(buffer);
 	}
-	
+
 	@Override
 	protected void unpackFlags(byte[] buffer) {
 		unsynchronisation = BufferTools.checkBit(buffer[FLAGS_OFFSET], UNSYNCHRONISATION_BIT);

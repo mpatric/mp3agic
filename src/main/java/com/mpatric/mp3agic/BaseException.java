@@ -3,19 +3,19 @@ package com.mpatric.mp3agic;
 public class BaseException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public BaseException() {
 		super();
 	}
-	
+
 	public BaseException(String message) {
 		super(message);
 	}
-	
+
 	public BaseException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
+
 	public String getDetailedMessage() {
 		Throwable t = this;
 		StringBuilder s = new StringBuilder();
@@ -33,7 +33,7 @@ public class BaseException extends Exception {
 			} else {
 				break;
 			}
-		} 
+		}
 		return s.toString();
 	}
 }

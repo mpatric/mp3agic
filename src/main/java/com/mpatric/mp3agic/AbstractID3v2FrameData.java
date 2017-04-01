@@ -1,13 +1,13 @@
 package com.mpatric.mp3agic;
 
 public abstract class AbstractID3v2FrameData {
-	
+
 	boolean unsynchronisation;
-	
+
 	public AbstractID3v2FrameData(boolean unsynchronisation) {
 		this.unsynchronisation = unsynchronisation;
 	}
-	
+
 	protected final void synchroniseAndUnpackFrameData(byte[] bytes) throws InvalidDataException {
 		if (unsynchronisation && BufferTools.sizeSynchronisationWouldSubtract(bytes) > 0) {
 			byte[] synchronisedBytes = BufferTools.synchroniseBuffer(bytes);
@@ -16,7 +16,7 @@ public abstract class AbstractID3v2FrameData {
 			unpackFrameData(bytes);
 		}
 	}
-	
+
 	protected byte[] packAndUnsynchroniseFrameData() {
 		byte[] bytes = packFrameData();
 		if (unsynchronisation && BufferTools.sizeUnsynchronisationWouldAdd(bytes) > 0) {
@@ -24,11 +24,11 @@ public abstract class AbstractID3v2FrameData {
 		}
 		return bytes;
 	}
-	
+
 	protected byte[] toBytes() {
 		return packAndUnsynchroniseFrameData();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -52,6 +52,8 @@ public abstract class AbstractID3v2FrameData {
 	}
 
 	protected abstract void unpackFrameData(byte[] bytes) throws InvalidDataException;
+
 	protected abstract byte[] packFrameData();
+
 	protected abstract int getLength();
 }

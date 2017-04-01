@@ -222,7 +222,7 @@ If you have added a feature or fixed a bug in mp3agic please submit a pull reque
 
 * Fork the project
 * Write the code for your feature or bug fix
-* Please don't auto-format the code or make wholesale whitespace changes as it makes seeing what has changed more difficult
+* mp3agic uses [editorconfig](http://editorconfig.org/) to keep code formatted in a consistent way. Please make sure that your IDE follows the [config file](.editorconfig)
 * Add tests! This is important so the code you've added doesn't get unintentionally broken in the future
 * Make sure the existing tests pass
 * Commit and do not mess with version or history
@@ -232,4 +232,4 @@ Thanks for sharing!
 
 ## Copyright
 
-Copyright (c) 2006-2017 Michael Patricios. See mit-license.txt for details.
+Copyright (c) 2006-2017 Michael Patricios. See [mit-license.txt](mit-license.txt) for details.

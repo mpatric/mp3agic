@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
 public class Mp3FileTest {
-	
+
 	private static final String fs = File.separator;
 	private static final String MP3_WITH_NO_TAGS = "src" + fs + "test" + fs + "resources" + fs + "notags.mp3";
 	private static final String MP3_WITH_ID3V1_AND_ID3V23_TAGS = "src" + fs + "test" + fs + "resources" + fs + "v1andv23tags.mp3";
@@ -23,7 +23,7 @@ public class Mp3FileTest {
 	private static final String NOT_AN_MP3 = "src" + fs + "test" + fs + "resources" + fs + "notanmp3.mp3";
 	private static final String MP3_WITH_INCOMPLETE_MPEG_FRAME = "src" + fs + "test" + fs + "resources" + fs + "incompletempegframe.mp3";
 
-    @Test
+	@Test
 	public void shouldLoadMp3WithNoTags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 41);
 		loadAndCheckTestMp3WithNoTags(MP3_WITH_NO_TAGS, 256);
@@ -35,7 +35,7 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldLoadMp3WithId3Tags() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithTags(MP3_WITH_ID3V1_AND_ID3V23_TAGS, 41);
 		loadAndCheckTestMp3WithTags(MP3_WITH_ID3V1_AND_ID3V23_TAGS, 256);
@@ -47,7 +47,7 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldLoadMp3WithFakeStartAndEndFrames() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithTags(MP3_WITH_DUMMY_START_AND_END_FRAMES, 41);
 		loadAndCheckTestMp3WithTags(MP3_WITH_DUMMY_START_AND_END_FRAMES, 256);
@@ -59,7 +59,7 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldLoadMp3WithCustomTag() throws IOException, UnsupportedTagException, InvalidDataException {
 		loadAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 41);
 		loadAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
@@ -71,7 +71,7 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForFileThatIsNotAnMp3() throws Exception {
 		try {
 			new Mp3File(NOT_AN_MP3);
@@ -81,7 +81,7 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForFileThatIsNotAnMp3ForFileConstructor() throws Exception {
 		try {
 			new Mp3File(new File(NOT_AN_MP3));
@@ -91,34 +91,34 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldFindProbableStartOfMpegFramesWithPrescan() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
 	}
 
-    @Test
+	@Test
 	public void shouldFindProbableStartOfMpegFramesWithPrescanForFileConstructor() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS));
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
 	}
-	
+
 	private void testShouldFindProbableStartOfMpegFramesWithPrescan(Mp3FileForTesting mp3File) {
 		assertEquals(0x44B, mp3File.preScanResult);
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile(mp3File);
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionIfSavingMp3WithSameNameAsSourceFileForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS));
 		testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile(mp3File);
 	}
-	
+
 	private void testShouldThrowExceptionIfSavingMp3WithSameNameAsSourceFile(Mp3File mp3File) throws NotSupportedException, IOException {
 		System.out.println(mp3File.getFilename());
 		System.out.println(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
@@ -130,7 +130,7 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldSaveLoadedMp3WhichIsEquivalentToOriginal() throws Exception {
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 41);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
@@ -142,7 +142,7 @@ public class Mp3FileTest {
 		copyAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldLoadAndCheckMp3ContainingUnicodeFields() throws Exception {
 		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
 		loadAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
@@ -154,7 +154,7 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldSaveLoadedMp3WithUnicodeFieldsWhichIsEquivalentToOriginal() throws Exception {
 		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 41);
 		copyAndCheckTestMp3WithUnicodeFields(MP3_WITH_ID3V23_UNICODE_TAGS, 256);
@@ -166,13 +166,13 @@ public class Mp3FileTest {
 		copyAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 5000);
 	}
 
-    @Test
+	@Test
 	public void shouldIgnoreIncompleteMpegFrame() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_INCOMPLETE_MPEG_FRAME, 256);
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
 	}
 
-    @Test
+	@Test
 	public void shouldIgnoreIncompleteMpegFrameForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME), 256);
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
@@ -187,13 +187,13 @@ public class Mp3FileTest {
 		assertEquals(5, mp3File.getFrameCount());
 	}
 
-    @Test
+	@Test
 	public void shouldInitialiseProperlyWhenNotScanningFile() throws Exception {
 		Mp3File mp3File = new Mp3File(MP3_WITH_INCOMPLETE_MPEG_FRAME, 256, false);
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
 	}
 
-    @Test
+	@Test
 	public void shouldInitialiseProperlyWhenNotScanningFileForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME), 256, false);
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
@@ -204,18 +204,18 @@ public class Mp3FileTest {
 		assertTrue(mp3File.hasId3v2Tag());
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v1Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v1Tag(new Mp3File(filename));
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v1TagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v1Tag(new Mp3File(filename));
 	}
-	
+
 	private void testShouldRemoveId3v1Tag(Mp3File mp3File) throws Exception {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -230,13 +230,13 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v2Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v2Tag(new Mp3File(filename));
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v2TagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v2Tag(new Mp3File(filename));
@@ -256,13 +256,13 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveCustomTag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveCustomTag(new Mp3File(filename));
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveCustomTagForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveCustomTag(new Mp3File(filename));
@@ -282,13 +282,13 @@ public class Mp3FileTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v1AndId3v2AndCustomTags() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
 	}
 
-    @Test
+	@Test
 	public void shouldRemoveId3v1AndId3v2AndCustomTagsForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
@@ -309,17 +309,17 @@ public class Mp3FileTest {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithCustomTag(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
 		Mp3File mp3File = loadAndCheckTestMp3WithCustomTag(filename, bufferLength);
 		return copyAndCheckTestMp3WithCustomTag(mp3File);
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithCustomTag(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
 		Mp3File mp3File = loadAndCheckTestMp3WithCustomTag(filename, bufferLength);
 		return copyAndCheckTestMp3WithCustomTag(mp3File);
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithCustomTag(Mp3File mp3File) throws NotSupportedException, IOException, UnsupportedTagException, InvalidDataException {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -333,17 +333,17 @@ public class Mp3FileTest {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithUnicodeFields(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
 		Mp3File mp3File = loadAndCheckTestMp3WithUnicodeFields(filename, bufferLength);
 		return copyAndCheckTestMp3WithUnicodeFields(mp3File);
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithUnicodeFields(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
 		Mp3File mp3File = loadAndCheckTestMp3WithUnicodeFields(filename, bufferLength);
 		return copyAndCheckTestMp3WithUnicodeFields(mp3File);
 	}
-	
+
 	private Mp3File copyAndCheckTestMp3WithUnicodeFields(Mp3File mp3File) throws NotSupportedException, IOException, UnsupportedTagException, InvalidDataException {
 		String saveFilename = mp3File.getFilename() + ".copy";
 		try {
@@ -355,17 +355,17 @@ public class Mp3FileTest {
 			TestHelper.deleteFile(saveFilename);
 		}
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithNoTags(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithNoTags(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithNoTags(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithNoTags(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithNoTags(Mp3File mp3File) {
 		assertEquals(0x000, mp3File.getXingOffset());
 		assertEquals(0x1A1, mp3File.getStartOffset());
@@ -380,12 +380,12 @@ public class Mp3FileTest {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithTags(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithTags(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithTags(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithTags(Mp3File mp3File) {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
@@ -400,12 +400,12 @@ public class Mp3FileTest {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithUnicodeFields(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithUnicodeFields(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithUnicodeFields(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithUnicodeFields(Mp3File mp3File) {
 		assertEquals(0x0CA, mp3File.getXingOffset());
 		assertEquals(0x26B, mp3File.getStartOffset());
@@ -420,12 +420,12 @@ public class Mp3FileTest {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithCustomTag(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithCustomTag(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
 		return loadAndCheckTestMp3WithCustomTag(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3WithCustomTag(Mp3File mp3File) {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
@@ -440,12 +440,12 @@ public class Mp3FileTest {
 		Mp3File mp3File = new Mp3File(filename, bufferLength);
 		return loadAndCheckTestMp3(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = new Mp3File(filename, bufferLength);
 		return loadAndCheckTestMp3(mp3File);
 	}
-	
+
 	private Mp3File loadAndCheckTestMp3(Mp3File mp3File) {
 		assertTrue(mp3File.hasXingFrame());
 		assertEquals(6, mp3File.getFrameCount());
@@ -475,7 +475,7 @@ public class Mp3FileTest {
 			SeekableByteChannel file = Files.newByteChannel(Paths.get(filename), StandardOpenOption.READ);
 			preScanResult = preScanFile(file);
 		}
-		
+
 		public Mp3FileForTesting(File filename) throws IOException {
 			SeekableByteChannel file = Files.newByteChannel(filename.toPath(), StandardOpenOption.READ);
 			preScanResult = preScanFile(file);

@@ -6,11 +6,11 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 
 	protected String url;
 	protected EncodedText description;
-	
+
 	public ID3v2UrlFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
-	
+
 	public ID3v2UrlFrameData(boolean unsynchronisation, EncodedText description, String url) {
 		super(unsynchronisation);
 		this.description = description;
@@ -21,7 +21,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
+
 	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 1, bytes[0]);
@@ -38,7 +38,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 			url = "";
 		}
 	}
-	
+
 	@Override
 	protected byte[] packFrameData() {
 		byte[] bytes = new byte[getLength()];
@@ -60,7 +60,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 		}
 		return bytes;
 	}
-	
+
 	@Override
 	protected int getLength() {
 		int length = 1;
@@ -77,7 +77,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 	public void setDescription(EncodedText description) {
 		this.description = description;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
@@ -85,7 +85,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

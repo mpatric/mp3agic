@@ -9,19 +9,19 @@ public class ID3v1TagTest {
 	private String VALID_TAG = "TAGTITLE1234567890123456789012345ARTIST123456789012345678901234ALBUM12345678901234567890123452001COMMENT123456789012345678901234";
 	private String VALID_TAG_WITH_WHITESPACE = "TAGTITLE                         ARTIST                        ALBUM                         2001COMMENT                        ";
 
-    @Test(expected = NoSuchTagException.class)
+	@Test(expected = NoSuchTagException.class)
 	public void shouldThrowExceptionForTagBufferTooShort() throws NoSuchTagException {
-		byte[] buffer = new byte[ID3v1Tag.TAG_LENGTH - 1]; 
-        new ID3v1Tag(buffer);
+		byte[] buffer = new byte[ID3v1Tag.TAG_LENGTH - 1];
+		new ID3v1Tag(buffer);
 	}
 
-    @Test(expected = NoSuchTagException.class)
+	@Test(expected = NoSuchTagException.class)
 	public void shouldThrowExceptionForTagBufferTooLong() throws NoSuchTagException {
-		byte[] buffer = new byte[ID3v1Tag.TAG_LENGTH + 1]; 
-        new ID3v1Tag(buffer);
+		byte[] buffer = new byte[ID3v1Tag.TAG_LENGTH + 1];
+		new ID3v1Tag(buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldExtractMaximumLengthFieldsFromValid10Tag() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG, 0, VALID_TAG.length());
 		buffer[buffer.length - 1] = -0x6D; // 0x93 as a signed byte
@@ -36,7 +36,7 @@ public class ID3v1TagTest {
 		assertEquals("Synthpop", id3v1tag.getGenreDescription());
 	}
 
-    @Test
+	@Test
 	public void shouldExtractMaximumLengthFieldsFromValid11Tag() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG, 0, VALID_TAG.length());
 		buffer[buffer.length - 3] = 0x00;
@@ -53,7 +53,7 @@ public class ID3v1TagTest {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 
-    @Test
+	@Test
 	public void shouldExtractTrimmedFieldsFromValid11TagWithWhitespace() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
 		buffer[buffer.length - 3] = 0x00;
@@ -70,7 +70,7 @@ public class ID3v1TagTest {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 
-    @Test
+	@Test
 	public void shouldExtractTrimmedFieldsFromValid11TagWithNullspace() throws Exception {
 		byte[] buffer = BufferTools.stringToByteBuffer(VALID_TAG_WITH_WHITESPACE, 0, VALID_TAG_WITH_WHITESPACE.length());
 		TestHelper.replaceSpacesWithNulls(buffer);
@@ -88,7 +88,7 @@ public class ID3v1TagTest {
 		assertEquals("Pop", id3v1tag.getGenreDescription());
 	}
 
-    @Test
+	@Test
 	public void shouldGenerateValidTagBuffer() throws Exception {
 		ID3v1Tag id3v1tag = new ID3v1Tag();
 		id3v1tag.setTitle("TITLE");
@@ -106,7 +106,7 @@ public class ID3v1TagTest {
 		assertArrayEquals(expectedBuffer, id3v1tag.toBytes());
 	}
 
-    @Test
+	@Test
 	public void shouldGenerateValidTagBufferWithHighGenreAndTrackNumber() throws Exception {
 		ID3v1Tag id3v1tag = new ID3v1Tag();
 		id3v1tag.setTitle("TITLE");
@@ -124,7 +124,7 @@ public class ID3v1TagTest {
 		assertArrayEquals(expectedBuffer, id3v1tag.toBytes());
 	}
 
-    @Test
+	@Test
 	public void shouldReadTagFieldsFromMp3() throws Exception {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v1andv23tags.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
@@ -139,7 +139,7 @@ public class ID3v1TagTest {
 		assertEquals("COMMENT123456789012345678901", id3tag.getComment());
 	}
 
-    @Test
+	@Test
 	public void shouldConvertTagToBytesAndBackToEquivalentTag() throws Exception {
 		ID3v1 id3tag = new ID3v1Tag();
 		id3tag.setTrack("5");
@@ -154,7 +154,7 @@ public class ID3v1TagTest {
 		assertEquals(id3tag, id3tagCopy);
 	}
 
-    @Test
+	@Test
 	public void shouldReturnEmptyTrackIfNotSetOn11Tag() throws Exception {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v1tagwithnotrack.mp3");
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);

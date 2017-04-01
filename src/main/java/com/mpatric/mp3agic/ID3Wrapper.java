@@ -9,7 +9,7 @@ public class ID3Wrapper {
 		this.id3v1Tag = id3v1Tag;
 		this.id3v2Tag = id3v2Tag;
 	}
-	
+
 	public ID3v1 getId3v1Tag() {
 		return id3v1Tag;
 	}
@@ -55,7 +55,7 @@ public class ID3Wrapper {
 			id3v1Tag.setArtist(artist);
 		}
 	}
-	
+
 	public String getTitle() {
 		if (id3v2Tag != null && id3v2Tag.getTitle() != null && id3v2Tag.getTitle().length() > 0) {
 			return id3v2Tag.getTitle();
@@ -93,7 +93,7 @@ public class ID3Wrapper {
 			id3v1Tag.setAlbum(album);
 		}
 	}
-	
+
 	public String getYear() {
 		if (id3v2Tag != null && id3v2Tag.getYear() != null && id3v2Tag.getYear().length() > 0) {
 			return id3v2Tag.getYear();
@@ -131,7 +131,7 @@ public class ID3Wrapper {
 			id3v1Tag.setGenre(genre);
 		}
 	}
-	
+
 	public String getGenreDescription() {
 		if (id3v1Tag != null) {
 			return id3v1Tag.getGenreDescription();
@@ -141,7 +141,7 @@ public class ID3Wrapper {
 			return null;
 		}
 	}
-	
+
 	public String getComment() {
 		if (id3v2Tag != null && id3v2Tag.getComment() != null && id3v2Tag.getComment().length() > 0) {
 			return id3v2Tag.getComment();
@@ -174,7 +174,7 @@ public class ID3Wrapper {
 			id3v2Tag.setComposer(composer);
 		}
 	}
-	
+
 	public String getOriginalArtist() {
 		if (id3v2Tag != null) {
 			return id3v2Tag.getOriginalArtist();
@@ -244,7 +244,7 @@ public class ID3Wrapper {
 			id3v2Tag.setEncoder(encoder);
 		}
 	}
-	
+
 	public byte[] getAlbumImage() {
 		if (id3v2Tag != null) {
 			return id3v2Tag.getAlbumImage();

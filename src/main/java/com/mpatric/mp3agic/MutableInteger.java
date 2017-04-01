@@ -1,13 +1,13 @@
 package com.mpatric.mp3agic;
 
 public class MutableInteger {
-	
+
 	private int value;
-	
+
 	public MutableInteger(int value) {
 		this.value = value;
 	}
-	
+
 	public void increment() {
 		value++;
 	}

@@ -23,32 +23,32 @@ public class BufferToolsTest {
 	private static final byte BYTE_ESZETT = -0x21;
 
 	// byte buffer to string
-	
-    @Test
+
+	@Test
 	public void shouldExtractStringFromStartOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
 
-    @Test
+	@Test
 	public void shouldExtractStringFromEndOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 
-    @Test
+	@Test
 	public void shouldExtractStringFromMiddleOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 
-    @Test
+	@Test
 	public void shouldExtractUnicodeStringFromMiddleOfBuffer() throws UnsupportedEncodingException {
-		byte[] buffer = {BYTE_DASH, BYTE_DASH, 0x03, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac, BYTE_DASH, BYTE_DASH};
+		byte[] buffer = {BYTE_DASH, BYTE_DASH, 0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac, BYTE_DASH, BYTE_DASH};
 		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.byteBufferToString(buffer, 2, 8, "UTF-16BE"));
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForOffsetBeforeStartOfArray() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
@@ -59,7 +59,7 @@ public class BufferToolsTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForOffsetAfterEndOfArray() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
@@ -70,7 +70,7 @@ public class BufferToolsTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForLengthExtendingBeyondEndOfArray() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
@@ -80,10 +80,10 @@ public class BufferToolsTest {
 			// expected
 		}
 	}
-	
+
 	// string to byte buffer
 
-    @Test
+	@Test
 	public void shouldConvertStringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
 		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length());
@@ -91,7 +91,7 @@ public class BufferToolsTest {
 		assertEquals(original, converted);
 	}
 
-    @Test
+	@Test
 	public void shouldConvertSubstringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
 		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5);
@@ -99,7 +99,7 @@ public class BufferToolsTest {
 		assertEquals("34567890QWERTYU", converted);
 	}
 
-    @Test
+	@Test
 	public void shouldConvertUnicodeStringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
 		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length(), "UTF-16LE");
@@ -107,7 +107,7 @@ public class BufferToolsTest {
 		assertEquals(original, converted);
 	}
 
-    @Test
+	@Test
 	public void shouldConvertUnicodeSubstringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
 		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5, "UTF-16LE");
@@ -115,7 +115,7 @@ public class BufferToolsTest {
 		assertEquals("\u03B9\u03AC ", converted);
 	}
 
-    @Test
+	@Test
 	public void shouldThrowAnExceptionWhenConvertingStringToBytesWithOffsetOutOfRange() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
 		try {
@@ -128,7 +128,7 @@ public class BufferToolsTest {
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
-    @Test
+	@Test
 	public void shouldThrowAnExceptionWhenConvertingStringToBytesWithLengthOutOfRange() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
 		try {
@@ -144,80 +144,80 @@ public class BufferToolsTest {
 			fail("StringIndexOutOfBoundsException expected but not thrown");
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
-	
+
 	// string into existing byte buffer
 
-    @Test
+	@Test
 	public void shouldCopyStringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0);
 		byte[] expectedBuffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopyUnicodeStringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0, "UTF-16BE");
-		byte[] expectedBuffer = {0x03, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac, 0, 0};
+		byte[] expectedBuffer = {0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopyStringToEndOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 6);
 		byte[] expectedBuffer = {0, 0, 0, 0, 0, 0, BYTE_T, BYTE_A, BYTE_G, BYTE_DASH};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopyUnicodeStringToEndOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 2, "UTF-16BE");
-		byte[] expectedBuffer = {0, 0, 0x03, (byte)0xb3, 0x03, (byte)0xb5, 0x03, (byte)0xb9, 0x03, (byte)0xac};
+		byte[] expectedBuffer = {0, 0, 0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopySubstringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0);
 		byte[] expectedBuffer = {BYTE_A, BYTE_G, 0, 0, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopyUnicodeSubstringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0, "UTF-16BE");
-		byte[] expectedBuffer = {0x03, (byte)0xb5, 0x03, (byte)0xb9, 0, 0, 0, 0, 0, 0};
+		byte[] expectedBuffer = {0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldCopySubstringToMiddleOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		Arrays.fill(buffer, (byte)0);
+		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 4);
 		byte[] expectedBuffer = {0, 0, 0, 0, BYTE_A, BYTE_G, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
 
-    @Test
+	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithOffsetOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		String s = "TAG-";
@@ -231,7 +231,7 @@ public class BufferToolsTest {
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
-    @Test
+	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithLengthOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		String s = "TAG-";
@@ -249,7 +249,7 @@ public class BufferToolsTest {
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
-    @Test
+	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithDestinationOffsetOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		String s = "TAG-";
@@ -262,10 +262,10 @@ public class BufferToolsTest {
 			fail("ArrayIndexOutOfBoundsException expected but not thrown");
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 	}
-	
+
 	// trim strings
 
-    @Test
+	@Test
 	public void shouldRightTrimStringsCorrectly() throws UnsupportedEncodingException {
 		assertEquals("", BufferTools.trimStringRight(""));
 		assertEquals("", BufferTools.trimStringRight(" "));
@@ -274,20 +274,20 @@ public class BufferToolsTest {
 		assertEquals("   TEST", BufferTools.trimStringRight("   TEST"));
 		assertEquals("   TEST", BufferTools.trimStringRight("   TEST   "));
 		assertEquals("TEST", BufferTools.trimStringRight("TEST\t\r\n"));
-		assertEquals("TEST", BufferTools.trimStringRight("TEST" + BufferTools.byteBufferToString(new byte[] {0, 0}, 0, 2)));
+		assertEquals("TEST", BufferTools.trimStringRight("TEST" + BufferTools.byteBufferToString(new byte[]{0, 0}, 0, 2)));
 	}
 
-    @Test
+	@Test
 	public void shouldRightTrimUnicodeStringsCorrectly() throws UnsupportedEncodingException {
 		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("\u03B3\u03B5\u03B9\u03AC"));
 		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("\u03B3\u03B5\u03B9\u03AC   "));
 		assertEquals("   \u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("   \u03B3\u03B5\u03B9\u03AC"));
 		assertEquals("   \u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("   \u03B3\u03B5\u03B9\u03AC   "));
 		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("\u03B3\u03B5\u03B9\u03AC\t\r\n"));
-		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("\u03B3\u03B5\u03B9\u03AC" + BufferTools.byteBufferToString(new byte[] {0, 0}, 0, 2)));
+		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.trimStringRight("\u03B3\u03B5\u03B9\u03AC" + BufferTools.byteBufferToString(new byte[]{0, 0}, 0, 2)));
 	}
 
-    @Test
+	@Test
 	public void shouldRightPadStringsCorrectly() {
 		assertEquals("1234", BufferTools.padStringRight("1234", 3, ' '));
 		assertEquals("123", BufferTools.padStringRight("123", 3, ' '));
@@ -296,7 +296,7 @@ public class BufferToolsTest {
 		assertEquals("   ", BufferTools.padStringRight("", 3, ' '));
 	}
 
-    @Test
+	@Test
 	public void shouldRightPadUnicodeStringsCorrectly() {
 		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.padStringRight("\u03B3\u03B5\u03B9\u03AC", 3, ' '));
 		assertEquals("\u03B3\u03B5\u03B9", BufferTools.padStringRight("\u03B3\u03B5\u03B9", 3, ' '));
@@ -304,28 +304,28 @@ public class BufferToolsTest {
 		assertEquals("\u03B3  ", BufferTools.padStringRight("\u03B3", 3, ' '));
 	}
 
-    @Test
+	@Test
 	public void shouldPadRightWithNullCharacters() {
 		assertEquals("123", BufferTools.padStringRight("123", 3, '\00'));
 		assertEquals("12\00", BufferTools.padStringRight("12", 3, '\00'));
 		assertEquals("1\00\00", BufferTools.padStringRight("1", 3, '\00'));
 		assertEquals("\00\00\00", BufferTools.padStringRight("", 3, '\00'));
 	}
-    
-    @Test
+
+	@Test
 	public void shouldExtractBitsCorrectly() {
 		byte b = -0x36; // 11001010
 		assertFalse(BufferTools.checkBit(b, 0));
 		assertTrue(BufferTools.checkBit(b, 1));
 		assertFalse(BufferTools.checkBit(b, 2));
 		assertTrue(BufferTools.checkBit(b, 3));
-		assertFalse(BufferTools.checkBit(b, 4));		
+		assertFalse(BufferTools.checkBit(b, 4));
 		assertFalse(BufferTools.checkBit(b, 5));
 		assertTrue(BufferTools.checkBit(b, 6));
 		assertTrue(BufferTools.checkBit(b, 7));
 	}
 
-    @Test
+	@Test
 	public void shouldSetBitsInBytesCorrectly() {
 		byte b = -0x36; // 11001010
 		assertEquals(-0x36, BufferTools.setBit(b, 7, true)); // 11010010
@@ -336,37 +336,37 @@ public class BufferToolsTest {
 		assertEquals(-0x3E, BufferTools.setBit(b, 3, false)); // 11000010
 	}
 
-    @Test
+	@Test
 	public void shouldUnpackIntegerCorrectly() {
 		assertEquals(0xFFFB9044, BufferTools.unpackInteger(BYTE_FF, BYTE_FB, BYTE_90, BYTE_44));
-		assertEquals(0x00000081, BufferTools.unpackInteger((byte)0, (byte)0, (byte)0, BYTE_81));
-		assertEquals(0x00000101, BufferTools.unpackInteger((byte)0, (byte)0, (byte)1, (byte)1));
+		assertEquals(0x00000081, BufferTools.unpackInteger((byte) 0, (byte) 0, (byte) 0, BYTE_81));
+		assertEquals(0x00000101, BufferTools.unpackInteger((byte) 0, (byte) 0, (byte) 1, (byte) 1));
 	}
 
-    @Test
+	@Test
 	public void shouldUnpackSynchsafeIntegersCorrectly() {
-		assertEquals(1217, BufferTools.unpackSynchsafeInteger((byte)0, (byte)0, (byte)0x09, (byte)0x41));
-		assertEquals(1227, BufferTools.unpackSynchsafeInteger((byte)0, (byte)0, (byte)0x09, (byte)0x4B));
-		assertEquals(1002, BufferTools.unpackSynchsafeInteger((byte)0, (byte)0, (byte)0x07, (byte)0x6A));
-		assertEquals(0x0101, BufferTools.unpackSynchsafeInteger((byte)0, (byte)0, (byte)2, (byte)1));
-		assertEquals(0x01010101, BufferTools.unpackSynchsafeInteger((byte)8, (byte)4, (byte)2, (byte)1));
+		assertEquals(1217, BufferTools.unpackSynchsafeInteger((byte) 0, (byte) 0, (byte) 0x09, (byte) 0x41));
+		assertEquals(1227, BufferTools.unpackSynchsafeInteger((byte) 0, (byte) 0, (byte) 0x09, (byte) 0x4B));
+		assertEquals(1002, BufferTools.unpackSynchsafeInteger((byte) 0, (byte) 0, (byte) 0x07, (byte) 0x6A));
+		assertEquals(0x0101, BufferTools.unpackSynchsafeInteger((byte) 0, (byte) 0, (byte) 2, (byte) 1));
+		assertEquals(0x01010101, BufferTools.unpackSynchsafeInteger((byte) 8, (byte) 4, (byte) 2, (byte) 1));
 	}
 
-    @Test
+	@Test
 	public void shouldPackIntegerCorrectly() {
-		assertArrayEquals(new byte[] {BYTE_FF, BYTE_FB, BYTE_90, BYTE_44}, BufferTools.packInteger(0xFFFB9044));
+		assertArrayEquals(new byte[]{BYTE_FF, BYTE_FB, BYTE_90, BYTE_44}, BufferTools.packInteger(0xFFFB9044));
 	}
 
-    @Test
+	@Test
 	public void shouldPackSynchsafeIntegersCorrectly() {
-		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x41}, BufferTools.packSynchsafeInteger(1217));
-		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x09, (byte)0x4B}, BufferTools.packSynchsafeInteger(1227));
-		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)0x07, (byte)0x6A}, BufferTools.packSynchsafeInteger(1002));
-		assertArrayEquals(new byte[] {(byte)0, (byte)0, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x0101));
-		assertArrayEquals(new byte[] {(byte)8, (byte)4, (byte)2, (byte)1}, BufferTools.packSynchsafeInteger(0x01010101));
+		assertArrayEquals(new byte[]{(byte) 0, (byte) 0, (byte) 0x09, (byte) 0x41}, BufferTools.packSynchsafeInteger(1217));
+		assertArrayEquals(new byte[]{(byte) 0, (byte) 0, (byte) 0x09, (byte) 0x4B}, BufferTools.packSynchsafeInteger(1227));
+		assertArrayEquals(new byte[]{(byte) 0, (byte) 0, (byte) 0x07, (byte) 0x6A}, BufferTools.packSynchsafeInteger(1002));
+		assertArrayEquals(new byte[]{(byte) 0, (byte) 0, (byte) 2, (byte) 1}, BufferTools.packSynchsafeInteger(0x0101));
+		assertArrayEquals(new byte[]{(byte) 8, (byte) 4, (byte) 2, (byte) 1}, BufferTools.packSynchsafeInteger(0x01010101));
 	}
 
-    @Test
+	@Test
 	public void shouldPackAndUnpackIntegerBackToOriginalValue() {
 		int original = 12345;
 		byte[] bytes = BufferTools.packInteger(original);
@@ -374,7 +374,7 @@ public class BufferToolsTest {
 		assertEquals(original, unpacked);
 	}
 
-    @Test
+	@Test
 	public void shouldPackAndUnpackSynchsafeIntegerBackToOriginalValue() {
 		int original = 12345;
 		byte[] bytes = BufferTools.packSynchsafeInteger(original);
@@ -382,59 +382,59 @@ public class BufferToolsTest {
 		assertEquals(original, unpacked);
 	}
 
-    @Test
+	@Test
 	public void shouldCopyBuffersWithValidOffsetsAndLengths() {
 		byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-		assertArrayEquals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 0, buffer.length));
-		assertArrayEquals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 1, buffer.length - 1));
-		assertArrayEquals(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 0, buffer.length - 1));
-		assertArrayEquals(new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 1, buffer.length - 2));
-		assertArrayEquals(new byte[] {4}, BufferTools.copyBuffer(buffer, 4, 1));
+		assertArrayEquals(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 0, buffer.length));
+		assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, BufferTools.copyBuffer(buffer, 1, buffer.length - 1));
+		assertArrayEquals(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 0, buffer.length - 1));
+		assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}, BufferTools.copyBuffer(buffer, 1, buffer.length - 2));
+		assertArrayEquals(new byte[]{4}, BufferTools.copyBuffer(buffer, 4, 1));
 	}
 
-    @Test
-    public void throwsExceptionWhenCopyingBufferWithInvalidOffsetAndOrLength() {
-        byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	@Test
+	public void throwsExceptionWhenCopyingBufferWithInvalidOffsetAndOrLength() {
+		byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-        try {
-            BufferTools.copyBuffer(buffer, -1, buffer.length);
-            fail("ArrayIndexOutOfBoundsException expected but not thrown");
-        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+		try {
+			BufferTools.copyBuffer(buffer, -1, buffer.length);
+			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 
-        try {
-            BufferTools.copyBuffer(buffer, buffer.length, 1);
-            fail("ArrayIndexOutOfBoundsException expected but not thrown");
-        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+		try {
+			BufferTools.copyBuffer(buffer, buffer.length, 1);
+			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 
-        try {
-            BufferTools.copyBuffer(buffer, 1, buffer.length);
-            fail("ArrayIndexOutOfBoundsException expected but not thrown");
-        } catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
-    }
+		try {
+			BufferTools.copyBuffer(buffer, 1, buffer.length);
+			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
+	}
 
-    @Test
+	@Test
 	public void shouldDetermineUnsynchronisationSizesCorrectly() {
-		assertEquals(0, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {}));
-		assertEquals(0, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {BYTE_FF, 1, BYTE_FB}));
-		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {BYTE_FF, BYTE_FB}));
-		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {0, BYTE_FF, BYTE_FB, 0}));
-		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {0, BYTE_FF}));
-		assertEquals(2, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {BYTE_FF, BYTE_FB, 0, BYTE_FF, BYTE_FB}));
-		assertEquals(3, BufferTools.sizeUnsynchronisationWouldAdd(new byte[] {BYTE_FF, BYTE_FF, BYTE_FF}));
+		assertEquals(0, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{}));
+		assertEquals(0, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{BYTE_FF, 1, BYTE_FB}));
+		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{BYTE_FF, BYTE_FB}));
+		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{0, BYTE_FF, BYTE_FB, 0}));
+		assertEquals(1, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{0, BYTE_FF}));
+		assertEquals(2, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{BYTE_FF, BYTE_FB, 0, BYTE_FF, BYTE_FB}));
+		assertEquals(3, BufferTools.sizeUnsynchronisationWouldAdd(new byte[]{BYTE_FF, BYTE_FF, BYTE_FF}));
 	}
 
-    @Test
+	@Test
 	public void shouldDetermineSynchronisationSizesCorrectly() {
-		assertEquals(0, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {}));
-		assertEquals(0, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {BYTE_FF, 1, BYTE_FB}));
-		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {BYTE_FF, 0, BYTE_FB}));
-		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {0, BYTE_FF, 0, BYTE_FB, 0}));
-		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {0, BYTE_FF, 0}));
-		assertEquals(2, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {BYTE_FF, 0, BYTE_FB, 0, BYTE_FF, 0, BYTE_FB}));
-		assertEquals(3, BufferTools.sizeSynchronisationWouldSubtract(new byte[] {BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0}));
+		assertEquals(0, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{}));
+		assertEquals(0, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{BYTE_FF, 1, BYTE_FB}));
+		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{BYTE_FF, 0, BYTE_FB}));
+		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{0, BYTE_FF, 0, BYTE_FB, 0}));
+		assertEquals(1, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{0, BYTE_FF, 0}));
+		assertEquals(2, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{BYTE_FF, 0, BYTE_FB, 0, BYTE_FF, 0, BYTE_FB}));
+		assertEquals(3, BufferTools.sizeSynchronisationWouldSubtract(new byte[]{BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0}));
 	}
 
-    @Test
+	@Test
 	public void shouldUnsynchroniseThenSynchroniseFFExBytesCorrectly() {
 		byte[] buffer = {BYTE_FF, BYTE_FB, 2, 3, 4, BYTE_FF, BYTE_E0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, BYTE_F0};
 		byte[] expectedBuffer = {BYTE_FF, 0, BYTE_FB, 2, 3, 4, BYTE_FF, 0, BYTE_E0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, 0, BYTE_F0};
@@ -444,7 +444,7 @@ public class BufferToolsTest {
 		assertArrayEquals(buffer, synchronised);
 	}
 
-    @Test
+	@Test
 	public void shouldUnsynchroniseThenSynchroniseFF00BytesCorrectly() {
 		byte[] buffer = {BYTE_FF, 0, 2, 3, 4, BYTE_FF, 0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, 0};
 		byte[] expectedBuffer = {BYTE_FF, 0, 0, 2, 3, 4, BYTE_FF, 0, 0, 7, 8, 9, 10, 11, 12, 13, BYTE_FF, 0, 0};
@@ -454,7 +454,7 @@ public class BufferToolsTest {
 		assertArrayEquals(buffer, synchronised);
 	}
 
-    @Test
+	@Test
 	public void shouldUnsynchroniseThenSynchroniseBufferFullOfFFsCorrectly() {
 		byte[] buffer = {BYTE_FF, BYTE_FF, BYTE_FF, BYTE_FF};
 		byte[] expectedBuffer = {BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0, BYTE_FF, 0};
@@ -464,7 +464,7 @@ public class BufferToolsTest {
 		assertArrayEquals(buffer, synchronised);
 	}
 
-    @Test
+	@Test
 	public void shouldUnsynchroniseThenSynchroniseBufferMinimalBufferCorrectly() {
 		byte[] buffer = {BYTE_FF};
 		byte[] expectedBuffer = {BYTE_FF, 0};
@@ -474,7 +474,7 @@ public class BufferToolsTest {
 		assertArrayEquals(buffer, synchronised);
 	}
 
-    @Test
+	@Test
 	public void shouldReturnOriginalBufferIfNoUnynchronisationOrSynchronisationIsRequired() {
 		byte[] buffer = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 		byte[] unsynchronised = BufferTools.unsynchroniseBuffer(buffer);
@@ -483,7 +483,7 @@ public class BufferToolsTest {
 		assertEquals(buffer, synchronised);
 	}
 
-    @Test
+	@Test
 	public void shouldReplaceTokensWithSpecifiedStrings() {
 		String source = "%1-%2 something %1-%3";
 		assertEquals("ONE-%2 something ONE-%3", BufferTools.substitute(source, "%1", "ONE"));
@@ -491,116 +491,116 @@ public class BufferToolsTest {
 		assertEquals("%1-%2 something %1-THREE", BufferTools.substitute(source, "%3", "THREE"));
 	}
 
-    @Test
+	@Test
 	public void shouldReturnOriginalStringIfTokenToSubstituteDoesNotExistInString() {
 		String source = "%1-%2 something %1-%3";
 		assertEquals("%1-%2 something %1-%3", BufferTools.substitute(source, "%X", "XXXXX"));
 	}
-    
-    @Test
+
+	@Test
 	public void shouldReturnOriginalStringForSubstitutionWithEmptyString() {
 		String source = "%1-%2 something %1-%3";
 		assertEquals("%1-%2 something %1-%3", BufferTools.substitute(source, "", "WHATEVER"));
 	}
 
-    @Test
+	@Test
 	public void shouldSubstituteEmptyStringWhenDestinationStringIsNull() {
 		String source = "%1-%2 something %1-%3";
 		assertEquals("-%2 something -%3", BufferTools.substitute(source, "%1", null));
 	}
 
-    @Test
+	@Test
 	public void shouldConvertNonAsciiCharactersToQuestionMarksInString() {
 		assertEquals("?12?34?567???89?", BufferTools.asciiOnly("ü12¬34ü567¬¬¬89ü"));
 	}
 
-    @Test
+	@Test
 	public void convertsBufferContainingHighAscii() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G};
-		assertEquals("T" + (char)(223) + "G", BufferTools.byteBufferToString(buffer, 0, 3));
+		assertEquals("T" + (char) (223) + "G", BufferTools.byteBufferToString(buffer, 0, 3));
 	}
-	
+
 	// finding terminators
-	
-    @Test
+
+	@Test
 	public void findsSingleTerminator() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
 	}
 
-    @Test
+	@Test
 	public void findsFirstSingleTerminator() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A, 0, BYTE_G, BYTE_A};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
 	}
 
-    @Test
+	@Test
 	public void findsFirstSingleTerminatorAfterFromIndex() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, BYTE_G, BYTE_A, 0, BYTE_G, BYTE_A};
 		assertEquals(7, BufferTools.indexOfTerminator(buffer, 5, 1));
 	}
 
-    @Test
+	@Test
 	public void findsSingleTerminatorWhenFirstElement() {
 		byte[] buffer = {0, BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
 		assertEquals(0, BufferTools.indexOfTerminator(buffer, 0, 1));
 	}
-    
-    @Test
+
+	@Test
 	public void findsSingleTerminatorWhenLastElement() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 1));
 	}
 
-    @Test
+	@Test
 	public void ReturnsMinusOneWhenNoSingleTerminator() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
 		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 1));
 	}
 
-    @Test
+	@Test
 	public void findsDoubleTerminator() {
 		byte[] buffer = {BYTE_T, 0, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void findsNotFindDoubleTerminatorIfNotOnEvenByte() {
 		byte[] buffer = {BYTE_T, 0, BYTE_G, BYTE_T, BYTE_T, 0, 0, BYTE_G, BYTE_A};
 		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void findsFirstDoubleTerminator() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void findsFirstDoubleTerminatorOnAnEvenByte() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, 0, 0, BYTE_T, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
 		assertEquals(8, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void findsFirstDoubleTerminatorAfterFromIndex() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0, BYTE_G, BYTE_A, 0, 0, BYTE_G, BYTE_A};
 		assertEquals(8, BufferTools.indexOfTerminator(buffer, 6, 2));
 	}
 
-    @Test
+	@Test
 	public void findsDoubleTerminatorWhenFirstElement() {
 		byte[] buffer = {0, 0, BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
 		assertEquals(0, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void findsDoubleTerminatorWhenLastElement() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T, 0, 0};
 		assertEquals(4, BufferTools.indexOfTerminator(buffer, 0, 2));
 	}
 
-    @Test
+	@Test
 	public void returnsMinusOneWhenNoDoubleTerminator() {
 		byte[] buffer = {BYTE_T, BYTE_ESZETT, BYTE_G, BYTE_T};
 		assertEquals(-1, BufferTools.indexOfTerminator(buffer, 0, 2));

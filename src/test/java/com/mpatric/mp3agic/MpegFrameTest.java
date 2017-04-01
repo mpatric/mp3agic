@@ -19,7 +19,7 @@ public class MpegFrameTest {
 	private static final byte BYTE_40 = 0x40;
 	private static final byte BYTE_02 = 0x02;
 
-    @Test
+	@Test
 	public void testBitwiseLeftShiftOperationsOnLong() {
 		long original = 0xFFFFFFFE; // 1111 1111 1111 1111 1111 1111 1111 1110
 		long expectedShl1 = 0xFFFFFFFC; // 1111 1111 1111 1111 1111 1111 1111 1100
@@ -30,7 +30,7 @@ public class MpegFrameTest {
 		assertEquals(expectedShl30, original << 30);
 	}
 
-    @Test
+	@Test
 	public void testBitwiseRightShiftOperationsOnLong() {
 		long original = 0x80000000; // 1000 0000 0000 0000 0000 0000 0000 0000
 		long expectedShr1 = 0xC0000000; // 1100 0000 0000 0000 0000 0000 0000 0000
@@ -41,7 +41,7 @@ public class MpegFrameTest {
 		assertEquals(expectedShr30, original >> 30);
 	}
 
-    @Test
+	@Test
 	public void testShiftingByteIntoBiggerNumber() {
 		byte original = -0x02; // 1111 1110
 		long originalAsLong = (original & 0xFF);
@@ -56,7 +56,7 @@ public class MpegFrameTest {
 		assertEquals(expectedShl23, originalAsLong << 23);
 	}
 
-    @Test
+	@Test
 	public void shouldExtractValidFields() {
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting();
 		assertEquals(0x000007FF, mpegFrame.extractField(0xFFE00000, 0xFFE00000L));
@@ -65,7 +65,7 @@ public class MpegFrameTest {
 		assertEquals(0x00000055, mpegFrame.extractField(0xFFEFFF55, 0x000000FFL));
 	}
 
-    @Test
+	@Test
 	public void shouldExtractValidMpegVersion1Header() throws InvalidDataException {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
@@ -84,7 +84,7 @@ public class MpegFrameTest {
 		assertEquals(523, mpegFrame.getLengthInBytes());
 	}
 
-    @Test
+	@Test
 	public void shouldProcessValidMpegVersion2Header() throws InvalidDataException {
 		byte[] frameData = {BYTE_FF, BYTE_F3, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
@@ -103,72 +103,72 @@ public class MpegFrameTest {
 		assertEquals(627, mpegFrame.getLengthInBytes());
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForInvalidFrameSync() {
 		byte[] frameData = {BYTE_FF, BYTE_DB, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Frame sync missing", e.getMessage()); 
+			assertEquals("Frame sync missing", e.getMessage());
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForInvalidMpegVersion() {
 		byte[] frameData = {BYTE_FF, BYTE_EB, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Invalid mpeg audio version in frame header", e.getMessage()); 
+			assertEquals("Invalid mpeg audio version in frame header", e.getMessage());
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForInvalidMpegLayer() {
 		byte[] frameData = {BYTE_FF, BYTE_F9, BYTE_A2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Invalid mpeg layer description in frame header", e.getMessage()); 
+			assertEquals("Invalid mpeg layer description in frame header", e.getMessage());
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForFreeBitrate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_02, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Invalid bitrate in frame header", e.getMessage()); 
+			assertEquals("Invalid bitrate in frame header", e.getMessage());
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForInvalidBitrate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_F2, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Invalid bitrate in frame header", e.getMessage()); 
+			assertEquals("Invalid bitrate in frame header", e.getMessage());
 		}
 	}
 
-    @Test
+	@Test
 	public void shouldThrowExceptionForInvalidSampleRate() {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_AE, BYTE_40};
 		try {
 			new MpegFrameForTesting(frameData);
 			fail("InvalidDataException expected but not thrown");
 		} catch (InvalidDataException e) {
-			assertEquals("Invalid sample rate in frame header", e.getMessage()); 
+			assertEquals("Invalid sample rate in frame header", e.getMessage());
 		}
 	}
-	
+
 	class MpegFrameForTesting extends MpegFrame {
 
 		public MpegFrameForTesting() {
