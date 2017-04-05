@@ -1,7 +1,5 @@
 package com.mpatric.mp3agic;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
 
 public class ID3v2TXXXFrameData extends AbstractID3v2FrameData {
@@ -113,7 +111,7 @@ public class ID3v2TXXXFrameData extends AbstractID3v2FrameData {
                 try {
                     ID3v2TXXXFrameData field = new ID3v2TXXXFrameData(useFrameUnsynchronisation, frame.getData());
 
-                    if (d == null || TextUtils.isEmpty(d) || field.getDescription().toString().contains(d))
+                    if (d == null || field.getDescription().toString().contains(d))
                         fields.add(field);
                 } catch (InvalidDataException e) {
                     // do nothing
