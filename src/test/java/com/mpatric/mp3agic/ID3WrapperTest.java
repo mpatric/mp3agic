@@ -1401,6 +1401,15 @@ public class ID3WrapperTest {
         public void setLyrics(String lyrics) {
             this.lyrics = lyrics;
         }
+                
+        @Override
+        public String getCustomText(String description) {
+            return null;
+        }
+
+        @Override
+        public void setCustomText(String description, String value) {
+        }
 
         @Override
         public void setGenreDescription(String text) {
