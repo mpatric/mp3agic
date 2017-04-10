@@ -7,7 +7,7 @@ public class ID3v2FrameSet {
 
 	private String id;
 	private ArrayList<ID3v2Frame> frames;
-	
+
 	public ID3v2FrameSet(String id) {
 		this.id = id;
 		frames = new ArrayList<>();
@@ -18,9 +18,9 @@ public class ID3v2FrameSet {
 	}
 
 	public void clear() {
-		frames.clear();		
+		frames.clear();
 	}
-	
+
 	public void addFrame(ID3v2Frame frame) {
 		frames.add(frame);
 	}
@@ -28,7 +28,7 @@ public class ID3v2FrameSet {
 	public List<ID3v2Frame> getFrames() {
 		return frames;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.id + ": " + frames.size();

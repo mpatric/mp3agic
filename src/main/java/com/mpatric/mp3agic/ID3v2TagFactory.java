@@ -6,11 +6,14 @@ public class ID3v2TagFactory {
 		sanityCheckTag(bytes);
 		int majorVersion = bytes[AbstractID3v2Tag.MAJOR_VERSION_OFFSET];
 		switch (majorVersion) {
-			case 2: return createID3v22Tag(bytes);
-			case 3: return new ID3v23Tag(bytes);
-			case 4: return new ID3v24Tag(bytes);
+			case 2:
+				return createID3v22Tag(bytes);
+			case 3:
+				return new ID3v23Tag(bytes);
+			case 4:
+				return new ID3v24Tag(bytes);
 		}
-		throw new UnsupportedTagException("Tag version not supported");   
+		throw new UnsupportedTagException("Tag version not supported");
 	}
 
 	private static AbstractID3v2Tag createID3v22Tag(byte[] bytes) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
@@ -20,12 +23,12 @@ public class ID3v2TagFactory {
 		}
 		return tag;
 	}
-	
+
 	public static void sanityCheckTag(byte[] bytes) throws NoSuchTagException, UnsupportedTagException {
 		if (bytes.length < AbstractID3v2Tag.HEADER_LENGTH) {
 			throw new NoSuchTagException("Buffer too short");
 		}
-		if (! AbstractID3v2Tag.TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, AbstractID3v2Tag.TAG.length()))) {
+		if (!AbstractID3v2Tag.TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, AbstractID3v2Tag.TAG.length()))) {
 			throw new NoSuchTagException();
 		}
 		int majorVersion = bytes[AbstractID3v2Tag.MAJOR_VERSION_OFFSET];

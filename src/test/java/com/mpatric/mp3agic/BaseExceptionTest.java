@@ -6,14 +6,14 @@ import static org.junit.Assert.assertEquals;
 
 public class BaseExceptionTest {
 
-    @Test
+	@Test
 	public void generatesCorrectDetailedMessageForSingleException() {
 		BaseException e = new BaseException("ONE");
 		assertEquals("ONE", e.getMessage());
 		assertEquals("[com.mpatric.mp3agic.BaseException: ONE]", e.getDetailedMessage());
 	}
 
-    @Test
+	@Test
 	public void generatesCorrectDetailedMessageForChainedBaseExceptions() {
 		BaseException e1 = new BaseException("ONE");
 		BaseException e2 = new UnsupportedTagException("TWO", e1);
@@ -24,7 +24,7 @@ public class BaseExceptionTest {
 		assertEquals("[com.mpatric.mp3agic.InvalidDataException: FIVE] caused by [com.mpatric.mp3agic.NoSuchTagException: FOUR] caused by [com.mpatric.mp3agic.NotSupportedException: THREE] caused by [com.mpatric.mp3agic.UnsupportedTagException: TWO] caused by [com.mpatric.mp3agic.BaseException: ONE]", e5.getDetailedMessage());
 	}
 
-    @Test
+	@Test
 	public void generatesCorrectDetailedMessageForChainedExceptionsWithOtherExceptionInMix() {
 		BaseException e1 = new BaseException("ONE");
 		BaseException e2 = new UnsupportedTagException("TWO", e1);

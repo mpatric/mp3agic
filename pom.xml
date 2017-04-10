@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -12,7 +13,9 @@
 	<artifactId>mp3agic</artifactId>
 	<version>0.9.1-SNAPSHOT</version>
 	<name>mp3agic</name>
-	<description>A java library for reading mp3 files and manipulating mp3 file ID3 tags (ID3v1 and ID3v2.2 to ID3v2.4).</description>
+	<description>A java library for reading mp3 files and manipulating mp3 file ID3 tags (ID3v1 and ID3v2.2 to
+		ID3v2.4).
+	</description>
 	<url>https://github.com/mpatric/mp3agic</url>
 	<licenses>
 		<license>
@@ -28,7 +31,7 @@
 		<tag>HEAD</tag>
 		<url>http://github.com/mpatric/mp3agic</url>
 	</scm>
-	
+
 	<developers>
 		<developer>
 			<name>Michael Patricios</name>
@@ -94,7 +97,8 @@
 					<quiet>true</quiet>
 					<show>private</show>
 					<doctitle><![CDATA[<h1>${project.name}</h1>]]></doctitle>
-					<bottom><![CDATA[<div align="right"><i>Version ${project.version} - 2006-2015 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
+					<bottom>
+						<![CDATA[<div align="right"><i>Version ${project.version} - 2006-2015 - <a href="${project.scm.url}" target="_top">${project.scm.url}</a></i></div>]]></bottom>
 				</configuration>
 			</plugin>
 			<!-- attach "bundling source jar" to the package phase -->
@@ -130,7 +134,7 @@
 				<configuration>
 					<format>xml</format>
 					<maxmem>256m</maxmem>
-					<check />
+					<check/>
 				</configuration>
 			</plugin>
 		</plugins>

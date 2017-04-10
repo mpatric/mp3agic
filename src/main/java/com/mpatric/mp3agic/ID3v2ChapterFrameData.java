@@ -5,158 +5,158 @@ import java.util.ArrayList;
 
 public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 
-    protected String id;
-    protected int startTime;
-    protected int endTime;
-    protected int startOffset;
-    protected int endOffset;
-    protected ArrayList<ID3v2Frame> subframes = new ArrayList<>();
+	protected String id;
+	protected int startTime;
+	protected int endTime;
+	protected int startOffset;
+	protected int endOffset;
+	protected ArrayList<ID3v2Frame> subframes = new ArrayList<>();
 
-    public ID3v2ChapterFrameData(boolean unsynchronisation) {
-        super(unsynchronisation);
-    }
+	public ID3v2ChapterFrameData(boolean unsynchronisation) {
+		super(unsynchronisation);
+	}
 
-    public ID3v2ChapterFrameData(boolean unsynchronisation, String id, int startTime,
-            int endTime, int startOffset, int endOffset) {
-        super(unsynchronisation);
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.startOffset = startOffset;
-        this.endOffset = endOffset;
-    }
+	public ID3v2ChapterFrameData(boolean unsynchronisation, String id, int startTime,
+								 int endTime, int startOffset, int endOffset) {
+		super(unsynchronisation);
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
+	}
 
-    public ID3v2ChapterFrameData(boolean unsynchronisation, byte[] bytes)
-            throws InvalidDataException {
-        super(unsynchronisation);
-        synchroniseAndUnpackFrameData(bytes);
-    }
+	public ID3v2ChapterFrameData(boolean unsynchronisation, byte[] bytes)
+			throws InvalidDataException {
+		super(unsynchronisation);
+		synchroniseAndUnpackFrameData(bytes);
+	}
 
-    @Override
-    protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
-        ByteBuffer bb = ByteBuffer.wrap(bytes);
-        
-        id = ByteBufferUtils.extractNullTerminatedString(bb);
-        
-        bb.position(id.length() + 1);
-        startTime = bb.getInt();
-        endTime = bb.getInt();
-        startOffset = bb.getInt();
-        endOffset = bb.getInt();
+	@Override
+	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+		ByteBuffer bb = ByteBuffer.wrap(bytes);
 
-        for (int offset = bb.position(); offset < bytes.length;) {
-            ID3v2Frame frame = new ID3v2Frame(bytes, offset);
-            offset += frame.getLength();
-            subframes.add(frame);
-        }
+		id = ByteBufferUtils.extractNullTerminatedString(bb);
 
-    }
+		bb.position(id.length() + 1);
+		startTime = bb.getInt();
+		endTime = bb.getInt();
+		startOffset = bb.getInt();
+		endOffset = bb.getInt();
 
-    public void addSubframe(String id, AbstractID3v2FrameData frame) {
-        subframes.add(new ID3v2Frame(id, frame.toBytes()));
-    }
+		for (int offset = bb.position(); offset < bytes.length; ) {
+			ID3v2Frame frame = new ID3v2Frame(bytes, offset);
+			offset += frame.getLength();
+			subframes.add(frame);
+		}
 
-    @Override
-    protected byte[] packFrameData() {
-        ByteBuffer bb = ByteBuffer.allocate(getLength());
-        bb.put(id.getBytes());
-        bb.put((byte) 0);
+	}
 
-        bb.putInt(startTime);
-        bb.putInt(endTime);
-        bb.putInt(startOffset);
-        bb.putInt(endOffset);
+	public void addSubframe(String id, AbstractID3v2FrameData frame) {
+		subframes.add(new ID3v2Frame(id, frame.toBytes()));
+	}
 
-        for (ID3v2Frame frame : subframes) {
-            try {
-                bb.put(frame.toBytes());
-            } catch (NotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
-        return bb.array();
-    }
+	@Override
+	protected byte[] packFrameData() {
+		ByteBuffer bb = ByteBuffer.allocate(getLength());
+		bb.put(id.getBytes());
+		bb.put((byte) 0);
 
-    public String getId() {
-        return id;
-    }
+		bb.putInt(startTime);
+		bb.putInt(endTime);
+		bb.putInt(startOffset);
+		bb.putInt(endOffset);
 
-    public void setId(String id) {
-        this.id = id;
-    }
+		for (ID3v2Frame frame : subframes) {
+			try {
+				bb.put(frame.toBytes());
+			} catch (NotSupportedException e) {
+				e.printStackTrace();
+			}
+		}
+		return bb.array();
+	}
 
-    public int getStartTime() {
-        return startTime;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public int getEndTime() {
-        return endTime;
-    }
+	public int getStartTime() {
+		return startTime;
+	}
 
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
-    }
+	public void setStartTime(int startTime) {
+		this.startTime = startTime;
+	}
 
-    public int getStartOffset() {
-        return startOffset;
-    }
+	public int getEndTime() {
+		return endTime;
+	}
 
-    public void setStartOffset(int startOffset) {
-        this.startOffset = startOffset;
-    }
+	public void setEndTime(int endTime) {
+		this.endTime = endTime;
+	}
 
-    public int getEndOffset() {
-        return endOffset;
-    }
+	public int getStartOffset() {
+		return startOffset;
+	}
 
-    public void setEndOffset(int endOffset) {
-        this.endOffset = endOffset;
-    }
+	public void setStartOffset(int startOffset) {
+		this.startOffset = startOffset;
+	}
 
-    public ArrayList<ID3v2Frame> getSubframes() {
-        return subframes;
-    }
+	public int getEndOffset() {
+		return endOffset;
+	}
 
-    public void setSubframes(ArrayList<ID3v2Frame> subframes) {
-        this.subframes = subframes;
-    }
+	public void setEndOffset(int endOffset) {
+		this.endOffset = endOffset;
+	}
 
-    @Override
-    protected int getLength() {
-        int length = 1;
-        length += 16;
-        if (id != null)
-            length += id.length();
-        if (subframes != null) {
-            for (ID3v2Frame frame : subframes) {
-                length += frame.getLength();
-            }
-        }
-        return length;
-    }
+	public ArrayList<ID3v2Frame> getSubframes() {
+		return subframes;
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("ID3v2ChapterFrameData [id=");
-        builder.append(id);
-        builder.append(", startTime=");
-        builder.append(startTime);
-        builder.append(", endTime=");
-        builder.append(endTime);
-        builder.append(", startOffset=");
-        builder.append(startOffset);
-        builder.append(", endOffset=");
-        builder.append(endOffset);
-        builder.append(", subframes=");
-        builder.append(subframes);
-        builder.append("]");
-        return builder.toString();
-    }
+	public void setSubframes(ArrayList<ID3v2Frame> subframes) {
+		this.subframes = subframes;
+	}
+
+	@Override
+	protected int getLength() {
+		int length = 1;
+		length += 16;
+		if (id != null)
+			length += id.length();
+		if (subframes != null) {
+			for (ID3v2Frame frame : subframes) {
+				length += frame.getLength();
+			}
+		}
+		return length;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ID3v2ChapterFrameData [id=");
+		builder.append(id);
+		builder.append(", startTime=");
+		builder.append(startTime);
+		builder.append(", endTime=");
+		builder.append(endTime);
+		builder.append(", startOffset=");
+		builder.append(startOffset);
+		builder.append(", endOffset=");
+		builder.append(endOffset);
+		builder.append(", subframes=");
+		builder.append(subframes);
+		builder.append("]");
+		return builder.toString();
+	}
 
 	@Override
 	public int hashCode() {

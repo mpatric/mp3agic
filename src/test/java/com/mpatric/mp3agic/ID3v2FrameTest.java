@@ -6,12 +6,12 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class ID3v2FrameTest {
-	
+
 	private static final String T_FRAME = "TPE1000 000ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 	private static final String W_FRAME = "WXXX000!0000ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 	private static final String C_FRAME = "COMM000$0000000ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 
-    @Test
+	@Test
 	public void shouldReadValid32TFrame() throws Exception {
 		byte[] bytes = BufferTools.stringToByteBuffer("xxxxx" + T_FRAME, 0, 5 + T_FRAME.length());
 		TestHelper.replaceNumbersWithBytes(bytes, 9);
@@ -21,10 +21,10 @@ public class ID3v2FrameTest {
 		String s = "0ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 		byte[] expectedBytes = BufferTools.stringToByteBuffer(s, 0, s.length());
 		TestHelper.replaceNumbersWithBytes(expectedBytes, 0);
-        assertArrayEquals(expectedBytes, frame.getData());
+		assertArrayEquals(expectedBytes, frame.getData());
 	}
 
-    @Test
+	@Test
 	public void shouldReadValid32WFrame() throws Exception {
 		byte[] bytes = BufferTools.stringToByteBuffer(W_FRAME + "xxxxx", 0, W_FRAME.length());
 		TestHelper.replaceNumbersWithBytes(bytes, 0);
@@ -34,10 +34,10 @@ public class ID3v2FrameTest {
 		String s = "00ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 		byte[] expectedBytes = BufferTools.stringToByteBuffer(s, 0, s.length());
 		TestHelper.replaceNumbersWithBytes(expectedBytes, 0);
-        assertArrayEquals(expectedBytes, frame.getData());
+		assertArrayEquals(expectedBytes, frame.getData());
 	}
 
-    @Test
+	@Test
 	public void shouldReadValid32CFrame() throws Exception {
 		byte[] bytes = BufferTools.stringToByteBuffer(C_FRAME, 0, C_FRAME.length());
 		TestHelper.replaceNumbersWithBytes(bytes, 0);
@@ -47,12 +47,12 @@ public class ID3v2FrameTest {
 		String s = "00000ABCDEFGHIJKLMNOPQRSTUVWXYZABCDE";
 		byte[] expectedBytes = BufferTools.stringToByteBuffer(s, 0, s.length());
 		TestHelper.replaceNumbersWithBytes(expectedBytes, 0);
-        assertArrayEquals(expectedBytes, frame.getData());
+		assertArrayEquals(expectedBytes, frame.getData());
 	}
 
-    @Test
+	@Test
 	public void shouldPackAndUnpackHeaderToGiveEquivalentObject() throws Exception {
-		byte[] bytes = new byte [26];
+		byte[] bytes = new byte[26];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) ('A' + i);
 		}

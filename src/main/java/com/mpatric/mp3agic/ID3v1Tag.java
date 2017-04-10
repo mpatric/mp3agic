@@ -24,7 +24,7 @@ public class ID3v1Tag implements ID3v1 {
 	private static final int TRACK_MARKER_OFFSET = 125;
 	private static final int TRACK_OFFSET = 126;
 	private static final int GENRE_OFFSET = 127;
-	
+
 	private String track = null;
 	private String artist = null;
 	private String title = null;
@@ -35,7 +35,7 @@ public class ID3v1Tag implements ID3v1 {
 
 	public ID3v1Tag() {
 	}
-	
+
 	public ID3v1Tag(byte[] bytes) throws NoSuchTagException {
 		unpackTag(bytes);
 	}
@@ -63,29 +63,29 @@ public class ID3v1Tag implements ID3v1 {
 			}
 		}
 	}
-	
+
 	private void sanityCheckTag(byte[] bytes) throws NoSuchTagException {
 		if (bytes.length != TAG_LENGTH) {
 			throw new NoSuchTagException("Buffer length wrong");
 		}
-		if (! TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, TAG.length()))) {
+		if (!TAG.equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, 0, TAG.length()))) {
 			throw new NoSuchTagException();
 		}
 	}
-	
+
 	@Override
 	public byte[] toBytes() {
 		byte[] bytes = new byte[TAG_LENGTH];
 		packTag(bytes);
 		return bytes;
 	}
-	
+
 	public void toBytes(byte[] bytes) {
 		packTag(bytes);
 	}
 
 	public void packTag(byte[] bytes) {
-		Arrays.fill(bytes, (byte)0);
+		Arrays.fill(bytes, (byte) 0);
 		try {
 			BufferTools.stringIntoByteBuffer(TAG, 0, 3, bytes, 0);
 		} catch (UnsupportedEncodingException e) {
@@ -95,21 +95,21 @@ public class ID3v1Tag implements ID3v1 {
 		packField(bytes, album, ALBUM_LENGTH, ALBUM_OFFSET);
 		packField(bytes, year, YEAR_LENGTH, YEAR_OFFSET);
 		if (genre < 128) {
-			bytes[GENRE_OFFSET] = (byte)genre;
+			bytes[GENRE_OFFSET] = (byte) genre;
 		} else {
-			bytes[GENRE_OFFSET] = (byte)(genre - 256);
+			bytes[GENRE_OFFSET] = (byte) (genre - 256);
 		}
 		if (track == null) {
 			packField(bytes, comment, COMMENT_LENGTH_V1_0, COMMENT_OFFSET);
 		} else {
 			packField(bytes, comment, COMMENT_LENGTH_V1_1, COMMENT_OFFSET);
 			String trackTemp = numericsOnly(track);
-			if (trackTemp.length() > 0) {			
+			if (trackTemp.length() > 0) {
 				int trackInt = Integer.parseInt(trackTemp);
 				if (trackInt < 128) {
-					bytes[TRACK_OFFSET] = (byte)trackInt;
+					bytes[TRACK_OFFSET] = (byte) trackInt;
 				} else {
-					bytes[TRACK_OFFSET] = (byte)(trackInt - 256);
+					bytes[TRACK_OFFSET] = (byte) (trackInt - 256);
 				}
 			}
 		}
@@ -123,7 +123,7 @@ public class ID3v1Tag implements ID3v1 {
 			}
 		}
 	}
-	
+
 	private String numericsOnly(String s) {
 		StringBuilder stringBuffer = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
@@ -136,7 +136,7 @@ public class ID3v1Tag implements ID3v1 {
 		}
 		return stringBuffer.toString();
 	}
-	
+
 	@Override
 	public String getVersion() {
 		if (track == null) {
@@ -175,7 +175,7 @@ public class ID3v1Tag implements ID3v1 {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	@Override
 	public String getAlbum() {
 		return album;
@@ -195,7 +195,7 @@ public class ID3v1Tag implements ID3v1 {
 	public void setYear(String year) {
 		this.year = year;
 	}
-	
+
 	@Override
 	public int getGenre() {
 		return genre;

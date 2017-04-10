@@ -5,7 +5,7 @@ import java.io.UnsupportedEncodingException;
 public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 
 	private static final String DEFAULT_LANGUAGE = "eng";
-	
+
 	private String language;
 	private EncodedText description;
 	private EncodedText comment;
@@ -13,7 +13,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	public ID3v2CommentFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
 	}
-	
+
 	public ID3v2CommentFrameData(boolean unsynchronisation, String language, EncodedText description, EncodedText comment) {
 		super(unsynchronisation);
 		this.language = language;
@@ -25,7 +25,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		super(unsynchronisation);
 		synchroniseAndUnpackFrameData(bytes);
 	}
-	
+
 	@Override
 	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
 		try {
@@ -84,7 +84,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 		if (comment != null) length += comment.toBytes(true, false).length;
 		return length;
 	}
-	
+
 	public String getLanguage() {
 		return language;
 	}
@@ -92,7 +92,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	
+
 	public EncodedText getComment() {
 		return comment;
 	}
@@ -108,7 +108,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	public void setDescription(EncodedText description) {
 		this.description = description;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

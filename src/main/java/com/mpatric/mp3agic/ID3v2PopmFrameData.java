@@ -13,8 +13,8 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 	protected int rating = -1;
 
 	private static final Map<Byte, Integer> byteToRating = new HashMap<>(5);
-	private static final byte[] wmp9encodedRatings = { (byte) 0x00, (byte) 0x01, (byte) 0x40, (byte) 0x80, (byte) 0xC4,
-			(byte) 0xFF };
+	private static final byte[] wmp9encodedRatings = {(byte) 0x00, (byte) 0x01, (byte) 0x40, (byte) 0x80, (byte) 0xC4,
+			(byte) 0xFF};
 
 	static {
 		for (int i = 0; i < 6; i++) {
@@ -42,9 +42,9 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 		}
 		final byte ratingByte = bytes[bytes.length - 1];
 		if (byteToRating.containsKey(ratingByte)) {
-                    rating = byteToRating.get(ratingByte);
+			rating = byteToRating.get(ratingByte);
 		} else {
-		    rating = -1;
+			rating = -1;
 		}
 
 	}
@@ -79,35 +79,33 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 		return address.length() + 2;
 	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((address == null) ? 0 : address.hashCode());
-        result = prime * result + rating;
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + rating;
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ID3v2PopmFrameData other = (ID3v2PopmFrameData) obj;
-        if (address == null) {
-            if (other.address != null)
-                return false;
-        } else if (!address.equals(other.address))
-            return false;
-        if (rating != other.rating)
-            return false;
-        return true;
-    }
-	
-	
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ID3v2PopmFrameData other = (ID3v2PopmFrameData) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (rating != other.rating)
+			return false;
+		return true;
+	}
+
 
 }

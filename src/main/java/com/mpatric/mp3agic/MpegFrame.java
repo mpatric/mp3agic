@@ -41,7 +41,7 @@ public class MpegFrame {
 	private static final long BITMASK_COPYRIGHT = 0x8L;
 	private static final long BITMASK_ORIGINAL = 0x4L;
 	private static final long BITMASK_EMPHASIS = 0x3L;
-	
+
 	private String version;
 	private int layer;
 	private boolean protection;
@@ -60,7 +60,7 @@ public class MpegFrame {
 		long frameHeader = BufferTools.unpackInteger(frameData[0], frameData[1], frameData[2], frameData[3]);
 		setFields(frameHeader);
 	}
-	
+
 	public MpegFrame(byte frameData1, byte frameData2, byte frameData3, byte frameData4) throws InvalidDataException {
 		long frameHeader = BufferTools.unpackInteger(frameData1, frameData2, frameData3, frameData4);
 		setFields(frameHeader);
@@ -94,203 +94,407 @@ public class MpegFrame {
 				break;
 			}
 		}
-		return (int)((frameHeader >> shiftBy) & (bitMask >> shiftBy));
+		return (int) ((frameHeader >> shiftBy) & (bitMask >> shiftBy));
 	}
 
 	private void setVersion(int version) throws InvalidDataException {
 		switch (version) {
-			case 0: this.version = MPEG_VERSION_2_5; break;
-			case 2: this.version = MPEG_VERSION_2_0; break;
-			case 3: this.version = MPEG_VERSION_1_0; break;
-			default: throw new InvalidDataException("Invalid mpeg audio version in frame header");
+			case 0:
+				this.version = MPEG_VERSION_2_5;
+				break;
+			case 2:
+				this.version = MPEG_VERSION_2_0;
+				break;
+			case 3:
+				this.version = MPEG_VERSION_1_0;
+				break;
+			default:
+				throw new InvalidDataException("Invalid mpeg audio version in frame header");
 		}
 	}
-	
+
 	private void setLayer(int layer) throws InvalidDataException {
 		switch (layer) {
-			case 1: this.layer = 3; break;
-			case 2: this.layer = 2; break;
-			case 3: this.layer = 1; break;
-			default: throw new InvalidDataException("Invalid mpeg layer description in frame header"); 
+			case 1:
+				this.layer = 3;
+				break;
+			case 2:
+				this.layer = 2;
+				break;
+			case 3:
+				this.layer = 1;
+				break;
+			default:
+				throw new InvalidDataException("Invalid mpeg layer description in frame header");
 		}
 	}
-	
+
 	private void setProtection(int protectionBit) {
 		this.protection = (protectionBit == 1);
 	}
-	
+
 	private void setBitRate(int bitrate) throws InvalidDataException {
 		if (MPEG_VERSION_1_0.equals(version)) {
 			if (layer == 1) {
 				switch (bitrate) {
-					case 1: this.bitrate = 32; return;
-					case 2: this.bitrate = 64; return;
-					case 3: this.bitrate = 96; return;
-					case 4: this.bitrate = 128; return;
-					case 5: this.bitrate = 160; return;
-					case 6: this.bitrate = 192; return;
-					case 7: this.bitrate = 224; return;
-					case 8: this.bitrate = 256; return;
-					case 9: this.bitrate = 288; return;
-					case 10: this.bitrate = 320; return;
-					case 11: this.bitrate = 352; return;
-					case 12: this.bitrate = 384; return;
-					case 13: this.bitrate = 416; return;
-					case 14: this.bitrate = 448; return;
+					case 1:
+						this.bitrate = 32;
+						return;
+					case 2:
+						this.bitrate = 64;
+						return;
+					case 3:
+						this.bitrate = 96;
+						return;
+					case 4:
+						this.bitrate = 128;
+						return;
+					case 5:
+						this.bitrate = 160;
+						return;
+					case 6:
+						this.bitrate = 192;
+						return;
+					case 7:
+						this.bitrate = 224;
+						return;
+					case 8:
+						this.bitrate = 256;
+						return;
+					case 9:
+						this.bitrate = 288;
+						return;
+					case 10:
+						this.bitrate = 320;
+						return;
+					case 11:
+						this.bitrate = 352;
+						return;
+					case 12:
+						this.bitrate = 384;
+						return;
+					case 13:
+						this.bitrate = 416;
+						return;
+					case 14:
+						this.bitrate = 448;
+						return;
 				}
 			} else if (layer == 2) {
 				switch (bitrate) {
-					case 1: this.bitrate = 32; return;
-					case 2: this.bitrate = 48; return;
-					case 3: this.bitrate = 56; return;
-					case 4: this.bitrate = 64; return;
-					case 5: this.bitrate = 80; return;
-					case 6: this.bitrate = 96; return;
-					case 7: this.bitrate = 112; return;
-					case 8: this.bitrate = 128; return;
-					case 9: this.bitrate = 160; return;
-					case 10: this.bitrate = 192; return;
-					case 11: this.bitrate = 224; return;
-					case 12: this.bitrate = 256; return;
-					case 13: this.bitrate = 320; return;
-					case 14: this.bitrate = 384; return;
+					case 1:
+						this.bitrate = 32;
+						return;
+					case 2:
+						this.bitrate = 48;
+						return;
+					case 3:
+						this.bitrate = 56;
+						return;
+					case 4:
+						this.bitrate = 64;
+						return;
+					case 5:
+						this.bitrate = 80;
+						return;
+					case 6:
+						this.bitrate = 96;
+						return;
+					case 7:
+						this.bitrate = 112;
+						return;
+					case 8:
+						this.bitrate = 128;
+						return;
+					case 9:
+						this.bitrate = 160;
+						return;
+					case 10:
+						this.bitrate = 192;
+						return;
+					case 11:
+						this.bitrate = 224;
+						return;
+					case 12:
+						this.bitrate = 256;
+						return;
+					case 13:
+						this.bitrate = 320;
+						return;
+					case 14:
+						this.bitrate = 384;
+						return;
 				}
 			} else if (layer == 3) {
 				switch (bitrate) {
-					case 1: this.bitrate = 32; return;
-					case 2: this.bitrate = 40; return;
-					case 3: this.bitrate = 48; return;
-					case 4: this.bitrate = 56; return;
-					case 5: this.bitrate = 64; return;
-					case 6: this.bitrate = 80; return;
-					case 7: this.bitrate = 96; return;
-					case 8: this.bitrate = 112; return;
-					case 9: this.bitrate = 128; return;
-					case 10: this.bitrate = 160; return;
-					case 11: this.bitrate = 192; return;
-					case 12: this.bitrate = 224; return;
-					case 13: this.bitrate = 256; return;
-					case 14: this.bitrate = 320; return;
+					case 1:
+						this.bitrate = 32;
+						return;
+					case 2:
+						this.bitrate = 40;
+						return;
+					case 3:
+						this.bitrate = 48;
+						return;
+					case 4:
+						this.bitrate = 56;
+						return;
+					case 5:
+						this.bitrate = 64;
+						return;
+					case 6:
+						this.bitrate = 80;
+						return;
+					case 7:
+						this.bitrate = 96;
+						return;
+					case 8:
+						this.bitrate = 112;
+						return;
+					case 9:
+						this.bitrate = 128;
+						return;
+					case 10:
+						this.bitrate = 160;
+						return;
+					case 11:
+						this.bitrate = 192;
+						return;
+					case 12:
+						this.bitrate = 224;
+						return;
+					case 13:
+						this.bitrate = 256;
+						return;
+					case 14:
+						this.bitrate = 320;
+						return;
 				}
 			}
 		} else if (MPEG_VERSION_2_0.equals(version) || MPEG_VERSION_2_5.equals(version)) {
 			if (layer == 1) {
 				switch (bitrate) {
-					case 1: this.bitrate = 32; return;
-					case 2: this.bitrate = 48; return;
-					case 3: this.bitrate = 56; return;
-					case 4: this.bitrate = 64; return;
-					case 5: this.bitrate = 80; return;
-					case 6: this.bitrate = 96; return;
-					case 7: this.bitrate = 112; return;
-					case 8: this.bitrate = 128; return;
-					case 9: this.bitrate = 144; return;
-					case 10: this.bitrate = 160; return;
-					case 11: this.bitrate = 176; return;
-					case 12: this.bitrate = 192; return;
-					case 13: this.bitrate = 224; return;
-					case 14: this.bitrate = 256; return;
+					case 1:
+						this.bitrate = 32;
+						return;
+					case 2:
+						this.bitrate = 48;
+						return;
+					case 3:
+						this.bitrate = 56;
+						return;
+					case 4:
+						this.bitrate = 64;
+						return;
+					case 5:
+						this.bitrate = 80;
+						return;
+					case 6:
+						this.bitrate = 96;
+						return;
+					case 7:
+						this.bitrate = 112;
+						return;
+					case 8:
+						this.bitrate = 128;
+						return;
+					case 9:
+						this.bitrate = 144;
+						return;
+					case 10:
+						this.bitrate = 160;
+						return;
+					case 11:
+						this.bitrate = 176;
+						return;
+					case 12:
+						this.bitrate = 192;
+						return;
+					case 13:
+						this.bitrate = 224;
+						return;
+					case 14:
+						this.bitrate = 256;
+						return;
 				}
 			} else if (layer == 2 || layer == 3) {
 				switch (bitrate) {
-					case 1: this.bitrate = 8; return;
-					case 2: this.bitrate = 16; return;
-					case 3: this.bitrate = 24; return;
-					case 4: this.bitrate = 32; return;
-					case 5: this.bitrate = 40; return;
-					case 6: this.bitrate = 48; return;
-					case 7: this.bitrate = 56; return;
-					case 8: this.bitrate = 64; return;
-					case 9: this.bitrate = 80; return;
-					case 10: this.bitrate = 96; return;
-					case 11: this.bitrate = 112; return;
-					case 12: this.bitrate = 128; return;
-					case 13: this.bitrate = 144; return;
-					case 14: this.bitrate = 160; return;
+					case 1:
+						this.bitrate = 8;
+						return;
+					case 2:
+						this.bitrate = 16;
+						return;
+					case 3:
+						this.bitrate = 24;
+						return;
+					case 4:
+						this.bitrate = 32;
+						return;
+					case 5:
+						this.bitrate = 40;
+						return;
+					case 6:
+						this.bitrate = 48;
+						return;
+					case 7:
+						this.bitrate = 56;
+						return;
+					case 8:
+						this.bitrate = 64;
+						return;
+					case 9:
+						this.bitrate = 80;
+						return;
+					case 10:
+						this.bitrate = 96;
+						return;
+					case 11:
+						this.bitrate = 112;
+						return;
+					case 12:
+						this.bitrate = 128;
+						return;
+					case 13:
+						this.bitrate = 144;
+						return;
+					case 14:
+						this.bitrate = 160;
+						return;
 				}
 			}
 		}
 		throw new InvalidDataException("Invalid bitrate in frame header");
 	}
-	
+
 	private void setSampleRate(int sampleRate) throws InvalidDataException {
 		if (MPEG_VERSION_1_0.equals(version)) {
 			switch (sampleRate) {
-				case 0: this.sampleRate = 44100; return;
-				case 1: this.sampleRate = 48000; return;
-				case 2: this.sampleRate = 32000; return;
+				case 0:
+					this.sampleRate = 44100;
+					return;
+				case 1:
+					this.sampleRate = 48000;
+					return;
+				case 2:
+					this.sampleRate = 32000;
+					return;
 			}
-		} else if (MPEG_VERSION_2_0.equals(version)) {	
+		} else if (MPEG_VERSION_2_0.equals(version)) {
 			switch (sampleRate) {
-				case 0: this.sampleRate = 22050; return;
-				case 1: this.sampleRate = 24000; return;
-				case 2: this.sampleRate = 16000; return;
+				case 0:
+					this.sampleRate = 22050;
+					return;
+				case 1:
+					this.sampleRate = 24000;
+					return;
+				case 2:
+					this.sampleRate = 16000;
+					return;
 			}
-		} else if (MPEG_VERSION_2_5.equals(version)) {	
+		} else if (MPEG_VERSION_2_5.equals(version)) {
 			switch (sampleRate) {
-				case 0: this.sampleRate = 11025; return;
-				case 1: this.sampleRate = 12000; return;
-				case 2: this.sampleRate = 8000; return;
+				case 0:
+					this.sampleRate = 11025;
+					return;
+				case 1:
+					this.sampleRate = 12000;
+					return;
+				case 2:
+					this.sampleRate = 8000;
+					return;
 			}
 		}
 		throw new InvalidDataException("Invalid sample rate in frame header");
 	}
-	
+
 	private void setPadding(int paddingBit) {
 		this.padding = (paddingBit == 1);
 	}
-	
+
 	private void setPrivate(int privateBit) {
 		this.privat = (privateBit == 1);
 	}
-	
+
 	private void setChannelMode(int channelMode) throws InvalidDataException {
 		switch (channelMode) {
-			case 0: this.channelMode = CHANNEL_MODE_STEREO; break;
-			case 1: this.channelMode = CHANNEL_MODE_JOINT_STEREO; break;
-			case 2: this.channelMode = CHANNEL_MODE_DUAL_MONO; break;
-			case 3: this.channelMode = CHANNEL_MODE_MONO; break;
-			default: throw new InvalidDataException("Invalid channel mode in frame header");
+			case 0:
+				this.channelMode = CHANNEL_MODE_STEREO;
+				break;
+			case 1:
+				this.channelMode = CHANNEL_MODE_JOINT_STEREO;
+				break;
+			case 2:
+				this.channelMode = CHANNEL_MODE_DUAL_MONO;
+				break;
+			case 3:
+				this.channelMode = CHANNEL_MODE_MONO;
+				break;
+			default:
+				throw new InvalidDataException("Invalid channel mode in frame header");
 		}
 	}
-	
+
 	private void setModeExtension(int modeExtension) throws InvalidDataException {
-		if (! CHANNEL_MODE_JOINT_STEREO.equals(channelMode)) {
+		if (!CHANNEL_MODE_JOINT_STEREO.equals(channelMode)) {
 			this.modeExtension = MODE_EXTENSION_NA;
 		} else {
-			if (layer == 1 || layer == 2) { 
+			if (layer == 1 || layer == 2) {
 				switch (modeExtension) {
-					case 0: this.modeExtension = MODE_EXTENSION_BANDS_4_31; return;
-					case 1: this.modeExtension = MODE_EXTENSION_BANDS_8_31; return;
-					case 2: this.modeExtension = MODE_EXTENSION_BANDS_12_31; return;
-					case 3: this.modeExtension = MODE_EXTENSION_BANDS_16_31; return;
+					case 0:
+						this.modeExtension = MODE_EXTENSION_BANDS_4_31;
+						return;
+					case 1:
+						this.modeExtension = MODE_EXTENSION_BANDS_8_31;
+						return;
+					case 2:
+						this.modeExtension = MODE_EXTENSION_BANDS_12_31;
+						return;
+					case 3:
+						this.modeExtension = MODE_EXTENSION_BANDS_16_31;
+						return;
 				}
 			} else if (layer == 3) {
 				switch (modeExtension) {
-					case 0: this.modeExtension = MODE_EXTENSION_NONE; return;
-					case 1: this.modeExtension = MODE_EXTENSION_INTENSITY_STEREO; return;
-					case 2: this.modeExtension = MODE_EXTENSION_M_S_STEREO; return;
-					case 3: this.modeExtension = MODE_EXTENSION_INTENSITY_M_S_STEREO; return;
+					case 0:
+						this.modeExtension = MODE_EXTENSION_NONE;
+						return;
+					case 1:
+						this.modeExtension = MODE_EXTENSION_INTENSITY_STEREO;
+						return;
+					case 2:
+						this.modeExtension = MODE_EXTENSION_M_S_STEREO;
+						return;
+					case 3:
+						this.modeExtension = MODE_EXTENSION_INTENSITY_M_S_STEREO;
+						return;
 				}
 			}
 			throw new InvalidDataException("Invalid mode extension in frame header");
 		}
 	}
-	
+
 	private void setCopyright(int copyrightBit) {
 		this.copyright = (copyrightBit == 1);
 	}
-	
+
 	private void setOriginal(int originalBit) {
 		this.original = (originalBit == 1);
 	}
-	
+
 	private void setEmphasis(int emphasis) throws InvalidDataException {
 		switch (emphasis) {
-			case 0: this.emphasis = EMPHASIS_NONE; break;
-			case 1: this.emphasis = EMPHASIS__50_15_MS; break;
-			case 3: this.emphasis = EMPHASIS_CCITT_J_17; break;
-			default: throw new InvalidDataException("Invalid emphasis in frame header");
+			case 0:
+				this.emphasis = EMPHASIS_NONE;
+				break;
+			case 1:
+				this.emphasis = EMPHASIS__50_15_MS;
+				break;
+			case 3:
+				this.emphasis = EMPHASIS_CCITT_J_17;
+				break;
+			default:
+				throw new InvalidDataException("Invalid emphasis in frame header");
 		}
 	}
 
@@ -341,7 +545,7 @@ public class MpegFrame {
 	public String getVersion() {
 		return version;
 	}
-	
+
 	public int getLengthInBytes() {
 		long length;
 		int pad;
@@ -352,6 +556,6 @@ public class MpegFrame {
 		} else {
 			length = ((144000 * bitrate) / sampleRate) + pad;
 		}
-		return (int)length;
+		return (int) length;
 	}
 }
