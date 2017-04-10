@@ -8,3 +8,4 @@ build
 *.classpath
 target
 .settings
+.nbproject
