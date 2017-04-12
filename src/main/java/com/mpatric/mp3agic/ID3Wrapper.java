@@ -114,10 +114,10 @@ public class ID3Wrapper {
 	}
 
 	public int getGenre() {
-		if (id3v1Tag != null && id3v1Tag.getGenre() != -1) {
-			return id3v1Tag.getGenre();
-		} else if (id3v2Tag != null) {
+		if (id3v2Tag != null && id3v2Tag.getGenre() != -1) {
 			return id3v2Tag.getGenre();
+		} else if (id3v1Tag != null) {
+			return id3v1Tag.getGenre();
 		} else {
 			return -1;
 		}
@@ -133,10 +133,10 @@ public class ID3Wrapper {
 	}
 
 	public String getGenreDescription() {
-		if (id3v1Tag != null) {
-			return id3v1Tag.getGenreDescription();
-		} else if (id3v2Tag != null) {
+		if (id3v2Tag != null) {
 			return id3v2Tag.getGenreDescription();
+		} else if (id3v1Tag != null) {
+			return id3v1Tag.getGenreDescription();
 		} else {
 			return null;
 		}
