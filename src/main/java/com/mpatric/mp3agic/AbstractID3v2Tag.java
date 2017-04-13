@@ -1104,7 +1104,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 				description);
 
 		if (frameData != null) {
-			frameData.getValue().toString();
+            return frameData.getValue().toString();
 		}
 
 		return null;
