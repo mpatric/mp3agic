@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -16,8 +17,28 @@ public class FileWrapperTest {
 	private static final String MALFORMED_FILENAME = "malformed.?";
 
 	@Test
-	public void shouldReadValidFile() throws IOException {
+	public void shouldReadValidFilename() throws IOException {
 		FileWrapper fileWrapper = new FileWrapper(VALID_FILENAME);
+		System.out.println(fileWrapper.getFilename());
+		System.out.println(VALID_FILENAME);
+		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+		assertTrue(fileWrapper.getLastModified() > 0);
+		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+	}
+
+	@Test
+	public void shouldReadValidFile() throws IOException {
+		FileWrapper fileWrapper = new FileWrapper(new File(VALID_FILENAME));
+		System.out.println(fileWrapper.getFilename());
+		System.out.println(VALID_FILENAME);
+		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+		assertTrue(fileWrapper.getLastModified() > 0);
+		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+	}
+
+	@Test
+	public void shouldReadValidPath() throws IOException {
+		FileWrapper fileWrapper = new FileWrapper(Paths.get(VALID_FILENAME));
 		System.out.println(fileWrapper.getFilename());
 		System.out.println(VALID_FILENAME);
 		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
@@ -43,5 +64,10 @@ public class FileWrapperTest {
 	@Test(expected = NullPointerException.class)
 	public void shouldFailForNullFilenameFile() throws IOException {
 		new FileWrapper((java.io.File) null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldFailForNullPath() throws IOException {
+		new FileWrapper((java.nio.file.Path) null);
 	}
 }
