@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
@@ -51,9 +52,20 @@ public class FileWrapperTest {
 		new FileWrapper(NON_EXISTENT_FILENAME);
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void shouldFailForMalformedFilename() throws IOException {
-		new FileWrapper(MALFORMED_FILENAME);
+		try {
+			new FileWrapper(MALFORMED_FILENAME);
+		}
+		// Linux/Mac
+		catch (FileNotFoundException fnfe) {
+			return;
+		}
+		// Windows
+		catch (InvalidPathException ipe) {
+			return;
+		}
+		fail("Expected FileNotFoundException or InvalidPathException");
 	}
 
 	@Test(expected = NullPointerException.class)
