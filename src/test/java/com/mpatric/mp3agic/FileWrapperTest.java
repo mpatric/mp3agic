@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,7 @@ public class FileWrapperTest {
 	private static final String VALID_FILENAME = "src" + fs + "test" + fs + "resources" + fs + "notags.mp3";
 	private static final long VALID_FILE_LENGTH = 2869;
 	private static final String NON_EXISTENT_FILENAME = "just-not.there";
-	private static final String MALFORMED_FILENAME = "malformed.?";
+	private static final String MALFORMED_FILENAME = "malformed.\0";
 
 	@Test
 	public void shouldReadValidFilename() throws IOException {
@@ -51,7 +52,7 @@ public class FileWrapperTest {
 		new FileWrapper(NON_EXISTENT_FILENAME);
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test(expected = InvalidPathException.class)
 	public void shouldFailForMalformedFilename() throws IOException {
 		new FileWrapper(MALFORMED_FILENAME);
 	}
