@@ -14,4 +14,4 @@ build_script:
 
 cache:
   - C:\maven\
-- C:\Users\appveyor\.m2
+  - C:\Users\appveyor\.m2
