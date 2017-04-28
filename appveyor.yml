@@ -1,0 +1,17 @@
+version: '{build}'
+
+skip_tags: true
+
+clone_depth: 5
+
+install:
+  - choco install jdk8
+  - choco install maven
+  - refreshenv
+
+build_script:
+  - mvn clean verify
+
+cache:
+  - C:\maven\
+  - C:\Users\appveyor\.m2
