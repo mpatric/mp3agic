@@ -133,6 +133,13 @@ public class ID3v2CommentFrameDataTest {
 		assertEquals(frameData, frameDataCopy);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void constructorThrowsErrorWhenEncodingsDoNotMatch() {
+		new ID3v2CommentFrameData(false, TEST_LANGUAGE,
+				new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, "description"),
+				new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, "comment"));
+	}
+
 	@Test
 	public void shouldConvertFrameDataWithBlankDescriptionAndLanguageToBytesAndBackToEquivalentObject() throws Exception {
 		byte[] bytes = {0, 0, 0, 0, 0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'};
@@ -151,6 +158,57 @@ public class ID3v2CommentFrameDataTest {
 		assertArrayEquals(expectedBytes, bytes);
 		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
 		assertEquals(frameData, frameDataCopy);
+	}
+
+	@Test
+	public void convertsEmptyFrameDataToBytesAndBack() throws Exception {
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, null, null, null);
+		byte[] bytes = frameData.toBytes();
+		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("eng", frameDataCopy.getLanguage());
+		assertEquals(new EncodedText(""), frameDataCopy.getDescription());
+		assertEquals(new EncodedText(""), frameDataCopy.getComment());
+	}
+
+	@Test
+	public void convertsFrameDataWithNoLanguageToBytesAndBack() throws Exception {
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, null, new EncodedText(TEST_DESCRIPTION), new EncodedText(TEST_VALUE));
+		byte[] bytes = frameData.toBytes();
+		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("eng", frameDataCopy.getLanguage());
+		assertEquals(new EncodedText(TEST_DESCRIPTION), frameDataCopy.getDescription());
+		assertEquals(new EncodedText(TEST_VALUE), frameDataCopy.getComment());
+	}
+
+	@Test
+	public void convertsFrameDataWithNoDescriptionToBytesAndBack() throws Exception {
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, null, new EncodedText(TEST_VALUE));
+		byte[] bytes = frameData.toBytes();
+		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("eng", frameDataCopy.getLanguage());
+		assertEquals(new EncodedText(""), frameDataCopy.getDescription());
+		assertEquals(new EncodedText(TEST_VALUE), frameDataCopy.getComment());
+	}
+
+	@Test
+	public void convertsFrameDataWithNoDescriptionAndCommentIsUnicodeToBytesAndBack() throws Exception {
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, null,
+				new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_VALUE_UNICODE));
+		byte[] bytes = frameData.toBytes();
+		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("eng", frameDataCopy.getLanguage());
+		assertEquals(new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, ""), frameDataCopy.getDescription());
+		assertEquals(new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, TEST_VALUE_UNICODE), frameDataCopy.getComment());
+	}
+
+	@Test
+	public void convertsFrameDataWithNoCommentToBytesAndBack() throws Exception {
+		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText(TEST_DESCRIPTION), null);
+		byte[] bytes = frameData.toBytes();
+		ID3v2CommentFrameData frameDataCopy = new ID3v2CommentFrameData(false, bytes);
+		assertEquals("eng", frameDataCopy.getLanguage());
+		assertEquals(new EncodedText(TEST_DESCRIPTION), frameDataCopy.getDescription());
+		assertEquals(new EncodedText(""), frameDataCopy.getComment());
 	}
 
 	@Test
