@@ -16,6 +16,9 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 
 	public ID3v2CommentFrameData(boolean unsynchronisation, String language, EncodedText description, EncodedText comment) {
 		super(unsynchronisation);
+		if (description != null && comment != null && description.getTextEncoding() != comment.getTextEncoding()) {
+			throw new IllegalArgumentException("description and comment must have same text encoding");
+		}
 		this.language = language;
 		this.description = description;
 		this.comment = comment;
@@ -67,7 +70,9 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 			BufferTools.copyIntoByteBuffer(descriptionBytes, 0, descriptionBytes.length, bytes, marker);
 			marker += descriptionBytes.length;
 		} else {
-			bytes[marker++] = 0;
+			byte[] terminatorBytes = comment != null ? comment.getTerminator() : new byte[]{0};
+			BufferTools.copyIntoByteBuffer(terminatorBytes, 0, terminatorBytes.length, bytes, marker);
+			marker += terminatorBytes.length;
 		}
 		if (comment != null) {
 			byte[] commentBytes = comment.toBytes(true, false);
@@ -80,7 +85,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	protected int getLength() {
 		int length = 4;
 		if (description != null) length += description.toBytes(true, true).length;
-		else length++;
+		else length += comment != null ? comment.getTerminator().length : 1;
 		if (comment != null) length += comment.toBytes(true, false).length;
 		return length;
 	}
