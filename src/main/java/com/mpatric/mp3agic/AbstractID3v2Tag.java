@@ -1098,8 +1098,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 
 	@Override
 	public String getCustomText(String description) {
-		ID3v2TXXXFrameData frameData = ID3v2TXXXFrameData.extract(
-				frameSets,
+        ID3v2TXXXFrameData frameData = ID3v2TXXXFrameData.extract(
+            				frameSets,
 				unsynchronisation,
 				description);
 
