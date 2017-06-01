@@ -449,31 +449,31 @@ public class ID3WrapperTest {
 
 	//region getGenre
 	@Test
-	public void getGenreReturnsV1TagsGenreBeforeV2TagsGenre() {
+	public void getGenreReturnsV2TagsGenreBeforeV1TagsGenre() {
 		ID3v1 id3v1Tag = new ID3v1TagForTesting();
 		id3v1Tag.setGenre(10);
 		ID3v2 id3v2Tag = new ID3v2TagForTesting();
 		id3v2Tag.setGenre(20);
 		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, id3v2Tag);
+		assertEquals(20, wrapper.getGenre());
+	}
+
+	@Test
+	public void getGenreReturnsV1TagsGenreIfV2TagsGenreIsNegativeOne() {
+		ID3v1 id3v1Tag = new ID3v1TagForTesting();
+		id3v1Tag.setGenre(10);
+		ID3v2 id3v2Tag = new ID3v2TagForTesting();
+		id3v2Tag.setGenre(-1);
+		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, id3v2Tag);
 		assertEquals(10, wrapper.getGenre());
 	}
 
 	@Test
-	public void getGenreReturnsV2TagsGenreIfV1TagsGenreIsNegativeOne() {
+	public void getGenreReturnsV1TagsGenreIfV2TagDoesNotExist() {
 		ID3v1 id3v1Tag = new ID3v1TagForTesting();
-		id3v1Tag.setGenre(-1);
-		ID3v2 id3v2Tag = new ID3v2TagForTesting();
-		id3v2Tag.setGenre(20);
-		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, id3v2Tag);
-		assertEquals(20, wrapper.getGenre());
-	}
-
-	@Test
-	public void getGenreReturnsV2TagsGenreIfV1TagDoesNotExist() {
-		ID3v2 id3v2Tag = new ID3v2TagForTesting();
-		id3v2Tag.setGenre(20);
-		ID3Wrapper wrapper = new ID3Wrapper(null, id3v2Tag);
-		assertEquals(20, wrapper.getGenre());
+		id3v1Tag.setGenre(10);
+		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, null);
+		assertEquals(10, wrapper.getGenre());
 	}
 
 	@Test
@@ -519,21 +519,21 @@ public class ID3WrapperTest {
 
 	//region getGenreDescription
 	@Test
-	public void getGenreDescriptionReturnsV1TagsGenreDescriptionBeforeV2TagsGenreDescription() {
+	public void getGenreDescriptionReturnsV2TagsGenreDescriptionBeforeV1TagsGenreDescription() {
 		ID3v1TagForTesting id3v1Tag = new ID3v1TagForTesting();
 		id3v1Tag.setGenreDescription("V1 GenreDescription");
 		ID3v2 id3v2Tag = new ID3v2TagForTesting();
 		id3v2Tag.setGenreDescription("V2 GenreDescription");
 		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, id3v2Tag);
-		assertEquals("V1 GenreDescription", wrapper.getGenreDescription());
+		assertEquals("V2 GenreDescription", wrapper.getGenreDescription());
 	}
 
 	@Test
-	public void getGenreDescriptionReturnsV2TagsGenreDescriptionIfV1TagDoesNotExist() {
-		ID3v2TagForTesting id3v2Tag = new ID3v2TagForTesting();
-		id3v2Tag.setGenreDescription("V2 GenreDescription");
-		ID3Wrapper wrapper = new ID3Wrapper(null, id3v2Tag);
-		assertEquals("V2 GenreDescription", wrapper.getGenreDescription());
+	public void getGenreDescriptionReturnsV1TagsGenreDescriptionIfV2TagDoesNotExist() {
+		ID3v1TagForTesting id3v1Tag = new ID3v1TagForTesting();
+		id3v1Tag.setGenreDescription("V1 GenreDescription");
+		ID3Wrapper wrapper = new ID3Wrapper(id3v1Tag, null);
+		assertEquals("V1 GenreDescription", wrapper.getGenreDescription());
 	}
 
 	@Test
