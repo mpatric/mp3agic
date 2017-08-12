@@ -5,9 +5,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
@@ -205,6 +207,29 @@ public class Mp3FileTest {
 	}
 
 	@Test
+	public void shouldSetId3v1Tag() throws Exception {
+		final Mp3File mp3File = new Mp3File(MP3_WITH_NO_TAGS);
+		final ID3v1 id3tag = new ID3v1Tag();
+		id3tag.setTrack("5");
+		id3tag.setArtist("ARTIST");
+		id3tag.setTitle("TITLE");
+		id3tag.setAlbum("ALBUM");
+		id3tag.setYear("1997");
+		id3tag.setGenre(13);
+		id3tag.setComment("");
+		String saveFilename = mp3File.getFilename() + ".copy";
+		try {
+			mp3File.setId3v1Tag(id3tag);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertTrue(newMp3File.hasId3v1Tag());
+			assertEquals(id3tag, newMp3File.getId3v1Tag());
+		} finally {
+			TestHelper.deleteFile(saveFilename);
+		}
+	}
+
+	@Test
 	public void shouldRemoveId3v1Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v1Tag(new Mp3File(filename));
@@ -231,6 +256,27 @@ public class Mp3FileTest {
 	}
 
 	@Test
+	public void shouldSetId3v2Tag() throws Exception {
+		final Mp3File mp3File = new Mp3File(MP3_WITH_NO_TAGS);
+		final ID3v2 id3tag = new ID3v24Tag();
+		id3tag.setArtist("ARTIST");
+		id3tag.setTitle("TITLE");
+		id3tag.setAlbum("ALBUM");
+		id3tag.setYear("1954");
+		id3tag.setGenre(0x0d);
+		String saveFilename = mp3File.getFilename() + ".copy";
+		try {
+			mp3File.setId3v2Tag(id3tag);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertTrue(newMp3File.hasId3v2Tag());
+			assertEquals(id3tag, newMp3File.getId3v2Tag());
+		} finally {
+			TestHelper.deleteFile(saveFilename);
+		}
+	}
+
+	@Test
 	public void shouldRemoveId3v2Tag() throws Exception {
 		String filename = MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS;
 		testShouldRemoveId3v2Tag(new Mp3File(filename));
@@ -251,6 +297,22 @@ public class Mp3FileTest {
 			assertTrue(newMp3File.hasId3v1Tag());
 			assertFalse(newMp3File.hasId3v2Tag());
 			assertTrue(newMp3File.hasCustomTag());
+		} finally {
+			TestHelper.deleteFile(saveFilename);
+		}
+	}
+
+	@Test
+	public void shouldSetCustomTag() throws Exception {
+		final Mp3File mp3File = new Mp3File(MP3_WITH_NO_TAGS);
+		final byte[] customTag = "CUSTOM_TAG".getBytes(StandardCharsets.UTF_8);
+		String saveFilename = mp3File.getFilename() + ".copy";
+		try {
+			mp3File.setCustomTag(customTag);
+			mp3File.save(saveFilename);
+			Mp3File newMp3File = new Mp3File(saveFilename);
+			assertTrue(newMp3File.hasCustomTag());
+			assertTrue(Arrays.equals(newMp3File.getCustomTag(), customTag));
 		} finally {
 			TestHelper.deleteFile(saveFilename);
 		}
@@ -292,6 +354,18 @@ public class Mp3FileTest {
 	public void shouldRemoveId3v1AndId3v2AndCustomTagsForFileConstructor() throws Exception {
 		File filename = new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS);
 		testShouldRemoveId3v1AndId3v2AndCustomTags(new Mp3File(filename));
+	}
+
+	@Test
+	public void shouldReturnCorrectLengthInSeconds() throws Exception {
+		final Mp3File mp3File = new Mp3File(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
+		assertEquals(0, mp3File.getLengthInSeconds());
+	}
+
+	@Test
+	public void shouldCorrectlyIdentifyIfVBR() throws Exception {
+		final Mp3File mp3File = new Mp3File(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
+		assertTrue(mp3File.isVbr());
 	}
 
 	private void testShouldRemoveId3v1AndId3v2AndCustomTags(Mp3File mp3File) throws Exception {

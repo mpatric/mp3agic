@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import java.util.Objects;
+
 public class MutableInteger {
 
 	private int value;
@@ -22,10 +24,7 @@ public class MutableInteger {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + value;
-		return result;
+		return Objects.hash(value);
 	}
 
 	@Override
@@ -36,9 +35,7 @@ public class MutableInteger {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MutableInteger other = (MutableInteger) obj;
-		if (value != other.value)
-			return false;
-		return true;
+		final MutableInteger other = (MutableInteger) obj;
+		return Objects.equals(value, other.value);
 	}
 }
