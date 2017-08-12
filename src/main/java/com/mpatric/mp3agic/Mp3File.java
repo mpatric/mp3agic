@@ -84,13 +84,18 @@ public class Mp3File extends FileWrapper {
 		init(bufferLength, scanFile);
 	}
 
+	public Mp3File(InputSource inputSource, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+		super(inputSource);
+		init(bufferLength, scanFile);
+	}
+
 	private void init(int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
 		if (bufferLength < MINIMUM_BUFFER_LENGTH + 1) throw new IllegalArgumentException("Buffer too small");
 
 		this.bufferLength = bufferLength;
 		this.scanFile = scanFile;
 
-		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
+		try (SeekableByteChannel seekableByteChannel = inputSource.openChannel(StandardOpenOption.READ)) {
 			initId3v1Tag(seekableByteChannel);
 			scanFile(seekableByteChannel);
 			if (startOffset < 0) {
@@ -146,7 +151,7 @@ public class Mp3File extends FileWrapper {
 							}
 							lastOffset = startOffset;
 						}
-						offset = scanBlock(bytes, bytesRead, fileOffset, offset);
+						offset = scanBlock(bytes, bytesRead, fileOffset, offset, seekableByteChannel.size());
 						fileOffset += offset;
 						seekableByteChannel.position(fileOffset);
 						break;
@@ -204,12 +209,12 @@ public class Mp3File extends FileWrapper {
 		return offset;
 	}
 
-	private int scanBlock(byte[] bytes, int bytesRead, int absoluteOffset, int offset) throws InvalidDataException {
+	private int scanBlock(byte[] bytes, int bytesRead, int absoluteOffset, int offset, long size) throws InvalidDataException {
 		while (offset < bytesRead - MINIMUM_BUFFER_LENGTH) {
 			MpegFrame frame = new MpegFrame(bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3]);
-			sanityCheckFrame(frame, absoluteOffset + offset);
+			sanityCheckFrame(frame, absoluteOffset + offset, size);
 			int newEndOffset = absoluteOffset + offset + frame.getLengthInBytes() - 1;
-			if (newEndOffset < maxEndOffset()) {
+			if (newEndOffset < maxEndOffset(size)) {
 				endOffset = absoluteOffset + offset + frame.getLengthInBytes() - 1;
 				frameCount++;
 				addBitrate(frame.getBitrate());
@@ -221,8 +226,8 @@ public class Mp3File extends FileWrapper {
 		return offset;
 	}
 
-	private int maxEndOffset() {
-		int maxEndOffset = (int) getLength();
+	private int maxEndOffset(long size) {
+		int maxEndOffset = (int) size;
 		if (hasId3v1Tag()) maxEndOffset -= ID3v1Tag.TAG_LENGTH;
 		return maxEndOffset;
 	}
@@ -249,11 +254,11 @@ public class Mp3File extends FileWrapper {
 		return false;
 	}
 
-	private void sanityCheckFrame(MpegFrame frame, int offset) throws InvalidDataException {
+	private void sanityCheckFrame(MpegFrame frame, int offset, long size) throws InvalidDataException {
 		if (sampleRate != frame.getSampleRate()) throw new InvalidDataException("Inconsistent frame header");
 		if (!layer.equals(frame.getLayer())) throw new InvalidDataException("Inconsistent frame header");
 		if (!version.equals(frame.getVersion())) throw new InvalidDataException("Inconsistent frame header");
-		if (offset + frame.getLengthInBytes() > getLength())
+		if (offset + frame.getLengthInBytes() > size)
 			throw new InvalidDataException("Frame would extend beyond end of file");
 	}
 
@@ -270,7 +275,7 @@ public class Mp3File extends FileWrapper {
 
 	private void initId3v1Tag(SeekableByteChannel seekableByteChannel) throws IOException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(ID3v1Tag.TAG_LENGTH);
-		seekableByteChannel.position(getLength() - ID3v1Tag.TAG_LENGTH);
+		seekableByteChannel.position(seekableByteChannel.size() - ID3v1Tag.TAG_LENGTH);
 		byteBuffer.clear();
 		int bytesRead = seekableByteChannel.read(byteBuffer);
 		if (bytesRead < ID3v1Tag.TAG_LENGTH) throw new IOException("Not enough bytes read");
@@ -302,7 +307,7 @@ public class Mp3File extends FileWrapper {
 	}
 
 	private void initCustomTag(SeekableByteChannel seekableByteChannel) throws IOException {
-		int bufferLength = (int) (getLength() - (endOffset + 1));
+		int bufferLength = (int) (seekableByteChannel.size() - (endOffset + 1));
 		if (hasId3v1Tag()) bufferLength -= ID3v1Tag.TAG_LENGTH;
 		if (bufferLength <= 0) {
 			customTag = null;
@@ -442,10 +447,13 @@ public class Mp3File extends FileWrapper {
 	}
 
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (path.toAbsolutePath().compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
+		final Path originalPath = Paths.get(inputSource.getResourceName()).toAbsolutePath();
+		final Path newPath = Paths.get(newFilename).toAbsolutePath();
+		if (originalPath.compareTo(newPath) == 0) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
-		try (SeekableByteChannel saveFile = Files.newByteChannel(Paths.get(newFilename), EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
+		try (SeekableByteChannel saveFile = Files.newByteChannel(newPath,
+				EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
 			if (hasId3v2Tag()) {
 				ByteBuffer byteBuffer = ByteBuffer.wrap(id3v2Tag.toBytes());
 				byteBuffer.rewind();
@@ -471,9 +479,8 @@ public class Mp3File extends FileWrapper {
 		if (filePos < 0) filePos = startOffset;
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
-		SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ);
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
-		try {
+		try (SeekableByteChannel seekableByteChannel = inputSource.openChannel(StandardOpenOption.READ)) {
 			seekableByteChannel.position(filePos);
 			while (true) {
 				byteBuffer.clear();
@@ -489,8 +496,6 @@ public class Mp3File extends FileWrapper {
 					break;
 				}
 			}
-		} finally {
-			seekableByteChannel.close();
 		}
 	}
 }
