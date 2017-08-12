@@ -2,6 +2,7 @@ package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ID3v1Tag implements ID3v1 {
 
@@ -227,16 +228,7 @@ public class ID3v1Tag implements ID3v1 {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((album == null) ? 0 : album.hashCode());
-		result = prime * result + ((artist == null) ? 0 : artist.hashCode());
-		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
-		result = prime * result + genre;
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((track == null) ? 0 : track.hashCode());
-		result = prime * result + ((year == null) ? 0 : year.hashCode());
-		return result;
+		return Objects.hash(album, artist, comment, genre, title, track, year);
 	}
 
 	@Override
@@ -247,39 +239,14 @@ public class ID3v1Tag implements ID3v1 {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ID3v1Tag other = (ID3v1Tag) obj;
-		if (album == null) {
-			if (other.album != null)
-				return false;
-		} else if (!album.equals(other.album))
-			return false;
-		if (artist == null) {
-			if (other.artist != null)
-				return false;
-		} else if (!artist.equals(other.artist))
-			return false;
-		if (comment == null) {
-			if (other.comment != null)
-				return false;
-		} else if (!comment.equals(other.comment))
-			return false;
-		if (genre != other.genre)
-			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
-			return false;
-		if (track == null) {
-			if (other.track != null)
-				return false;
-		} else if (!track.equals(other.track))
-			return false;
-		if (year == null) {
-			if (other.year != null)
-				return false;
-		} else if (!year.equals(other.year))
-			return false;
-		return true;
+		final ID3v1Tag other = (ID3v1Tag) obj;
+		return
+				Objects.equals(album, other.album) &&
+				Objects.equals(artist, other.artist) &&
+				Objects.equals(comment, other.comment) &&
+				Objects.equals(genre, other.genre) &&
+				Objects.equals(title, other.title) &&
+				Objects.equals(track, other.track) &&
+				Objects.equals(year, other.year);
 	}
 }
