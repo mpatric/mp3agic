@@ -329,8 +329,7 @@ public class Mp3File extends FileWrapper {
 	}
 
 	public long getLengthInMilliseconds() {
-		double d = 8 * (endOffset - startOffset);
-		return (long) ((d / bitrate) + 0.5);
+		return (long) (((endOffset - startOffset) * (8.0 / bitrate)) + 0.5);
 	}
 
 	public long getLengthInSeconds() {
