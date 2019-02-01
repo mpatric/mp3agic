@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -160,5 +162,38 @@ public class ID3v1TagTest {
 		byte[] tagBuffer = BufferTools.copyBuffer(buffer, buffer.length - ID3v1Tag.TAG_LENGTH, ID3v1Tag.TAG_LENGTH);
 		ID3v1 id3tag = new ID3v1Tag(tagBuffer);
 		assertEquals("", id3tag.getTrack());
+	}
+
+	@Test
+	public void shouldReturnCorrectGenreDescription() throws Exception {
+		for (int genre = 0; genre < ID3v1Genres.GENRES.length; ++genre) {
+			final ID3v1 id3tag = new ID3v1Tag();
+			id3tag.setGenre(genre);
+			assertEquals(ID3v1Genres.GENRES[genre], id3tag.getGenreDescription());
+		}
+	}
+
+	@Test
+	public void shouldReturnUnknownGenreDescriptionForOutOfRangeGenre() throws Exception {
+		final ID3v1 id3tag = new ID3v1Tag();
+		id3tag.setGenre(Integer.MAX_VALUE);
+		assertEquals("Unknown", id3tag.getGenreDescription());
+	}
+
+	@Test
+	public void shouldReturnCorrectVersion() throws Exception {
+		final ID3v1 id3tag1 = new ID3v1Tag();
+		assertEquals("0", id3tag1.getVersion());
+		final ID3v1 id3tag2 = new ID3v1Tag();
+		id3tag2.setTrack("1");
+		assertEquals("1", id3tag2.getVersion());
+	}
+
+	@Test
+	public void shouldCorrectlyImplementHashCodeAndEquals() throws Exception {
+		EqualsVerifier.forClass(ID3v1Tag.class)
+				.usingGetClass()
+				.suppress(Warning.NONFINAL_FIELDS)
+				.verify();
 	}
 }

@@ -24,7 +24,7 @@ public class FileWrapperTest {
 		System.out.println(VALID_FILENAME);
 		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(fileWrapper.inputSource.getLength(), VALID_FILE_LENGTH);
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class FileWrapperTest {
 		System.out.println(VALID_FILENAME);
 		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(fileWrapper.inputSource.getLength(), VALID_FILE_LENGTH);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class FileWrapperTest {
 		System.out.println(VALID_FILENAME);
 		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(fileWrapper.inputSource.getLength(), VALID_FILE_LENGTH);
 	}
 
 	@Test(expected = FileNotFoundException.class)
@@ -57,18 +57,23 @@ public class FileWrapperTest {
 		new FileWrapper(MALFORMED_FILENAME);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void shouldFailForNullFilename() throws IOException {
 		new FileWrapper((String) null);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void shouldFailForNullFilenameFile() throws IOException {
 		new FileWrapper((java.io.File) null);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void shouldFailForNullPath() throws IOException {
 		new FileWrapper((java.nio.file.Path) null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldFailForNullInputSource() throws IOException {
+		new FileWrapper((InputSource) null);
 	}
 }
