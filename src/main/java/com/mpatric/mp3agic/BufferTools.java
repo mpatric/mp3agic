@@ -37,8 +37,7 @@ public class BufferTools {
 
 	public static byte[] stringToByteBuffer(String s, int offset, int length, String charsetName) throws UnsupportedEncodingException {
 		String stringToCopy = s.substring(offset, offset + length);
-		byte[] bytes = stringToCopy.getBytes(charsetName);
-		return bytes;
+		return stringToCopy.getBytes(charsetName);
 	}
 
 	public static void stringIntoByteBuffer(String s, int offset, int length, byte[] bytes, int destOffset) throws UnsupportedEncodingException {

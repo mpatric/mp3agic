@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 
 public class ID3v1TagTest {
 
-	private String VALID_TAG = "TAGTITLE1234567890123456789012345ARTIST123456789012345678901234ALBUM12345678901234567890123452001COMMENT123456789012345678901234";
-	private String VALID_TAG_WITH_WHITESPACE = "TAGTITLE                         ARTIST                        ALBUM                         2001COMMENT                        ";
+	private static final String VALID_TAG = "TAGTITLE1234567890123456789012345ARTIST123456789012345678901234ALBUM12345678901234567890123452001COMMENT123456789012345678901234";
+	private static final String VALID_TAG_WITH_WHITESPACE = "TAGTITLE                         ARTIST                        ALBUM                         2001COMMENT                        ";
 
 	@Test(expected = NoSuchTagException.class)
 	public void shouldThrowExceptionForTagBufferTooShort() throws NoSuchTagException {
