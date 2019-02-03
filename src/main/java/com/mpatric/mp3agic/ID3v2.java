@@ -139,7 +139,7 @@ public interface ID3v2 extends ID3v1 {
 	 *
 	 * @param text genre string
 	 */
-	public void setGenreDescription(String text);
+	void setGenreDescription(String text);
 
 	int getDataLength();
 

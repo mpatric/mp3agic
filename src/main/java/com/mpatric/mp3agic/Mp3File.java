@@ -257,13 +257,12 @@ public class Mp3File extends FileWrapper {
 			throw new InvalidDataException("Frame would extend beyond end of file");
 	}
 
-	private void addBitrate(int bitrate) {
-                final int key = bitrate;
-		MutableInteger count = bitrates.get(key);
+	private void addBitrate(final int bitrate) {
+		MutableInteger count = bitrates.get(bitrate);
 		if (count != null) {
 			count.increment();
 		} else {
-			bitrates.put(key, new MutableInteger(1));
+			bitrates.put(bitrate, new MutableInteger(1));
 		}
 		this.bitrate = ((this.bitrate * (frameCount - 1)) + bitrate) / frameCount;
 	}
@@ -470,9 +469,8 @@ public class Mp3File extends FileWrapper {
 		if (filePos < 0) filePos = startOffset;
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
-		SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ);
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
-		try {
+		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
 			seekableByteChannel.position(filePos);
 			while (true) {
 				byteBuffer.clear();
@@ -488,8 +486,6 @@ public class Mp3File extends FileWrapper {
 					break;
 				}
 			}
-		} finally {
-			seekableByteChannel.close();
 		}
 	}
 }
