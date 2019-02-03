@@ -2,9 +2,11 @@ package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
 
-public class BufferTools {
+public final class BufferTools {
 
 	protected static final String defaultCharsetName = "ISO-8859-1";
+
+	private BufferTools() {}
 
 	public static String byteBufferToStringIgnoringEncodingIssues(byte[] bytes, int offset, int length) {
 		try {

@@ -1,6 +1,6 @@
 package com.mpatric.mp3agic;
 
-public class ID3v1Genres {
+public final class ID3v1Genres {
 	public static final String[] GENRES = {
 			"Blues",
 			"Classic Rock",
@@ -151,6 +151,8 @@ public class ID3v1Genres {
 			"JPop",
 			"Synthpop"
 	};
+
+	private ID3v1Genres() {}
 
 	/**
 	 * Match provided description against genres, ignoring case.
