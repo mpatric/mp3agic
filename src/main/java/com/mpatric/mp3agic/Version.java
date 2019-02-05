@@ -1,6 +1,6 @@
 package com.mpatric.mp3agic;
 
-public class Version {
+public final class Version {
 	private static final String VERSION;
 	private static final String URL = "http://github.com/mpatric/mp3agic";
 
@@ -8,6 +8,8 @@ public class Version {
 		String implementationVersion = Version.class.getPackage().getImplementationVersion();
 		VERSION = implementationVersion != null ? implementationVersion : "UNKNOWN-SNAPSHOT";
 	}
+
+	private Version() {}
 
 	public static String asString() {
 		return getVersion() + " - " + getUrl();

@@ -1,6 +1,7 @@
 package com.mpatric.mp3agic;
 
-public class ID3v2TagFactory {
+public final class ID3v2TagFactory {
+	private ID3v2TagFactory() {}
 
 	public static AbstractID3v2Tag createTag(byte[] bytes) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 		sanityCheckTag(bytes);

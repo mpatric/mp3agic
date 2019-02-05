@@ -1,9 +1,10 @@
-
 package com.mpatric.mp3agic;
 
 import java.nio.ByteBuffer;
 
-public class ByteBufferUtils {
+public final class ByteBufferUtils {
+
+	private ByteBufferUtils() {}
 
 	public static String extractNullTerminatedString(ByteBuffer bb) {
 		int start = bb.position();
@@ -21,5 +22,4 @@ public class ByteBufferUtils {
 
 		return s;
 	}
-
 }
