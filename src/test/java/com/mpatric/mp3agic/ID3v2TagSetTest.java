@@ -2,6 +2,11 @@ package com.mpatric.mp3agic;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ID3v2TagSetTest {
@@ -522,6 +527,36 @@ public class ID3v2TagSetTest {
 		id3Tag.setUrl("abc");
 		assertTrue(id3Tag.getDataLength() > length);
 		id3Tag.setUrl("");
+		assertEquals(length, id3Tag.getDataLength());
+	}
+
+	@Test
+	public void shouldClearTheFrameWhenSetChaptersNull() {
+		ID3v24Tag id3Tag = new ID3v24Tag();
+		int length = id3Tag.getDataLength();
+		ArrayList<ID3v2ChapterFrameData> chapters = new ArrayList<>();
+		ID3v2ChapterFrameData chapter = new ID3v2ChapterFrameData(false);
+		chapter.setId("abc");
+		chapters.add(chapter);
+		id3Tag.setChapters(chapters);
+		assertTrue(id3Tag.getDataLength() > length);
+		id3Tag.setChapters(null);
+		assertEquals(length, id3Tag.getDataLength());
+	}
+
+
+	@Test
+	public void shouldClearTheFrameWhenSetChapterTOCNull() {
+		ID3v24Tag id3Tag = new ID3v24Tag();
+		int length = id3Tag.getDataLength();
+		ArrayList<ID3v2ChapterTOCFrameData> chapterTOCs = new ArrayList<>();
+		ID3v2ChapterTOCFrameData chapterTOC = new ID3v2ChapterTOCFrameData(false);
+		chapterTOC.setId("abc");
+		chapterTOC.setChildren(new String[]{});
+		chapterTOCs.add(chapterTOC);
+		id3Tag.setChapterTOC(chapterTOCs);
+		assertTrue(id3Tag.getDataLength() > length);
+		id3Tag.setChapterTOC(null);
 		assertEquals(length, id3Tag.getDataLength());
 	}
 
