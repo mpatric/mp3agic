@@ -51,7 +51,8 @@ public class ID3v24Tag extends AbstractID3v2Tag {
 		ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(text));
 		ID3v2FrameSet frameSet = getFrameSets().get(ID_GENRE);
 		if (frameSet == null) {
-			getFrameSets().put(ID_GENRE, frameSet = new ID3v2FrameSet(ID_GENRE));
+			frameSet = new ID3v2FrameSet(ID_GENRE);
+			getFrameSets().put(ID_GENRE, frameSet);
 		}
 		frameSet.clear();
 		frameSet.addFrame(createFrame(ID_GENRE, frameData.toBytes()));
