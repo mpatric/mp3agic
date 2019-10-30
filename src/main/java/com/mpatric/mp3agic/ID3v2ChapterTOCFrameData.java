@@ -4,6 +4,7 @@ package com.mpatric.mp3agic;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
@@ -11,7 +12,7 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 	protected boolean isOrdered;
 	protected String id;
 	protected String[] children;
-	protected ArrayList<ID3v2Frame> subframes = new ArrayList<>();
+	protected List<ID3v2Frame> subframes = new ArrayList<>();
 
 	public ID3v2ChapterTOCFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
@@ -144,11 +145,11 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 		this.children = childs;
 	}
 
-	public ArrayList<ID3v2Frame> getSubframes() {
+	public List<ID3v2Frame> getSubframes() {
 		return subframes;
 	}
 
-	public void setSubframes(ArrayList<ID3v2Frame> subframes) {
+	public void setSubframes(List<ID3v2Frame> subframes) {
 		this.subframes = subframes;
 	}
 

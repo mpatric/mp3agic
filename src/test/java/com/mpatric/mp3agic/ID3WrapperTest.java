@@ -1,16 +1,16 @@
 package com.mpatric.mp3agic;
 
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
 
 public class ID3WrapperTest {
 	//region getId3v1Tag
@@ -1317,22 +1317,22 @@ public class ID3WrapperTest {
 		}
 
 		@Override
-		public ArrayList<ID3v2ChapterFrameData> getChapters() {
+		public List<ID3v2ChapterFrameData> getChapters() {
 			return null;
 		}
 
 		@Override
-		public void setChapters(ArrayList<ID3v2ChapterFrameData> chapters) {
+		public void setChapters(List<ID3v2ChapterFrameData> chapters) {
 
 		}
 
 		@Override
-		public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
+		public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
 			return null;
 		}
 
 		@Override
-		public void setChapterTOC(ArrayList<ID3v2ChapterTOCFrameData> ctoc) {
+		public void setChapterTOC(List<ID3v2ChapterTOCFrameData> ctoc) {
 
 		}
 

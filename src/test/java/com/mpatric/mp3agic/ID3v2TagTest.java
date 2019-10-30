@@ -1,7 +1,6 @@
 package com.mpatric.mp3agic;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -376,7 +375,7 @@ public class ID3v2TagTest {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
 		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
 
-		ArrayList<ID3v2ChapterTOCFrameData> chapterTOCs = id3tag.getChapterTOC();
+		List<ID3v2ChapterTOCFrameData> chapterTOCs = id3tag.getChapterTOC();
 		assertEquals(1, chapterTOCs.size());
 
 		ID3v2ChapterTOCFrameData tocFrameData = chapterTOCs.get(0);
@@ -384,7 +383,7 @@ public class ID3v2TagTest {
 		String expectedChildren[] = {"ch1", "ch2", "ch3"};
 		assertArrayEquals(expectedChildren, tocFrameData.getChildren());
 
-		ArrayList<ID3v2Frame> subFrames = tocFrameData.getSubframes();
+		List<ID3v2Frame> subFrames = tocFrameData.getSubframes();
 		assertEquals(0, subFrames.size());
 	}
 
@@ -393,7 +392,7 @@ public class ID3v2TagTest {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
 		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
 
-		ArrayList<ID3v2ChapterFrameData> chapters = id3tag.getChapters();
+		List<ID3v2ChapterFrameData> chapters = id3tag.getChapters();
 		assertEquals(3, chapters.size());
 
 		ID3v2ChapterFrameData chapter1 = chapters.get(0);
@@ -403,7 +402,7 @@ public class ID3v2TagTest {
 		assertEquals(-1, chapter1.getStartOffset());
 		assertEquals(-1, chapter1.getEndOffset());
 
-		ArrayList<ID3v2Frame> subFrames1 = chapter1.getSubframes();
+		List<ID3v2Frame> subFrames1 = chapter1.getSubframes();
 		assertEquals(1, subFrames1.size());
 		ID3v2Frame subFrame1 = subFrames1.get(0);
 		assertEquals("TIT2", subFrame1.getId());
@@ -417,7 +416,7 @@ public class ID3v2TagTest {
 		assertEquals(-1, chapter2.getStartOffset());
 		assertEquals(-1, chapter2.getEndOffset());
 
-		ArrayList<ID3v2Frame> subFrames2 = chapter2.getSubframes();
+		List<ID3v2Frame> subFrames2 = chapter2.getSubframes();
 		assertEquals(1, subFrames2.size());
 		ID3v2Frame subFrame2 = subFrames2.get(0);
 		assertEquals("TIT2", subFrame2.getId());
@@ -431,7 +430,7 @@ public class ID3v2TagTest {
 		assertEquals(-1, chapter3.getStartOffset());
 		assertEquals(-1, chapter3.getEndOffset());
 
-		ArrayList<ID3v2Frame> subFrames3 = chapter3.getSubframes();
+		List<ID3v2Frame> subFrames3 = chapter3.getSubframes();
 		assertEquals(1, subFrames3.size());
 		ID3v2Frame subFrame3 = subFrames3.get(0);
 		assertEquals("TIT2", subFrame3.getId());
