@@ -22,9 +22,9 @@ public class FileWrapperTest {
 		FileWrapper fileWrapper = new FileWrapper(VALID_FILENAME);
 		System.out.println(fileWrapper.getFilename());
 		System.out.println(VALID_FILENAME);
-		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+		assertEquals(VALID_FILENAME, fileWrapper.getFilename());
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(VALID_FILE_LENGTH, fileWrapper.getLength());
 	}
 
 	@Test
@@ -32,9 +32,9 @@ public class FileWrapperTest {
 		FileWrapper fileWrapper = new FileWrapper(new File(VALID_FILENAME));
 		System.out.println(fileWrapper.getFilename());
 		System.out.println(VALID_FILENAME);
-		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+		assertEquals(VALID_FILENAME, fileWrapper.getFilename());
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(VALID_FILE_LENGTH, fileWrapper.getLength());
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class FileWrapperTest {
 		FileWrapper fileWrapper = new FileWrapper(Paths.get(VALID_FILENAME));
 		System.out.println(fileWrapper.getFilename());
 		System.out.println(VALID_FILENAME);
-		assertEquals(fileWrapper.getFilename(), VALID_FILENAME);
+		assertEquals(VALID_FILENAME, fileWrapper.getFilename());
 		assertTrue(fileWrapper.getLastModified() > 0);
-		assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		assertEquals(VALID_FILE_LENGTH, fileWrapper.getLength());
 	}
 
 	@Test(expected = FileNotFoundException.class)
