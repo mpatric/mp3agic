@@ -9,6 +9,13 @@ import static org.junit.Assert.*;
 
 public class BufferToolsTest {
 
+	private static final String TEST = "TEST";
+	private static final String TAG = "TAG";
+	private static final String TAG_DASH = "TAG-";
+	private static final String UTF_16BE = "UTF-16BE";
+	private static final String UTF_16LE = "UTF-16LE";
+	private static final String ARRAY_INDEX_OUT_OF_BOUNDS = "ArrayIndexOutOfBoundsException expected but not thrown";
+	private static final String STRING_INDEX_OUT_OF_BOUNDS = "StringIndexOutOfBoundsException expected but not thrown";
 	private static final byte BYTE_T = 0x54;
 	private static final byte BYTE_A = 0x41;
 	private static final byte BYTE_G = 0x47;
@@ -27,25 +34,25 @@ public class BufferToolsTest {
 	@Test
 	public void shouldExtractStringFromStartOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH};
-		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 0, 3));
+		assertEquals(TAG, BufferTools.byteBufferToString(buffer, 0, 3));
 	}
 
 	@Test
 	public void shouldExtractStringFromEndOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
-		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
+		assertEquals(TAG, BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 
 	@Test
 	public void shouldExtractStringFromMiddleOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
-		assertEquals("TAG", BufferTools.byteBufferToString(buffer, 5, 3));
+		assertEquals(TAG, BufferTools.byteBufferToString(buffer, 5, 3));
 	}
 
 	@Test
 	public void shouldExtractUnicodeStringFromMiddleOfBuffer() throws UnsupportedEncodingException {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, 0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac, BYTE_DASH, BYTE_DASH};
-		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.byteBufferToString(buffer, 2, 8, "UTF-16BE"));
+		assertEquals("\u03B3\u03B5\u03B9\u03AC", BufferTools.byteBufferToString(buffer, 2, 8, UTF_16BE));
 	}
 
 	@Test
@@ -53,7 +60,7 @@ public class BufferToolsTest {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, -1, 4);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
@@ -64,7 +71,7 @@ public class BufferToolsTest {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, buffer.length, 1);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
@@ -75,7 +82,7 @@ public class BufferToolsTest {
 		byte[] buffer = {BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_DASH, BYTE_T, BYTE_A, BYTE_G};
 		try {
 			BufferTools.byteBufferToString(buffer, buffer.length - 2, 3);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) {
 			// expected
 		}
@@ -102,16 +109,16 @@ public class BufferToolsTest {
 	@Test
 	public void shouldConvertUnicodeStringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length(), "UTF-16LE");
-		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, "UTF-16LE");
+		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length(), UTF_16LE);
+		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, UTF_16LE);
 		assertEquals(original, converted);
 	}
 
 	@Test
 	public void shouldConvertUnicodeSubstringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5, "UTF-16LE");
-		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, "UTF-16LE");
+		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5, UTF_16LE);
+		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, UTF_16LE);
 		assertEquals("\u03B9\u03AC ", converted);
 	}
 
@@ -120,11 +127,11 @@ public class BufferToolsTest {
 		String original = "1234567890QWERTYUIOP";
 		try {
 			BufferTools.stringToByteBuffer(original, -1, 1);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, original.length(), 1);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
@@ -133,15 +140,15 @@ public class BufferToolsTest {
 		String original = "1234567890QWERTYUIOP";
 		try {
 			BufferTools.stringToByteBuffer(original, 0, -1);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, 0, original.length() + 1);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringToByteBuffer(original, 3, original.length() - 2);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
@@ -151,7 +158,7 @@ public class BufferToolsTest {
 	public void shouldCopyStringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
-		String s = "TAG-";
+		String s = TAG_DASH;
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0);
 		byte[] expectedBuffer = {BYTE_T, BYTE_A, BYTE_G, BYTE_DASH, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
@@ -162,7 +169,7 @@ public class BufferToolsTest {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
-		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0, "UTF-16BE");
+		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0, UTF_16BE);
 		byte[] expectedBuffer = {0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
@@ -171,7 +178,7 @@ public class BufferToolsTest {
 	public void shouldCopyStringToEndOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
-		String s = "TAG-";
+		String s = TAG_DASH;
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 6);
 		byte[] expectedBuffer = {0, 0, 0, 0, 0, 0, BYTE_T, BYTE_A, BYTE_G, BYTE_DASH};
 		assertArrayEquals(expectedBuffer, buffer);
@@ -182,7 +189,7 @@ public class BufferToolsTest {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
-		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 2, "UTF-16BE");
+		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 2, UTF_16BE);
 		byte[] expectedBuffer = {0, 0, 0x03, (byte) 0xb3, 0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0x03, (byte) 0xac};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
@@ -191,7 +198,7 @@ public class BufferToolsTest {
 	public void shouldCopySubstringToStartOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
-		String s = "TAG-";
+		String s = TAG_DASH;
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0);
 		byte[] expectedBuffer = {BYTE_A, BYTE_G, 0, 0, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
@@ -202,7 +209,7 @@ public class BufferToolsTest {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
-		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0, "UTF-16BE");
+		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0, UTF_16BE);
 		byte[] expectedBuffer = {0x03, (byte) 0xb5, 0x03, (byte) 0xb9, 0, 0, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
 	}
@@ -211,7 +218,7 @@ public class BufferToolsTest {
 	public void shouldCopySubstringToMiddleOfByteBuffer() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
-		String s = "TAG-";
+		String s = TAG_DASH;
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 4);
 		byte[] expectedBuffer = {0, 0, 0, 0, BYTE_A, BYTE_G, 0, 0, 0, 0};
 		assertArrayEquals(expectedBuffer, buffer);
@@ -220,46 +227,46 @@ public class BufferToolsTest {
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithOffsetOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		String s = "TAG-";
+		String s = TAG_DASH;
 		try {
 			BufferTools.stringIntoByteBuffer(s, -1, 1, buffer, 0);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, s.length(), 1, buffer, 0);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithLengthOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		String s = "TAG-";
+		String s = TAG_DASH;
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, -1, buffer, 0);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, s.length() + 1, buffer, 0);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 3, s.length() - 2, buffer, 0);
-			fail("StringIndexOutOfBoundsException expected but not thrown");
+			fail(STRING_INDEX_OUT_OF_BOUNDS);
 		} catch (StringIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithDestinationOffsetOutOfRange() throws UnsupportedEncodingException {
 		byte buffer[] = new byte[10];
-		String s = "TAG-";
+		String s = TAG_DASH;
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, 1, buffer, 10);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+			fail(ARRAY_INDEX_OUT_OF_BOUNDS);
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, buffer.length - s.length() + 1);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+			fail(ARRAY_INDEX_OUT_OF_BOUNDS);
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
@@ -269,12 +276,12 @@ public class BufferToolsTest {
 	public void shouldRightTrimStringsCorrectly() throws UnsupportedEncodingException {
 		assertEquals("", BufferTools.trimStringRight(""));
 		assertEquals("", BufferTools.trimStringRight(" "));
-		assertEquals("TEST", BufferTools.trimStringRight("TEST"));
-		assertEquals("TEST", BufferTools.trimStringRight("TEST   "));
-		assertEquals("   TEST", BufferTools.trimStringRight("   TEST"));
-		assertEquals("   TEST", BufferTools.trimStringRight("   TEST   "));
-		assertEquals("TEST", BufferTools.trimStringRight("TEST\t\r\n"));
-		assertEquals("TEST", BufferTools.trimStringRight("TEST" + BufferTools.byteBufferToString(new byte[]{0, 0}, 0, 2)));
+		assertEquals(TEST, BufferTools.trimStringRight(TEST));
+		assertEquals(TEST, BufferTools.trimStringRight(TEST+"   "));
+		assertEquals("   "+TEST, BufferTools.trimStringRight("   "+TEST));
+		assertEquals("   "+TEST, BufferTools.trimStringRight("   "+TEST+"   "));
+		assertEquals(TEST, BufferTools.trimStringRight(TEST+"\t\r\n"));
+		assertEquals(TEST, BufferTools.trimStringRight(TEST + BufferTools.byteBufferToString(new byte[]{0, 0}, 0, 2)));
 	}
 
 	@Test
@@ -398,17 +405,17 @@ public class BufferToolsTest {
 
 		try {
 			BufferTools.copyBuffer(buffer, -1, buffer.length);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+			fail(ARRAY_INDEX_OUT_OF_BOUNDS);
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 
 		try {
 			BufferTools.copyBuffer(buffer, buffer.length, 1);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+			fail(ARRAY_INDEX_OUT_OF_BOUNDS);
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 
 		try {
 			BufferTools.copyBuffer(buffer, 1, buffer.length);
-			fail("ArrayIndexOutOfBoundsException expected but not thrown");
+			fail(ARRAY_INDEX_OUT_OF_BOUNDS);
 		} catch (ArrayIndexOutOfBoundsException e) { /* expected*/ }
 	}
 
