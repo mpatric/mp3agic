@@ -960,7 +960,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	@Override
 	public List<ID3v2ChapterFrameData> getChapters() {
 		if (obseleteFormat) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		return extractChapterFrameData(ID_CHAPTER);
@@ -985,7 +985,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	@Override
 	public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
 		if (obseleteFormat) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		return extractChapterTOCFrameData(ID_CHAPTER_TOC);
@@ -1103,7 +1103,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			}
 			return chapterData;
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 	private List<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
@@ -1123,7 +1123,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			}
 			return chapterData;
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 	protected ID3v2TextFrameData extractTextFrameData(String id) {

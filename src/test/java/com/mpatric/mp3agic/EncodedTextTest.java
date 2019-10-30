@@ -216,16 +216,16 @@ public class EncodedTextTest {
 	public void shouldTranscodeFromOneEncodingToAnother() throws CharacterCodingException {
 		EncodedText encodedText;
 		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"));
-		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1, true);
+		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1);
 		assertEquals("43 61 66 e9 20 50 61 72 61 64 69 73 6f", TestHelper.bytesToHexString(encodedText.toBytes()));
 		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"));
-		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_8, true);
+		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_8);
 		assertEquals("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f", TestHelper.bytesToHexString(encodedText.toBytes()));
 		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"));
-		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_16, true);
+		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_16);
 		assertEquals("43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f 00", TestHelper.bytesToHexString(encodedText.toBytes()));
 		encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"));
-		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_16BE, true);
+		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_UTF_16BE);
 		assertEquals("00 43 00 61 00 66 00 e9 00 20 00 50 00 61 00 72 00 61 00 64 00 69 00 73 00 6f", TestHelper.bytesToHexString(encodedText.toBytes()));
 	}
 
@@ -235,14 +235,14 @@ public class EncodedTextTest {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, UNICODE_TEST_STRING);
 
 		// expect exception
-		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1, true);
+		encodedText.setTextEncoding(EncodedText.TEXT_ENCODING_ISO_8859_1);
 	}
 
 	@Test
 	public void shouldThrowExceptionWhenTranscodingWithInvalidCharacterSet() throws CharacterCodingException {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_8, TestHelper.hexStringToBytes("43 61 66 c3 a9 20 50 61 72 61 64 69 73 6f"));
 		try {
-			encodedText.setTextEncoding((byte) 4, true);
+			encodedText.setTextEncoding((byte) 4);
 			fail("IllegalArgumentException expected but not thrown");
 		} catch (IllegalArgumentException e) {
 			assertEquals("Invalid text encoding 4", e.getMessage());
