@@ -2,6 +2,7 @@ package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ID3v2Frame {
 
@@ -175,20 +176,8 @@ public class ID3v2Frame {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (compression ? 1231 : 1237);
-		result = prime * result + Arrays.hashCode(data);
-		result = prime * result + dataLength;
-		result = prime * result + (dataLengthIndicator ? 1231 : 1237);
-		result = prime * result + (encryption ? 1231 : 1237);
-		result = prime * result + (group ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + (preserveFile ? 1231 : 1237);
-		result = prime * result + (preserveTag ? 1231 : 1237);
-		result = prime * result + (readOnly ? 1231 : 1237);
-		result = prime * result + (unsynchronisation ? 1231 : 1237);
-		return result;
+		return 31 * Objects.hash(compression, dataLength, dataLengthIndicator, encryption, group,
+				id, preserveFile, preserveTag, readOnly, unsynchronisation) + Arrays.hashCode(data);
 	}
 
 	@Override
@@ -199,32 +188,18 @@ public class ID3v2Frame {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ID3v2Frame other = (ID3v2Frame) obj;
-		if (compression != other.compression)
-			return false;
-		if (!Arrays.equals(data, other.data))
-			return false;
-		if (dataLength != other.dataLength)
-			return false;
-		if (dataLengthIndicator != other.dataLengthIndicator)
-			return false;
-		if (encryption != other.encryption)
-			return false;
-		if (group != other.group)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (preserveFile != other.preserveFile)
-			return false;
-		if (preserveTag != other.preserveTag)
-			return false;
-		if (readOnly != other.readOnly)
-			return false;
-		if (unsynchronisation != other.unsynchronisation)
-			return false;
-		return true;
+		final ID3v2Frame other = (ID3v2Frame) obj;
+		return
+				Arrays.equals(data, other.data) &&
+				Objects.equals(compression, other.compression) &&
+				Objects.equals(dataLength, other.dataLength) &&
+				Objects.equals(dataLengthIndicator, other.dataLengthIndicator) &&
+				Objects.equals(encryption, other.encryption) &&
+				Objects.equals(group, other.group) &&
+				Objects.equals(id, other.id) &&
+				Objects.equals(preserveFile, other.preserveFile) &&
+				Objects.equals(preserveTag, other.preserveTag) &&
+				Objects.equals(readOnly, other.readOnly) &&
+				Objects.equals(unsynchronisation, other.unsynchronisation);
 	}
 }

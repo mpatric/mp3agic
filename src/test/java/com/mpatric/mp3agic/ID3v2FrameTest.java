@@ -1,9 +1,12 @@
 package com.mpatric.mp3agic;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ID3v2FrameTest {
 
@@ -62,4 +65,41 @@ public class ID3v2FrameTest {
 		assertEquals("TEST", frameCopy.getId());
 		assertEquals(frame, frameCopy);
 	}
+
+	@Test
+	public void shouldCorrectlyUnpackHeader() throws Exception {
+		byte[] bytes = BufferTools.stringToByteBuffer(W_FRAME + "?????", 0, W_FRAME.length());
+		TestHelper.replaceNumbersWithBytes(bytes, 0);
+		final ID3v2Frame frame = new ID3v2Frame(bytes, 0);
+		assertFalse(frame.hasDataLengthIndicator());
+		assertFalse(frame.hasCompression());
+		assertFalse(frame.hasEncryption());
+		assertFalse(frame.hasGroup());
+		assertFalse(frame.hasPreserveFile());
+		assertFalse(frame.hasPreserveTag());
+		assertFalse(frame.isReadOnly());
+		assertFalse(frame.hasUnsynchronisation());
+	}
+
+	@Test
+	public void shouldStoreAndRetrieveData() throws Exception {
+		final byte[] oldBytes = BufferTools.stringToByteBuffer(C_FRAME, 0, C_FRAME.length());
+		TestHelper.replaceNumbersWithBytes(oldBytes, 0);
+		final ID3v2Frame frame = new ID3v2Frame(oldBytes, 0);
+		final byte[] newBytes = BufferTools.stringToByteBuffer(W_FRAME + "?????", 0, W_FRAME.length());
+		TestHelper.replaceNumbersWithBytes(newBytes, 0);
+		frame.setData(newBytes);
+		final byte[] expectedBytes = BufferTools.stringToByteBuffer(W_FRAME, 0, W_FRAME.length());
+		TestHelper.replaceNumbersWithBytes(expectedBytes, 0);
+		assertArrayEquals(expectedBytes, frame.getData());
+	}
+
+	@Test
+	public void shouldCorrectlyImplementHashCodeAndEquals() throws Exception {
+		EqualsVerifier.forClass(ID3v2Frame.class)
+				.usingGetClass()
+				.suppress(Warning.NONFINAL_FIELDS)
+				.verify();
+	}
+
 }
