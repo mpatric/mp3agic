@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.junit.Test;
 
@@ -371,11 +372,20 @@ public class ID3v2TagTest {
 	}
 
 	@Test
+	public void shouldExtractChapterTOCFramesFromMp3LegacyVersion() throws Exception {
+		extractChapterTOCFramesFromMp3( (id3tag) -> id3tag.getChapterTOC());
+	}
+	
+	@Test
 	public void shouldExtractChapterTOCFramesFromMp3() throws Exception {
+		extractChapterTOCFramesFromMp3( (id3tag) -> id3tag.listOfChapterTOC());
+	}
+	
+	private void extractChapterTOCFramesFromMp3(Function<ID3v2Improved,List<ID3v2ChapterTOCFrameData>> mode) throws Exception {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
-		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		ID3v2Improved id3tag = ID3v2TagFactory.createTag(buffer);
 
-		List<ID3v2ChapterTOCFrameData> chapterTOCs = id3tag.getChapterTOC();
+		List<ID3v2ChapterTOCFrameData> chapterTOCs = mode.apply(id3tag); // GOF, command-pattern
 		assertEquals(1, chapterTOCs.size());
 
 		ID3v2ChapterTOCFrameData tocFrameData = chapterTOCs.get(0);
@@ -388,11 +398,20 @@ public class ID3v2TagTest {
 	}
 
 	@Test
+	public void shouldExtractChapterTOCAndChapterFramesFromMp3LegacyMode() throws Exception {
+		shouldExtractChapterTOCAndChapterFramesFromMp3( (id3tag) -> id3tag.getChapters());
+	}
+	
+	@Test
 	public void shouldExtractChapterTOCAndChapterFramesFromMp3() throws Exception {
+		shouldExtractChapterTOCAndChapterFramesFromMp3( (id3tag) -> id3tag.listOfChapters());
+	}
+	
+	private void shouldExtractChapterTOCAndChapterFramesFromMp3(Function<ID3v2Improved,List<ID3v2ChapterFrameData>> mode) throws Exception {
 		byte[] buffer = TestHelper.loadFile("src/test/resources/v23tagwithchapters.mp3");
-		ID3v2 id3tag = ID3v2TagFactory.createTag(buffer);
+		ID3v2Improved id3tag = ID3v2TagFactory.createTag(buffer);
 
-		List<ID3v2ChapterFrameData> chapters = id3tag.getChapters();
+		List<ID3v2ChapterFrameData> chapters = mode.apply(id3tag); // GOF, command-pattern
 		assertEquals(3, chapters.size());
 
 		ID3v2ChapterFrameData chapter1 = chapters.get(0);
