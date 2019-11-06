@@ -11,7 +11,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 	protected int endTime;
 	protected int startOffset;
 	protected int endOffset;
-	protected List<ID3v2Frame> subframes = new ArrayList<>();
+	protected ArrayList<ID3v2Frame> subframes = new ArrayList<>();
 
 	public ID3v2ChapterFrameData(boolean unsynchronisation) {
 		super(unsynchronisation);
