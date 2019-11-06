@@ -122,7 +122,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 		return subframes;
 	}
 
-	public void setSubframes(List<ID3v2Frame> subframes) {
+	public void setSubframes(ArrayList<ID3v2Frame> subframes) {
 		this.subframes = subframes;
 	}
 
