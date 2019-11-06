@@ -1224,25 +1224,6 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (compression ? 1231 : 1237);
-		result = prime * result + dataLength;
-		result = prime * result + (experimental ? 1231 : 1237);
-		result = prime * result + (extendedHeader ? 1231 : 1237);
-		result = prime * result + Arrays.hashCode(extendedHeaderData);
-		result = prime * result + extendedHeaderLength;
-		result = prime * result + (footer ? 1231 : 1237);
-		result = prime * result + ((frameSets == null) ? 0 : frameSets.hashCode());
-		result = prime * result + (obseleteFormat ? 1231 : 1237);
-		result = prime * result + (padding ? 1231 : 1237);
-		result = prime * result + (unsynchronisation ? 1231 : 1237);
-		result = prime * result + ((version == null) ? 0 : version.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof AbstractID3v2Tag)) return false;
 		if (super.equals(obj)) return true;
@@ -1264,5 +1245,4 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		else if (!frameSets.equals(other.frameSets)) return false;
 		return true;
 	}
-	
 }
