@@ -1,6 +1,7 @@
 package com.mpatric.mp3agic;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -369,6 +370,46 @@ public class ID3v2TagTest {
 		id3tag.setEncoder("\u03B9\u03AC");
 		byte[] albumImage = TestHelper.loadFile("src/test/resources/image.png");
 		id3tag.setAlbumImage(albumImage, "image/png", ID3v23Tag.PICTURETYPE_OTHER, "\u03B3\u03B5\u03B9\u03AC");
+	}
+	
+	@Test
+	public void getChaptersShouldReturnNull() {
+		final ID3v2Improved id3tag = getObsoleteTag();
+		final ArrayList<ID3v2ChapterFrameData> list = id3tag.getChapters();
+		assertNull(list);
+	}
+	
+	@Test
+	public void getChapterTOCShouldReturnNull() {
+		final ID3v2Improved id3tag = getObsoleteTag();
+		final ArrayList<ID3v2ChapterTOCFrameData> list = id3tag.getChapterTOC();
+		assertNull(list);
+	}
+	
+	@Test
+	public void listOfChaptersReturnsEmptyList() {
+		final ID3v2Improved id3tag = getObsoleteTag();
+		final List<ID3v2ChapterFrameData> list = id3tag.listOfChapters();
+		assertTrue(list.isEmpty());
+	}
+	
+	@Test
+	public void listOfChapterTOCReturnsEmptyList() {
+		final ID3v2Improved id3tag = getObsoleteTag();
+		final List<ID3v2ChapterTOCFrameData> list = id3tag.listOfChapterTOC();
+		assertTrue(list.isEmpty());
+	}
+	
+	private ID3v2Improved getObsoleteTag() {
+		try {
+		byte[] buffer = TestHelper.loadFile("src/test/resources/obsolete.mp3");
+		final ID3v2Improved id3v2tag = ID3v2TagFactory.createTag(buffer);
+		return id3v2tag;
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		fail();
+		throw new AssertionError("Test failed");
 	}
 
 	@Test
