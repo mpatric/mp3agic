@@ -3,7 +3,7 @@ package com.mpatric.mp3agic;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-public abstract class AbstractID3v2Tag implements ID3v2 {
+public abstract class AbstractID3v2Tag implements ID3v2Improved {
 
 	public static final String ID_IMAGE = "APIC";
 	public static final String ID_ENCODER = "TENC";
@@ -958,9 +958,22 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 
 	@Override
-	public List<ID3v2ChapterFrameData> getChapters() {
+	@Deprecated
+	public ArrayList<ID3v2ChapterFrameData> getChapters() {
 		if (obseleteFormat) {
-			return Collections.emptyList();
+			return null;
+		}
+
+		return new ArrayList<>(extractChapterFrameData(ID_CHAPTER));
+	}
+	
+	/*
+	 * Replaces legacy method getChapters
+	 */
+	@Override
+	public List<ID3v2ChapterFrameData> listOfChapters() {
+		if (obseleteFormat) {
+			Collections.emptyList();
 		}
 
 		return extractChapterFrameData(ID_CHAPTER);
@@ -983,14 +996,26 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 
 	@Override
-	public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
+	@Deprecated
+	public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
+		if (obseleteFormat) {
+			return null;
+		}
+
+		return new ArrayList<>(extractChapterTOCFrameData(ID_CHAPTER_TOC));
+	}
+	
+	/*
+	 * Replaces legacy method getChapterTOC
+	 */
+	@Override
+	public List<ID3v2ChapterTOCFrameData> listOfChapterTOC() {
 		if (obseleteFormat) {
 			return Collections.emptyList();
 		}
-
 		return extractChapterTOCFrameData(ID_CHAPTER_TOC);
 	}
-
+	
 	@Override
 	public void setChapterTOC(List<ID3v2ChapterTOCFrameData> toc) {
 		if (toc != null) {

@@ -1,5 +1,6 @@
 package com.mpatric.mp3agic;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,11 +98,11 @@ public interface ID3v2 extends ID3v1 {
 
 	void setCompilation(boolean compilation);
 
-	List<ID3v2ChapterFrameData> getChapters();
+	ArrayList<ID3v2ChapterFrameData> getChapters();
 
 	void setChapters(List<ID3v2ChapterFrameData> chapters);
 
-	List<ID3v2ChapterTOCFrameData> getChapterTOC();
+	ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC();
 
 	void setChapterTOC(List<ID3v2ChapterTOCFrameData> ctoc);
 
