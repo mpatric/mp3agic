@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1317,7 +1318,7 @@ public class ID3WrapperTest {
 		}
 
 		@Override
-		public List<ID3v2ChapterFrameData> getChapters() {
+		public ArrayList<ID3v2ChapterFrameData> getChapters() {
 			return null;
 		}
 
@@ -1327,7 +1328,7 @@ public class ID3WrapperTest {
 		}
 
 		@Override
-		public List<ID3v2ChapterTOCFrameData> getChapterTOC() {
+		public ArrayList<ID3v2ChapterTOCFrameData> getChapterTOC() {
 			return null;
 		}
 
