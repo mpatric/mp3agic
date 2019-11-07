@@ -118,7 +118,7 @@ public class ID3v2ChapterFrameData extends AbstractID3v2FrameData {
 		this.endOffset = endOffset;
 	}
 
-	public List<ID3v2Frame> getSubframes() {
+	public ArrayList<ID3v2Frame> getSubframes() {
 		return subframes;
 	}
 

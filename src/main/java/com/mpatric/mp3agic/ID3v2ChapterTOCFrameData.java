@@ -145,7 +145,7 @@ public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 		this.children = childs;
 	}
 
-	public List<ID3v2Frame> getSubframes() {
+	public ArrayList<ID3v2Frame> getSubframes() {
 		return subframes;
 	}
 
