@@ -31,11 +31,11 @@ public class TestHelper {
 	}
 
 	public static byte[] loadFile(String filename) throws IOException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
-		byte[] buffer = new byte[(int) file.length()];
-		file.read(buffer);
-		file.close();
-		return buffer;
+		try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+			byte[] buffer = new byte[(int) file.length()];
+			file.read(buffer);
+			return buffer;
+		}
 	}
 
 	public static void deleteFile(String filename) {
