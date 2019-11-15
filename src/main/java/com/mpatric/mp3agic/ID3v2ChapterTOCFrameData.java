@@ -4,7 +4,6 @@ package com.mpatric.mp3agic;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ID3v2ChapterTOCFrameData extends AbstractID3v2FrameData {
 
