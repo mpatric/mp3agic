@@ -1,7 +1,5 @@
 package com.mpatric.mp3agic;
 
-import java.util.List;
-
 public class ID3v24Tag extends AbstractID3v2Tag {
 
 	public static final String VERSION = "4.0";
