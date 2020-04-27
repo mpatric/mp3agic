@@ -1,8 +1,6 @@
 package com.mpatric.mp3agic;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 import org.junit.Test;
 
@@ -57,6 +55,10 @@ public class TestHelper {
 				bytes[i] -= (byte) 48;
 			}
 		}
+	}
+
+	public static FileDescriptor toFileDescriptor(File file) throws IOException {
+		return new FileInputStream(file).getFD();
 	}
 
 	// self tests

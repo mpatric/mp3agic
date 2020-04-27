@@ -5,9 +5,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
+import static com.mpatric.mp3agic.TestHelper.toFileDescriptor;
 import static org.junit.Assert.*;
 
 public class FileWrapperTest {
@@ -16,6 +18,15 @@ public class FileWrapperTest {
 	private static final long VALID_FILE_LENGTH = 2869;
 	private static final String NON_EXISTENT_FILENAME = "just-not.there";
 	private static final String MALFORMED_FILENAME = "malformed.\0";
+
+	@Test
+	public void shouldReadValidFileDescriptor() throws IOException {
+		FileWrapper fileWrapper = new FileWrapper(toFileDescriptor(new File(VALID_FILENAME)));
+		assertEquals(fileWrapper.getLength(), -1); // length not valid until channel is opened
+		try (SeekableByteChannel channel = fileWrapper.getByteChannel()) {
+			assertEquals(fileWrapper.getLength(), VALID_FILE_LENGTH);
+		}
+	}
 
 	@Test
 	public void shouldReadValidFilename() throws IOException {
@@ -65,6 +76,11 @@ public class FileWrapperTest {
 	@Test(expected = NullPointerException.class)
 	public void shouldFailForNullFilenameFile() throws IOException {
 		new FileWrapper((java.io.File) null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldFailForNullFileDescriptor() throws IOException {
+		new FileWrapper((java.io.FileDescriptor) null);
 	}
 
 	@Test(expected = NullPointerException.class)

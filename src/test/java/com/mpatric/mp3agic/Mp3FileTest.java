@@ -2,13 +2,13 @@ package com.mpatric.mp3agic;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import static com.mpatric.mp3agic.TestHelper.toFileDescriptor;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
@@ -33,6 +33,10 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 256);
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 1024);
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 5000);
+		loadAndCheckTestMp3WithNoTags(toFileDescriptor(new File(MP3_WITH_NO_TAGS)), 41);
+		loadAndCheckTestMp3WithNoTags(toFileDescriptor(new File(MP3_WITH_NO_TAGS)), 256);
+		loadAndCheckTestMp3WithNoTags(toFileDescriptor(new File(MP3_WITH_NO_TAGS)), 1024);
+		loadAndCheckTestMp3WithNoTags(toFileDescriptor(new File(MP3_WITH_NO_TAGS)), 5000);
 	}
 
 	@Test
@@ -45,6 +49,10 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 256);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 1024);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS), 5000);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS)), 41);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS)), 256);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS)), 1024);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS)), 5000);
 	}
 
 	@Test
@@ -57,6 +65,10 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 256);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 1024);
 		loadAndCheckTestMp3WithTags(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES), 5000);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES)), 41);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES)), 256);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES)), 1024);
+		loadAndCheckTestMp3WithTags(toFileDescriptor(new File(MP3_WITH_DUMMY_START_AND_END_FRAMES)), 5000);
 	}
 
 	@Test
@@ -69,6 +81,10 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 256);
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 1024);
 		loadAndCheckTestMp3WithCustomTag(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS), 5000);
+		loadAndCheckTestMp3WithCustomTag(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS)), 41);
+		loadAndCheckTestMp3WithCustomTag(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS)), 256);
+		loadAndCheckTestMp3WithCustomTag(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS)), 1024);
+		loadAndCheckTestMp3WithCustomTag(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS)), 5000);
 	}
 
 	@Test
@@ -92,6 +108,16 @@ public class Mp3FileTest {
 	}
 
 	@Test
+	public void shouldThrowExceptionForFileThatIsNotAnMp3ForFileDescriptorConstructor() throws Exception {
+		try {
+			new Mp3File(toFileDescriptor(new File(NOT_AN_MP3)));
+			fail("InvalidDataException expected but not thrown");
+		} catch (InvalidDataException e) {
+			assertEquals("No mpegs frames found", e.getMessage());
+		}
+	}
+
+	@Test
 	public void shouldFindProbableStartOfMpegFramesWithPrescan() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(MP3_WITH_ID3V1_AND_ID3V23_TAGS);
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
@@ -100,6 +126,12 @@ public class Mp3FileTest {
 	@Test
 	public void shouldFindProbableStartOfMpegFramesWithPrescanForFileConstructor() throws IOException {
 		Mp3FileForTesting mp3File = new Mp3FileForTesting(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS));
+		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
+	}
+
+	@Test
+	public void shouldFindProbableStartOfMpegFramesWithPrescanForFileDescriptorConstructor() throws IOException {
+		Mp3FileForTesting mp3File = new Mp3FileForTesting(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_TAGS)));
 		testShouldFindProbableStartOfMpegFramesWithPrescan(mp3File);
 	}
 
@@ -131,6 +163,17 @@ public class Mp3FileTest {
 	}
 
 	@Test
+	public void shouldThrowExceptionIfSavingForFileDescriptorConstructor() throws Exception {
+		Mp3File mp3File = new Mp3File(toFileDescriptor(new File(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS)));
+		try {
+			mp3File.save(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS + ".copy");
+			fail("IllegalArgumentException expected but not thrown");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Unable to save files based on FileDescriptors", e.getMessage());
+		}
+	}
+
+	@Test
 	public void shouldSaveLoadedMp3WhichIsEquivalentToOriginal() throws Exception {
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 41);
 		copyAndCheckTestMp3WithCustomTag(MP3_WITH_ID3V1_AND_ID3V23_AND_CUSTOM_TAGS, 256);
@@ -152,6 +195,10 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 256);
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 1024);
 		loadAndCheckTestMp3WithUnicodeFields(new File(MP3_WITH_ID3V23_UNICODE_TAGS), 5000);
+		loadAndCheckTestMp3WithUnicodeFields(toFileDescriptor(new File(MP3_WITH_ID3V23_UNICODE_TAGS)), 41);
+		loadAndCheckTestMp3WithUnicodeFields(toFileDescriptor(new File(MP3_WITH_ID3V23_UNICODE_TAGS)), 256);
+		loadAndCheckTestMp3WithUnicodeFields(toFileDescriptor(new File(MP3_WITH_ID3V23_UNICODE_TAGS)), 1024);
+		loadAndCheckTestMp3WithUnicodeFields(toFileDescriptor(new File(MP3_WITH_ID3V23_UNICODE_TAGS)), 5000);
 	}
 
 	@Test
@@ -178,6 +225,12 @@ public class Mp3FileTest {
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
 	}
 
+	@Test
+	public void shouldIgnoreIncompleteMpegFrameForFileDescriptorConstructor() throws Exception {
+		Mp3File mp3File = new Mp3File(toFileDescriptor(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME)), 256);
+		testShouldIgnoreIncompleteMpegFrame(mp3File);
+	}
+
 	private void testShouldIgnoreIncompleteMpegFrame(Mp3File mp3File) throws Exception {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
@@ -196,6 +249,12 @@ public class Mp3FileTest {
 	@Test
 	public void shouldInitialiseProperlyWhenNotScanningFileForFileConstructor() throws Exception {
 		Mp3File mp3File = new Mp3File(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME), 256, false);
+		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
+	}
+
+	@Test
+	public void shouldInitialiseProperlyWhenNotScanningFileForFileDescriptorConstructor() throws Exception {
+		Mp3File mp3File = new Mp3File(toFileDescriptor(new File(MP3_WITH_INCOMPLETE_MPEG_FRAME)), 256, false);
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
 	}
 
@@ -366,6 +425,11 @@ public class Mp3FileTest {
 		return loadAndCheckTestMp3WithNoTags(mp3File);
 	}
 
+	private Mp3File loadAndCheckTestMp3WithNoTags(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = loadAndCheckTestMp3(fileDescriptor, bufferLength);
+		return loadAndCheckTestMp3WithNoTags(mp3File);
+	}
+
 	private Mp3File loadAndCheckTestMp3WithNoTags(Mp3File mp3File) {
 		assertEquals(0x000, mp3File.getXingOffset());
 		assertEquals(0x1A1, mp3File.getStartOffset());
@@ -383,6 +447,11 @@ public class Mp3FileTest {
 
 	private Mp3File loadAndCheckTestMp3WithTags(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = loadAndCheckTestMp3(filename, bufferLength);
+		return loadAndCheckTestMp3WithTags(mp3File);
+	}
+
+	private Mp3File loadAndCheckTestMp3WithTags(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = loadAndCheckTestMp3(fileDescriptor, bufferLength);
 		return loadAndCheckTestMp3WithTags(mp3File);
 	}
 
@@ -406,6 +475,11 @@ public class Mp3FileTest {
 		return loadAndCheckTestMp3WithUnicodeFields(mp3File);
 	}
 
+	private Mp3File loadAndCheckTestMp3WithUnicodeFields(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = loadAndCheckTestMp3(fileDescriptor, bufferLength);
+		return loadAndCheckTestMp3WithUnicodeFields(mp3File);
+	}
+
 	private Mp3File loadAndCheckTestMp3WithUnicodeFields(Mp3File mp3File) {
 		assertEquals(0x0CA, mp3File.getXingOffset());
 		assertEquals(0x26B, mp3File.getStartOffset());
@@ -426,6 +500,11 @@ public class Mp3FileTest {
 		return loadAndCheckTestMp3WithCustomTag(mp3File);
 	}
 
+	private Mp3File loadAndCheckTestMp3WithCustomTag(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = loadAndCheckTestMp3(fileDescriptor, bufferLength);
+		return loadAndCheckTestMp3WithCustomTag(mp3File);
+	}
+
 	private Mp3File loadAndCheckTestMp3WithCustomTag(Mp3File mp3File) {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
@@ -443,6 +522,11 @@ public class Mp3FileTest {
 
 	private Mp3File loadAndCheckTestMp3(File filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
 		Mp3File mp3File = new Mp3File(filename, bufferLength);
+		return loadAndCheckTestMp3(mp3File);
+	}
+
+	private Mp3File loadAndCheckTestMp3(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = new Mp3File(fileDescriptor, bufferLength);
 		return loadAndCheckTestMp3(mp3File);
 	}
 
@@ -478,6 +562,11 @@ public class Mp3FileTest {
 
 		public Mp3FileForTesting(File filename) throws IOException {
 			SeekableByteChannel file = Files.newByteChannel(filename.toPath(), StandardOpenOption.READ);
+			preScanResult = preScanFile(file);
+		}
+
+		public Mp3FileForTesting(FileDescriptor fileDescriptor) throws IOException {
+			SeekableByteChannel file = new FileInputStream(fileDescriptor).getChannel();
 			preScanResult = preScanFile(file);
 		}
 	}

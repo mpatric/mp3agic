@@ -1,6 +1,7 @@
 package com.mpatric.mp3agic;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
@@ -8,6 +9,7 @@ import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.EnumSet;
+import java.util.Objects;
 
 public class Mp3File extends FileWrapper {
 
@@ -71,6 +73,19 @@ public class Mp3File extends FileWrapper {
 		init(bufferLength, scanFile);
 	}
 
+	public Mp3File(FileDescriptor fileDescriptor) throws IOException, UnsupportedTagException, InvalidDataException {
+		this(fileDescriptor, DEFAULT_BUFFER_LENGTH, true);
+	}
+
+	public Mp3File(FileDescriptor fileDescriptor, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
+		this(fileDescriptor, bufferLength, true);
+	}
+
+	public Mp3File(FileDescriptor fileDescriptor, int bufferLength, boolean scanFile) throws IOException, UnsupportedTagException, InvalidDataException {
+		super(fileDescriptor);
+		init(bufferLength, scanFile);
+	}
+
 	public Mp3File(Path path) throws IOException, UnsupportedTagException, InvalidDataException {
 		this(path, DEFAULT_BUFFER_LENGTH, true);
 	}
@@ -90,7 +105,7 @@ public class Mp3File extends FileWrapper {
 		this.bufferLength = bufferLength;
 		this.scanFile = scanFile;
 
-		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
+		try (SeekableByteChannel seekableByteChannel = getByteChannel()) {
 			initId3v1Tag(seekableByteChannel);
 			scanFile(seekableByteChannel);
 			if (startOffset < 0) {
@@ -440,7 +455,10 @@ public class Mp3File extends FileWrapper {
 	}
 
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (path.toAbsolutePath().compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
+		if (getAbsolutePath() == null) {
+			throw new IllegalArgumentException("Unable to save files based on FileDescriptors");
+		}
+		if (Objects.equals(getAbsolutePath(), Paths.get(newFilename).toAbsolutePath())) {
 			throw new IllegalArgumentException("Save filename same as source filename");
 		}
 		try (SeekableByteChannel saveFile = Files.newByteChannel(Paths.get(newFilename), EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
@@ -470,7 +488,7 @@ public class Mp3File extends FileWrapper {
 		if (filePos < 0) return;
 		if (endOffset < filePos) return;
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
-		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
+		try (SeekableByteChannel seekableByteChannel = getByteChannel()) {
 			seekableByteChannel.position(filePos);
 			while (true) {
 				byteBuffer.clear();
