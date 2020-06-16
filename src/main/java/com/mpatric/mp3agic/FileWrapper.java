@@ -41,6 +41,10 @@ public class FileWrapper {
 		lastModified = Files.getLastModifiedTime(path).to(TimeUnit.MILLISECONDS);
 	}
 
+	public String getName(){
+		return path.getFileName().toString();
+	}
+
 	public String getFilename() {
 		return path.toString();
 	}
