@@ -1,5 +1,16 @@
 package com.mpatric.mp3agic;
 
+import com.mpatric.mp3agic.exception.InvalidDataException;
+import com.mpatric.mp3agic.exception.NoSuchTagException;
+import com.mpatric.mp3agic.exception.NotSupportedException;
+import com.mpatric.mp3agic.exception.UnsupportedTagException;
+import com.mpatric.mp3agic.id3.ID3v1;
+import com.mpatric.mp3agic.id3.ID3v1Tag;
+import com.mpatric.mp3agic.id3.ID3v2;
+import com.mpatric.mp3agic.id3.ID3v2TagFactory;
+import com.mpatric.mp3agic.mpeg.MPEGVersion;
+import com.mpatric.mp3agic.mpeg.MpegFrame;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,17 +33,17 @@ public class Mp3File extends FileWrapper {
 	private int startOffset = -1;
 	private int endOffset = -1;
 	private int frameCount = 0;
-	private Map<Integer, MutableInteger> bitrates = new HashMap<>();
+	private final Map<Integer, MutableInteger> bitrates = new HashMap<>();
 	private int xingBitrate;
 	private double bitrate = 0;
-	private String channelMode;
-	private String emphasis;
-	private String layer;
-	private String modeExtension;
+	private MpegFrame.ChannelMode channelMode;
+	private MpegFrame.Emphasis emphasis;
+	private MpegFrame.Layer layer;
+	private MpegFrame.ExtensionMode modeExtension;
 	private int sampleRate;
 	private boolean copyright;
 	private boolean original;
-	private String version;
+	private MPEGVersion version;
 	private ID3v1 id3v1Tag;
 	private ID3v2 id3v2Tag;
 	private byte[] customTag;
@@ -241,8 +252,7 @@ public class Mp3File extends FileWrapper {
 				if (bytes.length >= offset + XING_MARKER_OFFSET_3 + 3) {
 					if ("Xing".equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, offset + XING_MARKER_OFFSET_3, 4)))
 						return true;
-					if ("Info".equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, offset + XING_MARKER_OFFSET_3, 4)))
-						return true;
+					return "Info".equals(BufferTools.byteBufferToStringIgnoringEncodingIssues(bytes, offset + XING_MARKER_OFFSET_3, 4));
 				}
 			}
 		}
@@ -250,11 +260,18 @@ public class Mp3File extends FileWrapper {
 	}
 
 	private void sanityCheckFrame(MpegFrame frame, int offset) throws InvalidDataException {
-		if (sampleRate != frame.getSampleRate()) throw new InvalidDataException("Inconsistent frame header");
-		if (!layer.equals(frame.getLayer())) throw new InvalidDataException("Inconsistent frame header");
-		if (!version.equals(frame.getVersion())) throw new InvalidDataException("Inconsistent frame header");
-		if (offset + frame.getLengthInBytes() > getLength())
+		if (sampleRate != frame.getSampleRate()) {
+			throw new InvalidDataException("Inconsistent frame header");
+		}
+		if (!layer.equals(frame.getLayer())) {
+			throw new InvalidDataException("Inconsistent frame header");
+		}
+		if (!version.equals(frame.getVersion())) {
+			throw new InvalidDataException("Inconsistent frame header");
+		}
+		if (offset + frame.getLengthInBytes() > getLength()) {
 			throw new InvalidDataException("Frame would extend beyond end of file");
+		}
 	}
 
 	private void addBitrate(final int bitrate) {
@@ -347,7 +364,7 @@ public class Mp3File extends FileWrapper {
 		return bitrates;
 	}
 
-	public String getChannelMode() {
+	public MpegFrame.ChannelMode getChannelMode() {
 		return channelMode;
 	}
 
@@ -355,15 +372,15 @@ public class Mp3File extends FileWrapper {
 		return copyright;
 	}
 
-	public String getEmphasis() {
+	public MpegFrame.Emphasis getEmphasis() {
 		return emphasis;
 	}
 
-	public String getLayer() {
+	public MpegFrame.Layer getLayer() {
 		return layer;
 	}
 
-	public String getModeExtension() {
+	public MpegFrame.ExtensionMode getModeExtension() {
 		return modeExtension;
 	}
 
@@ -375,7 +392,7 @@ public class Mp3File extends FileWrapper {
 		return sampleRate;
 	}
 
-	public String getVersion() {
+	public MPEGVersion getVersion() {
 		return version;
 	}
 
@@ -460,15 +477,18 @@ public class Mp3File extends FileWrapper {
 				byteBuffer.rewind();
 				saveFile.write(byteBuffer);
 			}
-			saveFile.close();
 		}
 	}
 
 	private void saveMpegFrames(SeekableByteChannel saveFile) throws IOException {
 		int filePos = xingOffset;
-		if (filePos < 0) filePos = startOffset;
-		if (filePos < 0) return;
-		if (endOffset < filePos) return;
+		if (filePos < 0) {
+			filePos = startOffset;
+		}
+
+		if (filePos < 0 || endOffset < filePos) {
+			return;
+		}
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
 		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
 			seekableByteChannel.position(filePos);

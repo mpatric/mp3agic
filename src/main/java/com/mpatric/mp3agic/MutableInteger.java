@@ -30,15 +30,13 @@ public class MutableInteger {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MutableInteger other = (MutableInteger) obj;
-		if (value != other.value)
-			return false;
-		return true;
+		}
+		return value == ((MutableInteger) obj).value;
 	}
 }

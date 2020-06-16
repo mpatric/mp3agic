@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import com.mpatric.mp3agic.exception.InvalidDataException;
+import com.mpatric.mp3agic.mpeg.MpegFrame;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -70,10 +72,10 @@ public class MpegFrameTest {
 		byte[] frameData = {BYTE_FF, BYTE_FB, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
 		assertEquals(MpegFrame.MPEG_VERSION_1_0, mpegFrame.getVersion());
-		assertEquals(MpegFrame.MPEG_LAYER_3, mpegFrame.getLayer());
+		assertEquals(MpegFrame.Layer.LAYER_3, mpegFrame.getLayer());
 		assertEquals(160, mpegFrame.getBitrate());
 		assertEquals(44100, mpegFrame.getSampleRate());
-		assertEquals(MpegFrame.CHANNEL_MODE_JOINT_STEREO, mpegFrame.getChannelMode());
+		assertEquals(MpegFrame.ChannelMode.JOINT_STEREO, mpegFrame.getChannelMode());
 		assertEquals("None", mpegFrame.getModeExtension());
 		assertEquals("None", mpegFrame.getEmphasis());
 		assertEquals(true, mpegFrame.isProtection());
@@ -89,10 +91,10 @@ public class MpegFrameTest {
 		byte[] frameData = {BYTE_FF, BYTE_F3, BYTE_A2, BYTE_40};
 		MpegFrameForTesting mpegFrame = new MpegFrameForTesting(frameData);
 		assertEquals(MpegFrame.MPEG_VERSION_2_0, mpegFrame.getVersion());
-		assertEquals(MpegFrame.MPEG_LAYER_3, mpegFrame.getLayer());
+		assertEquals(MpegFrame.Layer.LAYER_3, mpegFrame.getLayer());
 		assertEquals(96, mpegFrame.getBitrate());
 		assertEquals(22050, mpegFrame.getSampleRate());
-		assertEquals(MpegFrame.CHANNEL_MODE_JOINT_STEREO, mpegFrame.getChannelMode());
+		assertEquals(MpegFrame.ChannelMode.JOINT_STEREO, mpegFrame.getChannelMode());
 		assertEquals("None", mpegFrame.getModeExtension());
 		assertEquals("None", mpegFrame.getEmphasis());
 		assertEquals(true, mpegFrame.isProtection());

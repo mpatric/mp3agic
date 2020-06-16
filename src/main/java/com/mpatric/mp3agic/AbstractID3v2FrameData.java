@@ -1,5 +1,7 @@
 package com.mpatric.mp3agic;
 
+import com.mpatric.mp3agic.exception.InvalidDataException;
+
 public abstract class AbstractID3v2FrameData {
 
 	boolean unsynchronisation;
@@ -25,7 +27,7 @@ public abstract class AbstractID3v2FrameData {
 		return bytes;
 	}
 
-	protected byte[] toBytes() {
+	public byte[] toBytes() {
 		return packAndUnsynchroniseFrameData();
 	}
 
@@ -39,16 +41,15 @@ public abstract class AbstractID3v2FrameData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AbstractID3v2FrameData other = (AbstractID3v2FrameData) obj;
-		if (unsynchronisation != other.unsynchronisation)
-			return false;
-		return true;
+		}
+
+		return unsynchronisation == ((AbstractID3v2FrameData) obj).unsynchronisation;
 	}
 
 	protected abstract void unpackFrameData(byte[] bytes) throws InvalidDataException;

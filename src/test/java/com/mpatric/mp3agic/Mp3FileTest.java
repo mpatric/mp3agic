@@ -1,5 +1,9 @@
 package com.mpatric.mp3agic;
 
+import com.mpatric.mp3agic.exception.InvalidDataException;
+import com.mpatric.mp3agic.exception.NotSupportedException;
+import com.mpatric.mp3agic.exception.UnsupportedTagException;
+import com.mpatric.mp3agic.mpeg.MpegFrame;
 import org.junit.Test;
 
 import java.io.File;
@@ -450,10 +454,10 @@ public class Mp3FileTest {
 		assertTrue(mp3File.hasXingFrame());
 		assertEquals(6, mp3File.getFrameCount());
 		assertEquals(MpegFrame.MPEG_VERSION_1_0, mp3File.getVersion());
-		assertEquals(MpegFrame.MPEG_LAYER_3, mp3File.getLayer());
+		assertEquals(MpegFrame.Layer.LAYER_3, mp3File.getLayer());
 		assertEquals(44100, mp3File.getSampleRate());
-		assertEquals(MpegFrame.CHANNEL_MODE_JOINT_STEREO, mp3File.getChannelMode());
-		assertEquals(MpegFrame.EMPHASIS_NONE, mp3File.getEmphasis());
+		assertEquals(MpegFrame.ChannelMode.JOINT_STEREO, mp3File.getChannelMode());
+		assertEquals(MpegFrame.Emphasis.NONE, mp3File.getEmphasis());
 		assertTrue(mp3File.isOriginal());
 		assertFalse(mp3File.isCopyright());
 		assertEquals(128, mp3File.getXingBitrate());

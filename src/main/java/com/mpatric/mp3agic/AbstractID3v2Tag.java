@@ -1,5 +1,11 @@
 package com.mpatric.mp3agic;
 
+import com.mpatric.mp3agic.exception.InvalidDataException;
+import com.mpatric.mp3agic.exception.NoSuchTagException;
+import com.mpatric.mp3agic.exception.NotSupportedException;
+import com.mpatric.mp3agic.exception.UnsupportedTagException;
+import com.mpatric.mp3agic.id3.*;
+
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -82,20 +88,20 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	public static final byte PICTURETYPE_PUBLISHER_LOGOTYPE = 0x14;
 
 
-	protected static final String TAG = "ID3";
+	public static final String TAG = "ID3";
 	protected static final String FOOTER_TAG = "3DI";
-	protected static final int HEADER_LENGTH = 10;
+	public static final int HEADER_LENGTH = 10;
 	protected static final int FOOTER_LENGTH = 10;
-	protected static final int MAJOR_VERSION_OFFSET = 3;
-	protected static final int MINOR_VERSION_OFFSET = 4;
-	protected static final int FLAGS_OFFSET = 5;
+	public static final int MAJOR_VERSION_OFFSET = 3;
+	public static final int MINOR_VERSION_OFFSET = 4;
+	public static final int FLAGS_OFFSET = 5;
 	protected static final int DATA_LENGTH_OFFSET = 6;
 	protected static final int FOOTER_BIT = 4;
 	protected static final int EXPERIMENTAL_BIT = 5;
 	protected static final int EXTENDED_HEADER_BIT = 6;
-	protected static final int COMPRESSION_BIT = 6;
-	protected static final int UNSYNCHRONISATION_BIT = 7;
-	protected static final int PADDING_LENGTH = 256;
+	public static final int COMPRESSION_BIT = 6;
+	public static final int UNSYNCHRONISATION_BIT = 7;
+	public static final int PADDING_LENGTH = 256;
 	private static final String ITUNES_COMMENT_DESCRIPTION = "iTunNORM";
 
 	protected boolean unsynchronisation = false;
@@ -220,7 +226,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	}
 
 	public void packTag(byte[] bytes) throws NotSupportedException {
-		int offset = packHeader(bytes, 0);
+		int offset = packHeader(bytes);
 		if (extendedHeader) {
 			offset = packExtendedHeader(bytes, offset);
 		}
@@ -230,23 +236,12 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
-	private int packHeader(byte[] bytes, int offset) {
+	private int packHeader(byte[] bytes) {
 		try {
-			BufferTools.stringIntoByteBuffer(TAG, 0, TAG.length(), bytes, offset);
-		} catch (UnsupportedEncodingException e) {
+			BufferTools.stringIntoByteBuffer(TAG, 0, TAG.length(), bytes, 0);
+		} catch (UnsupportedEncodingException ignored) {
 		}
-		String s[] = version.split("\\.");
-		if (s.length > 0) {
-			byte majorVersion = Byte.parseByte(s[0]);
-			bytes[offset + MAJOR_VERSION_OFFSET] = majorVersion;
-		}
-		if (s.length > 1) {
-			byte minorVersion = Byte.parseByte(s[1]);
-			bytes[offset + MINOR_VERSION_OFFSET] = minorVersion;
-		}
-		packFlags(bytes, offset);
-		BufferTools.packSynchsafeInteger(getDataLength(), bytes, offset + DATA_LENGTH_OFFSET);
-		return offset + HEADER_LENGTH;
+		return versionSplitter(bytes, 0, HEADER_LENGTH);
 	}
 
 	protected abstract void packFlags(byte[] bytes, int i);
@@ -281,8 +276,12 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	private int packFooter(byte[] bytes, int offset) {
 		try {
 			BufferTools.stringIntoByteBuffer(FOOTER_TAG, 0, FOOTER_TAG.length(), bytes, offset);
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException ignored) {
 		}
+		return versionSplitter(bytes, offset, FOOTER_LENGTH);
+	}
+
+	private int versionSplitter(byte[] bytes, int offset, int footerLength) {
 		String s[] = version.split("\\.");
 		if (s.length > 0) {
 			byte majorVersion = Byte.parseByte(s[0]);
@@ -294,7 +293,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 		packFlags(bytes, offset);
 		BufferTools.packSynchsafeInteger(getDataLength(), bytes, offset + DATA_LENGTH_OFFSET);
-		return offset + FOOTER_LENGTH;
+		return offset + footerLength;
 	}
 
 	private int calculateDataLength() {
@@ -570,7 +569,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		if (genre >= 0) {
 			invalidateDataLength();
 			String genreDescription = genre < ID3v1Genres.GENRES.length ? ID3v1Genres.GENRES[genre] : "";
-			String combinedGenre = "(" + Integer.toString(genre) + ")" + genreDescription;
+			String combinedGenre = "(" + genre + ")" + genreDescription;
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(combinedGenre));
 			addFrame(createFrame(ID_GENRE, frameData.toBytes()), true);
 		} else {
@@ -650,7 +649,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		setGenre(genreNum);
 	}
 
-	protected int extractGenreNumber(String genreValue) throws NumberFormatException {
+	public int extractGenreNumber(String genreValue) throws NumberFormatException {
 		String value = genreValue.trim();
 		if (value.length() > 0) {
 			if (value.charAt(0) == '(') {
@@ -663,7 +662,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return Integer.parseInt(value);
 	}
 
-	protected String extractGenreDescription(String genreValue) throws NumberFormatException {
+	public String extractGenreDescription(String genreValue) throws NumberFormatException {
 		String value = genreValue.trim();
 		if (value.length() > 0) {
 			if (value.charAt(0) == '(') {
@@ -963,7 +962,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			return null;
 		}
 
-		return extractChapterFrameData(ID_CHAPTER);
+		return extractChapterFrameData();
 	}
 
 	@Override
@@ -988,7 +987,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			return null;
 		}
 
-		return extractChapterTOCFrameData(ID_CHAPTER_TOC);
+		return extractChapterTOCFrameData();
 	}
 
 	@Override
@@ -1069,7 +1068,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 
 	@Override
 	public int getWmpRating() {
-		final ID3v2PopmFrameData frameData = extractPopmFrameData(ID_RATING);
+		final ID3v2PopmFrameData frameData = extractPopmFrameData();
 		if (frameData != null && frameData.getAddress() != null) {
 			return frameData.getRating();
 		}
@@ -1086,8 +1085,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
-	private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
-		ID3v2FrameSet frameSet = frameSets.get(id);
+	private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData() {
+		ID3v2FrameSet frameSet = frameSets.get(AbstractID3v2Tag.ID_CHAPTER);
 		if (frameSet != null) {
 			ArrayList<ID3v2ChapterFrameData> chapterData = new ArrayList<>();
 			List<ID3v2Frame> frames = frameSet.getFrames();
@@ -1106,8 +1105,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
-	private ArrayList<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData(String id) {
-		ID3v2FrameSet frameSet = frameSets.get(id);
+	private ArrayList<ID3v2ChapterTOCFrameData> extractChapterTOCFrameData() {
+		ID3v2FrameSet frameSet = frameSets.get(AbstractID3v2Tag.ID_CHAPTER_TOC);
 		if (frameSet != null) {
 			ArrayList<ID3v2ChapterTOCFrameData> chapterData = new ArrayList<>();
 			List<ID3v2Frame> frames = frameSet.getFrames();
@@ -1208,8 +1207,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		return null;
 	}
 
-	private ID3v2PopmFrameData extractPopmFrameData(final String id) {
-		final ID3v2FrameSet frameSet = frameSets.get(id);
+	private ID3v2PopmFrameData extractPopmFrameData() {
+		final ID3v2FrameSet frameSet = frameSets.get(AbstractID3v2Tag.ID_RATING);
 		if (frameSet != null) {
 			final ID3v2Frame frame = frameSet.getFrames().get(0);
 			ID3v2PopmFrameData frameData;
@@ -1240,9 +1239,8 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		} else if (other.version == null) return false;
 		else if (!version.equals(other.version)) return false;
 		if (frameSets == null) {
-			if (other.frameSets != null) return false;
+			return other.frameSets == null;
 		} else if (other.frameSets == null) return false;
-		else if (!frameSets.equals(other.frameSets)) return false;
-		return true;
+		else return frameSets.equals(other.frameSets);
 	}
 }
