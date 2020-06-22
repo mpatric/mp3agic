@@ -211,7 +211,7 @@ mp3file.save("MyMp3File.mp3");
 
 ### Reading and writing ID3v2 frames directly
 
-Frame IDs are defined in the [ID3v2 specification](http://www.id3.org/Developer_Information "ID3v2 specification"). Frames can be read from an ID3v2 tag using these. 
+Frame IDs are defined in the [ID3v2 specification](https://id3.org/Developer%20Information "ID3v2 specification"). Frames can be read from an ID3v2 tag using these. 
 
 For now, the best approach to access frames not yet supported by convenience methods is to extend the `AbstractID3v2Tag` class, following the pattern for other frames already done. Please fork the project on github and submit a pull request if you add anything useful.
 
