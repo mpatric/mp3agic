@@ -172,7 +172,7 @@ if (mp3file.hasId3v2Tag()) {
     String mimeType = id3v2Tag.getAlbumImageMimeType();
     // Write image to file - can determine appropriate file extension from the mime type
     RandomAccessFile file = new RandomAccessFile("album-artwork", "rw");
-    file.write(data);
+    file.write(imageData);
     file.close();
   }
 }
