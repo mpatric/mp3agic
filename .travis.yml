@@ -2,6 +2,10 @@ language: java
 
 script: mvn verify
 
+cache:
+  directories:
+  - $HOME/.m2
+
 jdk:
   - openjdk8
 
