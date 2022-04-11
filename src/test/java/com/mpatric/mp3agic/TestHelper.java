@@ -1,13 +1,15 @@
 package com.mpatric.mp3agic;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
-import org.junit.Test;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.junit.Test;
 
 public class TestHelper {
 	public static String bytesToHexString(byte[] bytes) {
@@ -31,16 +33,16 @@ public class TestHelper {
 	}
 
 	public static byte[] loadFile(String filename) throws IOException {
-		RandomAccessFile file = new RandomAccessFile(filename, "r");
-		byte[] buffer = new byte[(int) file.length()];
-		file.read(buffer);
-		file.close();
-		return buffer;
+		try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+			byte[] buffer = new byte[(int) file.length()];
+			file.read(buffer);
+			return buffer;
+		}
 	}
 
-	public static void deleteFile(String filename) {
-		File file = new File(filename);
-		file.delete();
+	public static void deleteFile(String filename) throws IOException {
+		Path file = Paths.get(filename);
+		Files.delete(file);
 	}
 
 	public static void replaceSpacesWithNulls(byte[] buffer) {
