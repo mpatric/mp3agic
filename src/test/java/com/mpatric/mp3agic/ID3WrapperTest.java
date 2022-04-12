@@ -1084,7 +1084,7 @@ public class ID3WrapperTest {
 		private byte[] albumImage;
 		private String albumImageMimeType;
 		private String lyrics;
-		private Map<String, ID3v2FrameSet> frameSets = new HashMap<>();
+		private final Map<String, ID3v2FrameSet> frameSets = new HashMap<>();
 
 		@Override
 		public boolean getPadding() {

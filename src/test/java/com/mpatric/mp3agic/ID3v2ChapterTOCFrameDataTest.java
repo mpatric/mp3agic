@@ -28,7 +28,7 @@ public class ID3v2ChapterTOCFrameDataTest {
 
 	@Test
 	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
-		String children[] = {"ch1", "ch2"};
+		String[] children = {"ch1", "ch2"};
 		ID3v2ChapterTOCFrameData frameData1 = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", children);
 		ID3v2TextFrameData subFrameData1 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
 		frameData1.addSubframe("TIT2", subFrameData1);
@@ -126,7 +126,7 @@ public class ID3v2ChapterTOCFrameDataTest {
 
 	@Test
 	public void shouldConvertFrameDataToBytesAndBackToEquivalentObject() throws Exception {
-		String children[] = {"ch1", "ch2"};
+		String[] children = {"ch1", "ch2"};
 		ID3v2ChapterTOCFrameData frameData = new ID3v2ChapterTOCFrameData(false, true, true, "toc1", children);
 		ID3v2TextFrameData subFrameData = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
 		frameData.addSubframe("TIT2", subFrameData);

@@ -381,7 +381,7 @@ public class ID3v2TagTest {
 
 		ID3v2ChapterTOCFrameData tocFrameData = chapterTOCs.get(0);
 		assertEquals("toc1", tocFrameData.getId());
-		String expectedChildren[] = {"ch1", "ch2", "ch3"};
+		String[] expectedChildren = {"ch1", "ch2", "ch3"};
 		assertArrayEquals(expectedChildren, tocFrameData.getChildren());
 
 		ArrayList<ID3v2Frame> subFrames = tocFrameData.getSubframes();

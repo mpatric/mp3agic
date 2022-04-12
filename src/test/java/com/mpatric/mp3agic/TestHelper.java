@@ -62,7 +62,7 @@ public class TestHelper {
 	// self tests
 	@Test
 	public void shouldConvertBytesToHexAndBack() throws Exception {
-		byte bytes[] = {(byte) 0x48, (byte) 0x45, (byte) 0x4C, (byte) 0x4C, (byte) 0x4F, (byte) 0x20, (byte) 0x74, (byte) 0x68, (byte) 0x65, (byte) 0x72, (byte) 0x65, (byte) 0x21};
+		byte[] bytes = {(byte) 0x48, (byte) 0x45, (byte) 0x4C, (byte) 0x4C, (byte) 0x4F, (byte) 0x20, (byte) 0x74, (byte) 0x68, (byte) 0x65, (byte) 0x72, (byte) 0x65, (byte) 0x21};
 		String hexString = TestHelper.bytesToHexString(bytes);
 		assertEquals("48 45 4c 4c 4f 20 74 68 65 72 65 21", hexString);
 		assertArrayEquals(bytes, TestHelper.hexStringToBytes(hexString));

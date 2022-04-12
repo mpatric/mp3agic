@@ -86,7 +86,7 @@ public class BufferToolsTest {
 	@Test
 	public void shouldConvertStringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length());
+		byte[] buffer = BufferTools.stringToByteBuffer(original, 0, original.length());
 		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length);
 		assertEquals(original, converted);
 	}
@@ -94,7 +94,7 @@ public class BufferToolsTest {
 	@Test
 	public void shouldConvertSubstringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "1234567890QWERTYUIOP";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5);
+		byte[] buffer = BufferTools.stringToByteBuffer(original, 2, original.length() - 5);
 		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length);
 		assertEquals("34567890QWERTYU", converted);
 	}
@@ -102,7 +102,7 @@ public class BufferToolsTest {
 	@Test
 	public void shouldConvertUnicodeStringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 0, original.length(), "UTF-16LE");
+		byte[] buffer = BufferTools.stringToByteBuffer(original, 0, original.length(), "UTF-16LE");
 		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, "UTF-16LE");
 		assertEquals(original, converted);
 	}
@@ -110,7 +110,7 @@ public class BufferToolsTest {
 	@Test
 	public void shouldConvertUnicodeSubstringToBufferAndBack() throws UnsupportedEncodingException {
 		String original = "\u03B3\u03B5\u03B9\u03AC \u03C3\u03BF\u03C5";
-		byte buffer[] = BufferTools.stringToByteBuffer(original, 2, original.length() - 5, "UTF-16LE");
+		byte[] buffer = BufferTools.stringToByteBuffer(original, 2, original.length() - 5, "UTF-16LE");
 		String converted = BufferTools.byteBufferToString(buffer, 0, buffer.length, "UTF-16LE");
 		assertEquals("\u03B9\u03AC ", converted);
 	}
@@ -149,7 +149,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopyStringToStartOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0);
@@ -159,7 +159,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopyUnicodeStringToStartOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 0, "UTF-16BE");
@@ -169,7 +169,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopyStringToEndOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 6);
@@ -179,7 +179,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopyUnicodeStringToEndOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 0, s.length(), buffer, 2, "UTF-16BE");
@@ -189,7 +189,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopySubstringToStartOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0);
@@ -199,7 +199,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopyUnicodeSubstringToStartOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "\u03B3\u03B5\u03B9\u03AC";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 0, "UTF-16BE");
@@ -209,7 +209,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldCopySubstringToMiddleOfByteBuffer() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0);
 		String s = "TAG-";
 		BufferTools.stringIntoByteBuffer(s, 1, 2, buffer, 4);
@@ -219,7 +219,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithOffsetOutOfRange() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		String s = "TAG-";
 		try {
 			BufferTools.stringIntoByteBuffer(s, -1, 1, buffer, 0);
@@ -233,7 +233,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithLengthOutOfRange() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		String s = "TAG-";
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, -1, buffer, 0);
@@ -251,7 +251,7 @@ public class BufferToolsTest {
 
 	@Test
 	public void shouldRaiseExceptionWhenCopyingStringIntoByteBufferWithDestinationOffsetOutOfRange() throws UnsupportedEncodingException {
-		byte buffer[] = new byte[10];
+		byte[] buffer = new byte[10];
 		String s = "TAG-";
 		try {
 			BufferTools.stringIntoByteBuffer(s, 0, 1, buffer, 10);
