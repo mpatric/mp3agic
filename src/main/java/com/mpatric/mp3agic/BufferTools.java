@@ -1,10 +1,11 @@
 package com.mpatric.mp3agic;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public final class BufferTools {
 
-	protected static final String defaultCharsetName = "ISO-8859-1";
+	private static final String defaultCharsetName = StandardCharsets.ISO_8859_1.name();
 
 	private BufferTools() {}
 
@@ -225,7 +226,7 @@ public final class BufferTools {
 		int position = 0;
 		while ((position = s.indexOf(replaceThis, position)) >= 0) {
 			if (position > lastPosition) {
-				newString.append(s.substring(lastPosition, position));
+				newString.append(s, lastPosition, position);
 			}
 			if (withThis != null) {
 				newString.append(withThis);
