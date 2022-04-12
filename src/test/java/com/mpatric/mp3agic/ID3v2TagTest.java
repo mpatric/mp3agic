@@ -549,7 +549,7 @@ public class ID3v2TagTest {
 		return factory.createTag(buffer);
 	}
 
-	class ID3v22TagForTesting extends ID3v22Tag {
+	static class ID3v22TagForTesting extends ID3v22Tag {
 
 		ID3v22TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
@@ -561,7 +561,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v23TagForTesting extends ID3v23Tag {
+	static class ID3v23TagForTesting extends ID3v23Tag {
 
 		ID3v23TagForTesting() {
 			super();
@@ -577,7 +577,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v24TagForTesting extends ID3v24Tag {
+	static class ID3v24TagForTesting extends ID3v24Tag {
 
 		ID3v24TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);

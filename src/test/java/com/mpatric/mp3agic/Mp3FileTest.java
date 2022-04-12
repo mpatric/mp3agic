@@ -467,7 +467,7 @@ public class Mp3FileTest {
 		return mp3File;
 	}
 
-	private class Mp3FileForTesting extends Mp3File {
+	private static class Mp3FileForTesting extends Mp3File {
 
 		int preScanResult;
 
