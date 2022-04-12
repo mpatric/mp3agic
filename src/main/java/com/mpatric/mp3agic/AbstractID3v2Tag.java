@@ -570,7 +570,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		if (genre >= 0) {
 			invalidateDataLength();
 			String genreDescription = genre < ID3v1Genres.GENRES.length ? ID3v1Genres.GENRES[genre] : "";
-			String combinedGenre = "(" + Integer.toString(genre) + ")" + genreDescription;
+			String combinedGenre = "(" + (genre) + ")" + genreDescription;
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(combinedGenre));
 			addFrame(createFrame(ID_GENRE, frameData.toBytes()), true);
 		} else {

@@ -41,11 +41,7 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 			address = "";
 		}
 		final byte ratingByte = bytes[bytes.length - 1];
-		if (byteToRating.containsKey(ratingByte)) {
-			rating = byteToRating.get(ratingByte);
-		} else {
-			rating = -1;
-		}
+		rating = byteToRating.getOrDefault(ratingByte, -1);
 
 	}
 
