@@ -7,27 +7,27 @@ import static org.junit.Assert.*;
 public class ID3v1GenresTest {
 
 	@Test
-	public void returnsMinusOneForNonExistentGenre() throws Exception {
+	public void returnsMinusOneForNonExistentGenre() {
 		assertEquals(-1, ID3v1Genres.matchGenreDescription("non existent"));
 	}
 
 	@Test
-	public void returnsCorrectGenreIdForFirstExistentGenre() throws Exception {
+	public void returnsCorrectGenreIdForFirstExistentGenre() {
 		assertEquals(0, ID3v1Genres.matchGenreDescription("Blues"));
 	}
 
 	@Test
-	public void returnsCorrectGenreIdForPolka() throws Exception {
+	public void returnsCorrectGenreIdForPolka() {
 		assertEquals(75, ID3v1Genres.matchGenreDescription("Polka"));
 	}
 
 	@Test
-	public void returnsCorrectGenreIdForLastExistentGenre() throws Exception {
+	public void returnsCorrectGenreIdForLastExistentGenre() {
 		assertEquals(147, ID3v1Genres.matchGenreDescription("Synthpop"));
 	}
 
 	@Test
-	public void ignoresCase() throws Exception {
+	public void ignoresCase() {
 		assertEquals(137, ID3v1Genres.matchGenreDescription("heavy METAL"));
 	}
 

@@ -17,7 +17,7 @@ public class ID3v2ObseletePictureFrameData extends ID3v2PictureFrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		String filetype;
 		try {
 			filetype = BufferTools.byteBufferToString(bytes, 1, 3);

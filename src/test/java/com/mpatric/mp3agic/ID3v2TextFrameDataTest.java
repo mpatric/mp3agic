@@ -13,13 +13,13 @@ public class ID3v2TextFrameDataTest {
 	private static final String TEST_TEXT_UNICODE = "\u03B3\u03B5\u03B9\u03AC";
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2TextFrameData frameData = new ID3v2TextFrameData(false, new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_TEXT));
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2TextFrameData frameData = new ID3v2TextFrameData(false, new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_TEXT));
 		assertFalse(frameData.equals(null));
 	}
@@ -72,7 +72,7 @@ public class ID3v2TextFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2TextFrameData frameData1 = new ID3v2TextFrameData(false, new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_TEXT));
 		ID3v2TextFrameData frameData2 = new ID3v2TextFrameData(false, new EncodedText(EncodedText.TEXT_ENCODING_ISO_8859_1, TEST_TEXT));
 		assertEquals(frameData1, frameData2);

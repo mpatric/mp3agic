@@ -30,7 +30,7 @@ public class ID3v2CommentFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		try {
 			language = BufferTools.byteBufferToString(bytes, 1, 3);
 		} catch (UnsupportedEncodingException e) {

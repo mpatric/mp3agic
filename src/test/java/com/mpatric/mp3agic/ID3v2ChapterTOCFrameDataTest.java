@@ -9,13 +9,13 @@ import java.util.ArrayList;
 public class ID3v2ChapterTOCFrameDataTest {
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2ChapterTOCFrameData frameData = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", new String[]{"ch1", "ch2"});
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2ChapterTOCFrameData frameData = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", new String[]{"ch1", "ch2"});
 		assertFalse(frameData.equals(null));
 	}
@@ -27,7 +27,7 @@ public class ID3v2ChapterTOCFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		String[] children = {"ch1", "ch2"};
 		ID3v2ChapterTOCFrameData frameData1 = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", children);
 		ID3v2TextFrameData subFrameData1 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
@@ -103,7 +103,7 @@ public class ID3v2ChapterTOCFrameDataTest {
 	}
 
 	@Test
-	public void notEqualIfOneHasSubframes() throws Exception {
+	public void notEqualIfOneHasSubframes() {
 		ID3v2ChapterTOCFrameData frameData1 = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", new String[]{"ch1", "ch2"});
 		ID3v2ChapterTOCFrameData frameData2 = new ID3v2ChapterTOCFrameData(false, true, false, "toc1", new String[]{"ch1", "ch2"});
 		ID3v2TextFrameData subFrameData2 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));

@@ -9,13 +9,13 @@ import java.util.ArrayList;
 public class ID3v2ChapterFrameDataTest {
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2ChapterFrameData frameData = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2ChapterFrameData frameData = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		assertFalse(frameData.equals(null));
 	}
@@ -27,7 +27,7 @@ public class ID3v2ChapterFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2ChapterFrameData frameData1 = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		ID3v2TextFrameData subFrameData1 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));
 		frameData1.addSubframe("TIT2", subFrameData1);
@@ -94,7 +94,7 @@ public class ID3v2ChapterFrameDataTest {
 	}
 
 	@Test
-	public void notEqualIfOneHasSubframes() throws Exception {
+	public void notEqualIfOneHasSubframes() {
 		ID3v2ChapterFrameData frameData1 = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		ID3v2ChapterFrameData frameData2 = new ID3v2ChapterFrameData(false, "ch1", 1, 380, 3, 400);
 		ID3v2TextFrameData subFrameData2 = new ID3v2TextFrameData(false, new EncodedText("Hello there"));

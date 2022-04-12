@@ -23,7 +23,7 @@ public class ID3v2UrlFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		int marker = BufferTools.indexOfTerminatorForEncoding(bytes, 1, bytes[0]);
 		if (marker >= 0) {
 			description = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, marker - 1));

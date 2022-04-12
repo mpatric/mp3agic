@@ -1067,7 +1067,7 @@ public class ID3WrapperTest {
 		}
 
 		@Override
-		public byte[] toBytes() throws NotSupportedException {
+		public byte[] toBytes() {
 			return new byte[0];
 		}
 	}

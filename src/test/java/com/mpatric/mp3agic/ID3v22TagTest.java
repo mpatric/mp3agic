@@ -14,13 +14,13 @@ public class ID3v22TagTest {
     private static final byte[] outputBytes = new byte[ID3v22Tag.FLAGS_OFFSET + 1];
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         inputBytes[ID3v22Tag.FLAGS_OFFSET] = 0;
         outputBytes[ID3v22Tag.FLAGS_OFFSET] = 0;
     }
 
     @Test
-    public void shouldUnpackAndPackOffUnsynchronizationBit() throws Exception {
+    public void shouldUnpackAndPackOffUnsynchronizationBit() {
         final ID3v22Tag id3tag = new ID3v22Tag();
         inputBytes[ID3v22Tag.FLAGS_OFFSET] = BufferTools.setBit(ZERO, ID3v22Tag.UNSYNCHRONISATION_BIT, false);
         id3tag.unpackFlags(inputBytes);
@@ -29,7 +29,7 @@ public class ID3v22TagTest {
     }
 
     @Test
-    public void shouldUnpackAndPackOnUnsynchronizationBit() throws Exception {
+    public void shouldUnpackAndPackOnUnsynchronizationBit() {
         final ID3v22Tag id3tag = new ID3v22Tag();
         inputBytes[ID3v22Tag.FLAGS_OFFSET] = BufferTools.setBit(ZERO, ID3v22Tag.UNSYNCHRONISATION_BIT, true);
         id3tag.unpackFlags(inputBytes);
@@ -38,7 +38,7 @@ public class ID3v22TagTest {
     }
 
     @Test
-    public void shouldUnpackAndPackOffCompressionBit() throws Exception {
+    public void shouldUnpackAndPackOffCompressionBit() {
         final ID3v22Tag id3tag = new ID3v22Tag();
         inputBytes[ID3v22Tag.FLAGS_OFFSET] = BufferTools.setBit(ZERO, ID3v22Tag.COMPRESSION_BIT, false);
         id3tag.unpackFlags(inputBytes);
@@ -47,7 +47,7 @@ public class ID3v22TagTest {
     }
 
     @Test
-    public void shouldUnpackAndPackOnCompressionBit() throws Exception {
+    public void shouldUnpackAndPackOnCompressionBit() {
         final ID3v22Tag id3tag = new ID3v22Tag();
         inputBytes[ID3v22Tag.FLAGS_OFFSET] = BufferTools.setBit(ZERO, ID3v22Tag.COMPRESSION_BIT, true);
         id3tag.unpackFlags(inputBytes);

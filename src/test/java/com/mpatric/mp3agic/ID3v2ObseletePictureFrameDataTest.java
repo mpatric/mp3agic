@@ -13,7 +13,7 @@ public class ID3v2ObseletePictureFrameDataTest {
 	private static final byte[] DUMMY_IMAGE_DATA = {1, 2, 3, 4, 5};
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2ObseletePictureFrameData frameData1 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte) 0, new EncodedText((byte) 1, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		ID3v2ObseletePictureFrameData frameData2 = new ID3v2ObseletePictureFrameData(false, TEST_MIME_TYPE, (byte) 0, new EncodedText((byte) 1, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertEquals(frameData1, frameData2);

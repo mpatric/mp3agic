@@ -95,7 +95,7 @@ public class ID3v2FrameTest {
 	}
 
 	@Test
-	public void shouldCorrectlyImplementHashCodeAndEquals() throws Exception {
+	public void shouldCorrectlyImplementHashCodeAndEquals() {
 		EqualsVerifier.forClass(ID3v2Frame.class)
 				.usingGetClass()
 				.suppress(Warning.NONFINAL_FIELDS)

@@ -460,7 +460,6 @@ public class Mp3File extends FileWrapper {
 				byteBuffer.rewind();
 				saveFile.write(byteBuffer);
 			}
-			saveFile.close();
 		}
 	}
 

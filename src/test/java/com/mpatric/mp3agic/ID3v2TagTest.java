@@ -195,7 +195,7 @@ public class ID3v2TagTest {
 	}
 
 	@Test
-	public void shouldExtractGenreNumberFromCombinedGenreStringsCorrectly() throws Exception {
+	public void shouldExtractGenreNumberFromCombinedGenreStringsCorrectly() {
 		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
 		try {
 			id3tag.extractGenreNumber("");
@@ -209,7 +209,7 @@ public class ID3v2TagTest {
 	}
 
 	@Test
-	public void shouldExtractGenreDescriptionFromCombinedGenreStringsCorrectly() throws Exception {
+	public void shouldExtractGenreDescriptionFromCombinedGenreStringsCorrectly() {
 		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
 		assertNull(id3tag.extractGenreDescription(""));
 		assertEquals("", id3tag.extractGenreDescription("(13)"));
@@ -589,7 +589,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v2TagFactoryForTesting {
+	static class ID3v2TagFactoryForTesting {
 
 		static final int MAJOR_VERSION_OFFSET = 3;
 
