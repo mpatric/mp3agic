@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 public class Mp3FileTest {
 
 	private static final String fs = File.separator;
+	private static final String MP3_NEVER_TAGGED = "src" + fs + "test" + fs + "resources" + fs + "never-tagged.mp3";
 	private static final String MP3_WITH_NO_TAGS = "src" + fs + "test" + fs + "resources" + fs + "notags.mp3";
 	private static final String MP3_WITH_ID3V1_AND_ID3V23_TAGS = "src" + fs + "test" + fs + "resources" + fs + "v1andv23tags.mp3";
 	private static final String MP3_WITH_DUMMY_START_AND_END_FRAMES = "src" + fs + "test" + fs + "resources" + fs + "dummyframes.mp3";
@@ -33,6 +34,8 @@ public class Mp3FileTest {
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 256);
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 1024);
 		loadAndCheckTestMp3WithNoTags(new File(MP3_WITH_NO_TAGS), 5000);
+
+		loadAndCheckTestMp3NeverTagged(MP3_NEVER_TAGGED);
 	}
 
 	@Test
@@ -354,6 +357,11 @@ public class Mp3FileTest {
 		} finally {
 			TestHelper.deleteFile(saveFilename);
 		}
+	}
+
+	private Mp3File loadAndCheckTestMp3NeverTagged(String filename) throws IOException, UnsupportedTagException, InvalidDataException {
+		Mp3File mp3File = new Mp3File(filename);
+		return mp3File;
 	}
 
 	private Mp3File loadAndCheckTestMp3WithNoTags(String filename, int bufferLength) throws IOException, UnsupportedTagException, InvalidDataException {
