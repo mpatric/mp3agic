@@ -28,7 +28,7 @@ public class ID3v2PictureFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		int marker = BufferTools.indexOfTerminator(bytes, 1, 1);
 		if (marker >= 0) {
 			try {

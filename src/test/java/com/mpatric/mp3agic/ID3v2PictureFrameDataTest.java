@@ -18,13 +18,13 @@ public class ID3v2PictureFrameDataTest {
 	private static final byte[] DUMMY_IMAGE_DATA = {1, 2, 3, 4, 5};
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte) 3, new EncodedText((byte) 0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2PictureFrameData frameData = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte) 3, new EncodedText((byte) 0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertFalse(frameData.equals(null));
 	}
@@ -36,7 +36,7 @@ public class ID3v2PictureFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2PictureFrameData frameData1 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte) 3, new EncodedText((byte) 0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		ID3v2PictureFrameData frameData2 = new ID3v2PictureFrameData(false, TEST_MIME_TYPE, (byte) 3, new EncodedText((byte) 0, TEST_DESCRIPTION), DUMMY_IMAGE_DATA);
 		assertEquals(frameData1, frameData2);

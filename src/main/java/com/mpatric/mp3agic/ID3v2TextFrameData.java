@@ -19,7 +19,7 @@ public class ID3v2TextFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		text = new EncodedText(bytes[0], BufferTools.copyBuffer(bytes, 1, bytes.length - 1));
 	}
 

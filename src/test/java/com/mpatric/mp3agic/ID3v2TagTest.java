@@ -195,7 +195,7 @@ public class ID3v2TagTest {
 	}
 
 	@Test
-	public void shouldExtractGenreNumberFromCombinedGenreStringsCorrectly() throws Exception {
+	public void shouldExtractGenreNumberFromCombinedGenreStringsCorrectly() {
 		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
 		try {
 			id3tag.extractGenreNumber("");
@@ -209,7 +209,7 @@ public class ID3v2TagTest {
 	}
 
 	@Test
-	public void shouldExtractGenreDescriptionFromCombinedGenreStringsCorrectly() throws Exception {
+	public void shouldExtractGenreDescriptionFromCombinedGenreStringsCorrectly() {
 		ID3v23TagForTesting id3tag = new ID3v23TagForTesting();
 		assertNull(id3tag.extractGenreDescription(""));
 		assertEquals("", id3tag.extractGenreDescription("(13)"));
@@ -381,7 +381,7 @@ public class ID3v2TagTest {
 
 		ID3v2ChapterTOCFrameData tocFrameData = chapterTOCs.get(0);
 		assertEquals("toc1", tocFrameData.getId());
-		String expectedChildren[] = {"ch1", "ch2", "ch3"};
+		String[] expectedChildren = {"ch1", "ch2", "ch3"};
 		assertArrayEquals(expectedChildren, tocFrameData.getChildren());
 
 		ArrayList<ID3v2Frame> subFrames = tocFrameData.getSubframes();
@@ -549,7 +549,7 @@ public class ID3v2TagTest {
 		return factory.createTag(buffer);
 	}
 
-	class ID3v22TagForTesting extends ID3v22Tag {
+	static class ID3v22TagForTesting extends ID3v22Tag {
 
 		ID3v22TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
@@ -561,7 +561,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v23TagForTesting extends ID3v23Tag {
+	static class ID3v23TagForTesting extends ID3v23Tag {
 
 		ID3v23TagForTesting() {
 			super();
@@ -577,7 +577,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v24TagForTesting extends ID3v24Tag {
+	static class ID3v24TagForTesting extends ID3v24Tag {
 
 		ID3v24TagForTesting(byte[] buffer) throws NoSuchTagException, UnsupportedTagException, InvalidDataException {
 			super(buffer);
@@ -589,7 +589,7 @@ public class ID3v2TagTest {
 		}
 	}
 
-	class ID3v2TagFactoryForTesting {
+	static class ID3v2TagFactoryForTesting {
 
 		static final int MAJOR_VERSION_OFFSET = 3;
 

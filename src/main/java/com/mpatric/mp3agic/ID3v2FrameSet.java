@@ -5,8 +5,8 @@ import java.util.List;
 
 public class ID3v2FrameSet {
 
-	private String id;
-	private ArrayList<ID3v2Frame> frames;
+	private final String id;
+	private final ArrayList<ID3v2Frame> frames;
 
 	public ID3v2FrameSet(String id) {
 		this.id = id;

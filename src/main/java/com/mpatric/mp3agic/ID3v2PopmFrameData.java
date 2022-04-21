@@ -34,18 +34,14 @@ public class ID3v2PopmFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		try {
 			address = BufferTools.byteBufferToString(bytes, 0, bytes.length - 2);
 		} catch (UnsupportedEncodingException e) {
 			address = "";
 		}
 		final byte ratingByte = bytes[bytes.length - 1];
-		if (byteToRating.containsKey(ratingByte)) {
-			rating = byteToRating.get(ratingByte);
-		} else {
-			rating = -1;
-		}
+		rating = byteToRating.getOrDefault(ratingByte, -1);
 
 	}
 

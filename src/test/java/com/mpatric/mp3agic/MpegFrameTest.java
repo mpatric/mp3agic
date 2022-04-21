@@ -169,7 +169,7 @@ public class MpegFrameTest {
 		}
 	}
 
-	class MpegFrameForTesting extends MpegFrame {
+	static class MpegFrameForTesting extends MpegFrame {
 
 		public MpegFrameForTesting() {
 			super();

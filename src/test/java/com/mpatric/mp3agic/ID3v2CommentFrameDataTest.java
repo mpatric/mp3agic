@@ -16,13 +16,13 @@ public class ID3v2CommentFrameDataTest {
 	private static final String TEST_VALUE_UNICODE = "\u03C3\u03BF\u03C5";
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText((byte) 0, TEST_DESCRIPTION), new EncodedText((byte) 0, TEST_VALUE));
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2CommentFrameData frameData = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText((byte) 0, TEST_DESCRIPTION), new EncodedText((byte) 0, TEST_VALUE));
 		assertFalse(frameData.equals(null));
 	}
@@ -34,7 +34,7 @@ public class ID3v2CommentFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2CommentFrameData frameData1 = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText((byte) 0, TEST_DESCRIPTION), new EncodedText((byte) 0, TEST_VALUE));
 		ID3v2CommentFrameData frameData2 = new ID3v2CommentFrameData(false, TEST_LANGUAGE, new EncodedText((byte) 0, TEST_DESCRIPTION), new EncodedText((byte) 0, TEST_VALUE));
 		assertEquals(frameData1, frameData2);

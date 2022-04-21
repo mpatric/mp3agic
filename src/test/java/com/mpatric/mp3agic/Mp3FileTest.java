@@ -178,7 +178,7 @@ public class Mp3FileTest {
 		testShouldIgnoreIncompleteMpegFrame(mp3File);
 	}
 
-	private void testShouldIgnoreIncompleteMpegFrame(Mp3File mp3File) throws Exception {
+	private void testShouldIgnoreIncompleteMpegFrame(Mp3File mp3File) {
 		assertEquals(0x44B, mp3File.getXingOffset());
 		assertEquals(0x5EC, mp3File.getStartOffset());
 		assertEquals(0xF17, mp3File.getEndOffset());
@@ -199,7 +199,7 @@ public class Mp3FileTest {
 		testShouldInitialiseProperlyWhenNotScanningFile(mp3File);
 	}
 
-	private void testShouldInitialiseProperlyWhenNotScanningFile(Mp3File mp3File) throws Exception {
+	private void testShouldInitialiseProperlyWhenNotScanningFile(Mp3File mp3File) {
 		assertTrue(mp3File.hasId3v1Tag());
 		assertTrue(mp3File.hasId3v2Tag());
 	}
@@ -467,7 +467,7 @@ public class Mp3FileTest {
 		return mp3File;
 	}
 
-	private class Mp3FileForTesting extends Mp3File {
+	private static class Mp3FileForTesting extends Mp3File {
 
 		int preScanResult;
 

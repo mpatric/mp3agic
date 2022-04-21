@@ -21,7 +21,7 @@ public class ID3v2WWWFrameData extends AbstractID3v2FrameData {
 	}
 
 	@Override
-	protected void unpackFrameData(byte[] bytes) throws InvalidDataException {
+	protected void unpackFrameData(byte[] bytes) {
 		try {
 			url = BufferTools.byteBufferToString(bytes, 0, bytes.length);
 		} catch (UnsupportedEncodingException e) {

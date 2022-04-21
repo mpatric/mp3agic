@@ -58,7 +58,7 @@ public class EncodedTextTest {
 		assertEquals(EncodedText.CHARSET_ISO_8859_1, encodedText.getCharacterSet());
 		assertEquals(TEST_STRING, encodedText.toString());
 		EncodedText encodedText2;
-		byte bytes[];
+		byte[] bytes;
 		// no bom & no terminator
 		bytes = encodedText.toBytes();
 		assertEquals(TEST_STRING_HEX_ISO8859_1, TestHelper.bytesToHexString(bytes));
@@ -87,7 +87,7 @@ public class EncodedTextTest {
 		assertEquals(EncodedText.CHARSET_UTF_8, encodedText.getCharacterSet());
 		assertEquals(UNICODE_TEST_STRING, encodedText.toString());
 		EncodedText encodedText2;
-		byte bytes[];
+		byte[] bytes;
 		// no bom & no terminator
 		bytes = encodedText.toBytes();
 		String c = TestHelper.bytesToHexString(bytes);
@@ -116,7 +116,7 @@ public class EncodedTextTest {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, UNICODE_TEST_STRING);
 		assertEquals(EncodedText.CHARSET_UTF_16, encodedText.getCharacterSet());
 		assertEquals(UNICODE_TEST_STRING, encodedText.toString());
-		byte bytes[];
+		byte[] bytes;
 		EncodedText encodedText2;
 		// no bom & no terminator
 		bytes = encodedText.toBytes();
@@ -145,7 +145,7 @@ public class EncodedTextTest {
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, UNICODE_TEST_STRING);
 		assertEquals(EncodedText.CHARSET_UTF_16BE, encodedText.getCharacterSet());
 		assertEquals(UNICODE_TEST_STRING, encodedText.toString());
-		byte bytes[];
+		byte[] bytes;
 		EncodedText encodedText2;
 		// no bom & no terminator
 		bytes = encodedText.toBytes();
@@ -173,7 +173,7 @@ public class EncodedTextTest {
 	public void UTF16ShouldDecodeBEWhenSpecifiedInBOM() {
 		// id3 v2.2 and 2.3: encoding set to UTF_16 (type 1), but BOM set to big endian, so interpret as UTF_16BE
 		EncodedText encodedText = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16BE, UNICODE_TEST_STRING);
-		byte bytes[] = encodedText.toBytes(true, true);
+		byte[] bytes = encodedText.toBytes(true, true);
 		EncodedText encodedText2 = new EncodedText(EncodedText.TEXT_ENCODING_UTF_16, bytes);
 		assertEquals(encodedText, encodedText2);
 	}

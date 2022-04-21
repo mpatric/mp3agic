@@ -22,7 +22,7 @@ public class Mp3File extends FileWrapper {
 	private int startOffset = -1;
 	private int endOffset = -1;
 	private int frameCount = 0;
-	private Map<Integer, MutableInteger> bitrates = new HashMap<>();
+	private final Map<Integer, MutableInteger> bitrates = new HashMap<>();
 	private int xingBitrate;
 	private double bitrate = 0;
 	private String channelMode;
@@ -460,7 +460,6 @@ public class Mp3File extends FileWrapper {
 				byteBuffer.rewind();
 				saveFile.write(byteBuffer);
 			}
-			saveFile.close();
 		}
 	}
 

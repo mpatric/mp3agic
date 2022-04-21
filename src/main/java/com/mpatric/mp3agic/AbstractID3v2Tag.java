@@ -235,7 +235,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			BufferTools.stringIntoByteBuffer(TAG, 0, TAG.length(), bytes, offset);
 		} catch (UnsupportedEncodingException e) {
 		}
-		String s[] = version.split("\\.");
+		String[] s = version.split("\\.");
 		if (s.length > 0) {
 			byte majorVersion = Byte.parseByte(s[0]);
 			bytes[offset + MAJOR_VERSION_OFFSET] = majorVersion;
@@ -283,7 +283,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 			BufferTools.stringIntoByteBuffer(FOOTER_TAG, 0, FOOTER_TAG.length(), bytes, offset);
 		} catch (UnsupportedEncodingException e) {
 		}
-		String s[] = version.split("\\.");
+		String[] s = version.split("\\.");
 		if (s.length > 0) {
 			byte majorVersion = Byte.parseByte(s[0]);
 			bytes[offset + MAJOR_VERSION_OFFSET] = majorVersion;
@@ -570,7 +570,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		if (genre >= 0) {
 			invalidateDataLength();
 			String genreDescription = genre < ID3v1Genres.GENRES.length ? ID3v1Genres.GENRES[genre] : "";
-			String combinedGenre = "(" + Integer.toString(genre) + ")" + genreDescription;
+			String combinedGenre = "(" + (genre) + ")" + genreDescription;
 			ID3v2TextFrameData frameData = new ID3v2TextFrameData(useFrameUnsynchronisation(), new EncodedText(combinedGenre));
 			addFrame(createFrame(ID_GENRE, frameData.toBytes()), true);
 		} else {

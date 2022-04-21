@@ -1067,7 +1067,7 @@ public class ID3WrapperTest {
 		}
 
 		@Override
-		public byte[] toBytes() throws NotSupportedException {
+		public byte[] toBytes() {
 			return new byte[0];
 		}
 	}
@@ -1084,7 +1084,7 @@ public class ID3WrapperTest {
 		private byte[] albumImage;
 		private String albumImageMimeType;
 		private String lyrics;
-		private Map<String, ID3v2FrameSet> frameSets = new HashMap<>();
+		private final Map<String, ID3v2FrameSet> frameSets = new HashMap<>();
 
 		@Override
 		public boolean getPadding() {

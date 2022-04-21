@@ -14,13 +14,13 @@ public class ID3v2UrlFrameDataTest {
 	private static final String TEST_URL = "http://ABCDEFGHIJKLMNOPQ";
 
 	@Test
-	public void equalsItself() throws Exception {
+	public void equalsItself() {
 		ID3v2UrlFrameData frameData = new ID3v2UrlFrameData(false, new EncodedText((byte) 0, TEST_DESCRIPTION), TEST_URL);
 		assertEquals(frameData, frameData);
 	}
 
 	@Test
-	public void notEqualToNull() throws Exception {
+	public void notEqualToNull() {
 		ID3v2UrlFrameData frameData = new ID3v2UrlFrameData(false, new EncodedText((byte) 0, TEST_DESCRIPTION), TEST_URL);
 		assertFalse(frameData.equals(null));
 	}
@@ -32,7 +32,7 @@ public class ID3v2UrlFrameDataTest {
 	}
 
 	@Test
-	public void shouldConsiderTwoEquivalentObjectsEqual() throws Exception {
+	public void shouldConsiderTwoEquivalentObjectsEqual() {
 		ID3v2UrlFrameData frameData1 = new ID3v2UrlFrameData(false, new EncodedText((byte) 0, TEST_DESCRIPTION), TEST_URL);
 		ID3v2UrlFrameData frameData2 = new ID3v2UrlFrameData(false, new EncodedText((byte) 0, TEST_DESCRIPTION), TEST_URL);
 		assertEquals(frameData1, frameData2);

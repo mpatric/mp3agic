@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ID3v2FrameSetTest {
 
     @Test
-    public void shouldCorrectlyImplementHashCodeAndEquals() throws Exception {
+    public void shouldCorrectlyImplementHashCodeAndEquals() {
         EqualsVerifier.forClass(ID3v2FrameSet.class)
                 .usingGetClass()
                 .suppress(Warning.NONFINAL_FIELDS)

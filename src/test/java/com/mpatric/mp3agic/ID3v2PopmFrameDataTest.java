@@ -73,7 +73,7 @@ public class ID3v2PopmFrameDataTest {
 	}
 
 	@Test
-	public void canGetLength() throws Exception {
+	public void canGetLength() {
 		ID3v2PopmFrameData iD3v2PopmFrameData = new ID3v2PopmFrameData(false, 0);
 		iD3v2PopmFrameData.setAddress("Address");
 		final int expectedLength = "Address".length() + 2;  // Length of address , plus 1 separator byte + 1 bye for rating
@@ -81,7 +81,7 @@ public class ID3v2PopmFrameDataTest {
 	}
 
 	@Test
-	public void canPackFrameData() throws Exception {
+	public void canPackFrameData() {
 		ID3v2PopmFrameData iD3v2PopmFrameData = new ID3v2PopmFrameData(false, 5);
 		byte[] expectedBytes = {'W', 'i', 'n', 'd', 'o', 'w', 's', ' ', 'M', 'e', 'd', 'i', 'a', ' ', 'P', 'l', 'a', 'y', 'e', 'r', ' ', '9', ' ', 'S', 'e', 'r', 'i', 'e', 's', 0, (byte) 0xFF};
 		final byte[] result = iD3v2PopmFrameData.packFrameData();
@@ -93,7 +93,7 @@ public class ID3v2PopmFrameDataTest {
 	}
 
 	@Test
-	public void hashCodeOfTwoDifferentObjectsAreDifferent() throws Exception {
+	public void hashCodeOfTwoDifferentObjectsAreDifferent() {
 		ID3v2PopmFrameData iD3v2PopmFrameData1 = new ID3v2PopmFrameData(false, 0);
 		ID3v2PopmFrameData iD3v2PopmFrameData2 = new ID3v2PopmFrameData(false, 1);
 		assertFalse(iD3v2PopmFrameData1.hashCode() == iD3v2PopmFrameData2.hashCode());
@@ -101,39 +101,39 @@ public class ID3v2PopmFrameDataTest {
 
 
 	@Test
-	public void twoEquivalentObjectsAreEquals() throws Exception {
+	public void twoEquivalentObjectsAreEquals() {
 		ID3v2PopmFrameData iD3v2PopmFrameData1 = new ID3v2PopmFrameData(false, 0);
 		ID3v2PopmFrameData iD3v2PopmFrameData2 = new ID3v2PopmFrameData(false, 0);
 		assertEquals(iD3v2PopmFrameData1, iD3v2PopmFrameData2);
 	}
 
 	@Test
-	public void sameObjectsAreEquals() throws Exception {
+	public void sameObjectsAreEquals() {
 		ID3v2PopmFrameData iD3v2PopmFrameData = new ID3v2PopmFrameData(false, 0);
 		assertEquals(iD3v2PopmFrameData, iD3v2PopmFrameData);
 	}
 
 	@Test
-	public void ID3v2PopmFrameDataIsNotEqualOtherType() throws Exception {
+	public void ID3v2PopmFrameDataIsNotEqualOtherType() {
 		ID3v2PopmFrameData iD3v2PopmFrameData = new ID3v2PopmFrameData(false, 0);
 		assertFalse(iD3v2PopmFrameData.equals("a String"));
 	}
 
 	@Test
-	public void ID3v2PopmFrameDataIsNotEqualNull() throws Exception {
+	public void ID3v2PopmFrameDataIsNotEqualNull() {
 		ID3v2PopmFrameData iD3v2PopmFrameData = new ID3v2PopmFrameData(false, 0);
 		assertFalse(iD3v2PopmFrameData.equals(null));
 	}
 
 	@Test
-	public void ID3v2PopmFrameDataIsNotEqualOtherWithDifferentRating() throws Exception {
+	public void ID3v2PopmFrameDataIsNotEqualOtherWithDifferentRating() {
 		ID3v2PopmFrameData iD3v2PopmFrameData1 = new ID3v2PopmFrameData(false, 1);
 		ID3v2PopmFrameData iD3v2PopmFrameData2 = new ID3v2PopmFrameData(false, 2);
 		assertFalse(iD3v2PopmFrameData1.equals(iD3v2PopmFrameData2));
 	}
 
 	@Test
-	public void ID3v2PopmFrameDataIsNotEqualOtherWithDifferentAddress() throws Exception {
+	public void ID3v2PopmFrameDataIsNotEqualOtherWithDifferentAddress() {
 		ID3v2PopmFrameData iD3v2PopmFrameData1 = new ID3v2PopmFrameData(false, 1);
 		iD3v2PopmFrameData1.setAddress("Address1");
 		ID3v2PopmFrameData iD3v2PopmFrameData2 = new ID3v2PopmFrameData(false, 1);
@@ -142,7 +142,7 @@ public class ID3v2PopmFrameDataTest {
 	}
 
 	@Test
-	public void ID3v2PopmFrameDataIsNotEqualOtherWithNullAddress() throws Exception {
+	public void ID3v2PopmFrameDataIsNotEqualOtherWithNullAddress() {
 		ID3v2PopmFrameData iD3v2PopmFrameData1 = new ID3v2PopmFrameData(false, 1);
 		iD3v2PopmFrameData1.setAddress("Address1");
 		ID3v2PopmFrameData iD3v2PopmFrameData2 = new ID3v2PopmFrameData(false, 1);
