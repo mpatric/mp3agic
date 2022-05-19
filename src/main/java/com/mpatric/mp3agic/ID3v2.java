@@ -131,6 +131,10 @@ public interface ID3v2 extends ID3v1 {
 
 	void setLyrics(String lyrics);
 
+	String getCustomText(String description);
+
+	void setCustomText(String description, String value);
+
 	/**
 	 * Set genre from text.
 	 * This method behaves different depending on the ID3 version.
