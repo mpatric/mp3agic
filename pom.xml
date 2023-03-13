@@ -12,7 +12,7 @@
 
 	<groupId>com.mpatric</groupId>
 	<artifactId>mp3agic</artifactId>
-	<version>0.9.2-SNAPSHOT</version>
+	<version>0.10.0</version>
 	<name>mp3agic</name>
 	<description>A java library for reading mp3 files and manipulating mp3 file ID3 tags (ID3v1 and ID3v2.2 to
 		ID3v2.4).
