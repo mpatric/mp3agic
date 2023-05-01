@@ -1158,7 +1158,7 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 	@Override
 	public void setAlbumImage(byte[] albumImage, String mimeType, byte imageType, String imageDescription) {
 		if (albumImage != null && albumImage.length > 0 && mimeType != null && mimeType.length() > 0) {
-			setAlbumImage(albumImage, mimeType, imageType, new EncodedText(imageDescription));
+			setAlbumImage(albumImage, mimeType, imageType, imageDescription != null ? new EncodedText(imageDescription) : null);
 		}
 	}
 
