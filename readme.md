@@ -1,8 +1,10 @@
 # mp3agic
-[![Build Status](https://travis-ci.org/mpatric/mp3agic.png?branch=master)](https://travis-ci.org/mpatric/mp3agic)
-[![Coverage Status](https://coveralls.io/repos/mpatric/mp3agic/badge.svg?branch=master)](https://coveralls.io/r/mpatric/mp3agic?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mpatric/mp3agic/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.mpatric/mp3agic)
-[![Build status](https://ci.appveyor.com/api/projects/status/c7k4fnxnjlmr7y7p?svg=true)](https://ci.appveyor.com/project/mpatric/mp3agic)
+
+___
+**Please note:**
+
+**This repo is no longer actively maintained - there are several forks with newer updates that may be more suitable for your needs.**
+___
 
 A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4).
 
