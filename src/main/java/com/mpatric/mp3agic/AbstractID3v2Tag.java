@@ -1086,6 +1086,30 @@ public abstract class AbstractID3v2Tag implements ID3v2 {
 		}
 	}
 
+	@Override
+	public String getCustomText(String description) {
+        ID3v2TXXXFrameData frameData = ID3v2TXXXFrameData.extract(
+            				frameSets,
+				unsynchronisation,
+				description);
+
+		if (frameData != null) {
+            return frameData.getValue().toString();
+		}
+
+		return null;
+	}
+
+	@Override
+	public void setCustomText(String description, String value) {
+		ID3v2TXXXFrameData.createOrAddField(
+				frameSets,
+				unsynchronisation,
+				description,
+				value,
+				true);
+	}
+
 	private ArrayList<ID3v2ChapterFrameData> extractChapterFrameData(String id) {
 		ID3v2FrameSet frameSet = frameSets.get(id);
 		if (frameSet != null) {

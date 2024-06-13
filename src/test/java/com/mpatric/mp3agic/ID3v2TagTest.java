@@ -516,8 +516,17 @@ public class ID3v2TagTest {
 		final int invalidValue = 6;
 		id3tag.setWmpRating(invalidValue);
 		assertEquals(originalValue, id3tag.getWmpRating());
-	}
+    }
 
+    @Test
+    public void shouldGetSetCustomText() throws Exception {
+        Mp3File mp3File = new Mp3File("src/test/resources/v23tagwithchapters.mp3");
+        ID3v2 id3tag = mp3File.getId3v2Tag();
+        assertNull(id3tag.getCustomText("foo"));
+
+        id3tag.setCustomText("foo", "bar");
+        assertEquals("bar", id3tag.getCustomText("foo"));
+    }
 
 	private void setTagFields(ID3v2 id3tag) throws IOException {
 		id3tag.setTrack("1");
