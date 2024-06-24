@@ -2,6 +2,7 @@ package com.mpatric.mp3agic;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
@@ -440,16 +441,14 @@ public class Mp3File extends FileWrapper {
 	}
 
 	public void save(String newFilename) throws IOException, NotSupportedException {
-		if (path.toAbsolutePath().compareTo(Paths.get(newFilename).toAbsolutePath()) == 0) {
-			throw new IllegalArgumentException("Save filename same as source filename");
-		}
+		byte[] frames = readMPegFrames();
 		try (SeekableByteChannel saveFile = Files.newByteChannel(Paths.get(newFilename), EnumSet.of(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))) {
 			if (hasId3v2Tag()) {
 				ByteBuffer byteBuffer = ByteBuffer.wrap(id3v2Tag.toBytes());
 				byteBuffer.rewind();
 				saveFile.write(byteBuffer);
 			}
-			saveMpegFrames(saveFile);
+			saveMpegFrames(saveFile,frames);
 			if (hasCustomTag()) {
 				ByteBuffer byteBuffer = ByteBuffer.wrap(customTag);
 				byteBuffer.rewind();
@@ -461,30 +460,25 @@ public class Mp3File extends FileWrapper {
 				saveFile.write(byteBuffer);
 			}
 		}
+
 	}
 
-	private void saveMpegFrames(SeekableByteChannel saveFile) throws IOException {
-		int filePos = xingOffset;
-		if (filePos < 0) filePos = startOffset;
-		if (filePos < 0) return;
-		if (endOffset < filePos) return;
-		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferLength);
-		try (SeekableByteChannel seekableByteChannel = Files.newByteChannel(path, StandardOpenOption.READ)) {
-			seekableByteChannel.position(filePos);
-			while (true) {
-				byteBuffer.clear();
-				int bytesRead = seekableByteChannel.read(byteBuffer);
-				byteBuffer.rewind();
-				if (filePos + bytesRead <= endOffset) {
-					byteBuffer.limit(bytesRead);
-					saveFile.write(byteBuffer);
-					filePos += bytesRead;
-				} else {
-					byteBuffer.limit(endOffset - filePos + 1);
-					saveFile.write(byteBuffer);
-					break;
-				}
-			}
+	private byte[] readMPegFrames() throws IOException {
+		int start = xingOffset;
+		if (start < 0) start = startOffset;
+		if (start < 0 || endOffset < start) return new byte[0];
+		int size = endOffset - start+1;
+		byte[] buffer = new byte[size];
+		try (RandomAccessFile f = new RandomAccessFile(path.toFile(),"r")) {
+			f.seek(start);
+			int read = f.read(buffer);
+			if (read != size)
+				throw new IllegalStateException("Less bytes were read (" + read + ") than were expected (" + size + ")");
 		}
+		return buffer;
+	}
+
+	private void saveMpegFrames(SeekableByteChannel saveFile, byte[] frames) throws IOException {
+		saveFile.write(ByteBuffer.wrap(frames));
 	}
 }
